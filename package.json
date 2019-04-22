@@ -3,20 +3,41 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@bit/mui-org.material-ui.bottom-navigation": "^3.9.2",
+    "@bit/mui-org.material-ui.bottom-navigation-action": "^3.9.2",
+    "@bit/mui-org.material-ui.icon": "^3.9.2",
+    "@dr-kobros/react-webfont-loader": "^8.0.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.17",
+    "@fortawesome/free-solid-svg-icons": "^5.8.1",
+    "@fortawesome/react-fontawesome": "^0.1.4",
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2",
+    "@material-ui/styles": "^3.0.0-alpha.10",
     "@types/jest": "24.0.11",
     "@types/node": "11.13.5",
     "@types/react": "16.8.13",
     "@types/react-dom": "16.8.4",
+    "circular-std": "^1.0.0",
+    "detect-browser-language": "^0.0.2",
+    "i18next": "^15.0.9",
+    "lorem-ipsum": "^2.0.1",
+    "query-string": "^6.4.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-headroom": "^2.2.8",
+    "react-hooks-global-state": "^0.9.0",
+    "react-i18next": "^10.8.1",
+    "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
-    "typescript": "3.4.3"
+    "react-transition-group": "^4.0.0",
+    "typescript": "^3.4.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prettier": "prettier --write \"src/**/*.{ts,tsx,css}\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -26,5 +47,11 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@types/react-headroom": "^2.2.1",
+    "@types/react-router-dom": "^4.3.2",
+    "tslint": "^5.16.0",
+    "tslint-config-airbnb": "^5.11.1"
+  }
 }

@@ -1,28 +1,29 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { FunctionComponent } from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import querystring from 'query-string';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+import { GlobalStateProvider } from './stores';
+import Header from './components/Header';
+import BottomNavigator from './components/BottomNavigator';
+import { LongContent } from './components/LongContent';
+import { createGlobalState } from 'react-hooks-global-state';
 
-export default App;
+interface Props extends RouteComponentProps {}
+
+const App: FunctionComponent<Props> = ({ location }) => {
+  const { t, i18n } = useTranslation();
+  const language = querystring.parse(location.search).lang as string | null | undefined;
+
+  if (language) i18n.changeLanguage(language);
+
+  return (
+    <GlobalStateProvider>
+      <Header />
+      <LongContent />
+      <BottomNavigator />
+    </GlobalStateProvider>
+  );
+};
+
+export default withRouter(App);
