@@ -17,6 +17,8 @@
     "import-name": false,
     "variable-name": false,
     "ter-indent": false,
-    "align": false
+    "align": false,
+    "ter-arrow-parens": true,
+    "arrow-parens": true
   }
 }

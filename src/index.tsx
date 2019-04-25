@@ -3,26 +3,22 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import WebfontLoader, { WebFontConfig, WebFontStatus } from '@dr-kobros/react-webfont-loader';
 import './index.css';
-import App from './App';
+import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import 'circular-std';
 import './i18n';
 
-// webfontloader configuration object. *REQUIRED*.
-const config: WebFontConfig = {
+const webFontConfig: WebFontConfig = {
   custom: {
     families: ['Nanum Square'],
     urls: ['https://cdn.rawgit.com/hiun/NanumSquare/master/nanumsquare.css'],
   },
 };
 
-// Callback receives the status of the general webfont loading process. *OPTIONAL*
-const callback = (status: WebFontStatus) => {
-  // I could hook the webfont status to for example Redux here.
-};
+const onWebFontLoad = (status: WebFontStatus) => {};
 
 ReactDOM.render(
-  <WebfontLoader config={config} onStatus={callback}>
+  <WebfontLoader config={webFontConfig} onStatus={onWebFontLoad}>
     <Router>
       <App />
     </Router>

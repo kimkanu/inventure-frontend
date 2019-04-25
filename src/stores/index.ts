@@ -5,6 +5,10 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
     current: '',
     previous: null as string | null,
   },
+  // FIXME: temporary state
+  auth: {
+    isLoggedIn: true,
+  },
 });
 
 export const navigateTab = (c: string, p: string) => {

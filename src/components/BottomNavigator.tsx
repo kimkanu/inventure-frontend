@@ -46,19 +46,23 @@ const BottomNavigator: FunctionComponent<Props> = ({ match, location, history })
   const [tabs] = useGlobalState('tabs');
   const handleChange = (event: ChangeEvent<{}>, value: string) => {
     navigateTab(value, tabs.current);
-    history.replace(`/${value === 'workout' ? '' : value}`);
-  };
-  useMemo(() => {
-    navigateTab(
-      location.pathname.slice(1, 1 + location.pathname.slice(1).indexOf('/') || undefined) ||
-        'workout',
-      tabs.current,
+    history.replace(
+      `/${['workout', 'profile', 'friends', 'settings'].includes(value) ? value : ''}`,
     );
+  };
+
+  const category = location.pathname.slice(
+    1,
+    1 + location.pathname.slice(1).indexOf('/') || undefined,
+  );
+
+  useMemo(() => {
+    navigateTab(category || 'workout', tabs.current);
   }, []);
 
   const bottomNavigationClasses = bottomNavigationStyles();
 
-  return (
+  return ['workout', 'profile', 'friends', 'settings'].includes(category) ? (
     <MuiThemeProvider theme={bottomNavigatorTheme}>
       <BottomNavigation
         value={tabs.current}
@@ -106,7 +110,7 @@ const BottomNavigator: FunctionComponent<Props> = ({ match, location, history })
         />
       </BottomNavigation>
     </MuiThemeProvider>
-  );
+  ) : null;
 };
 
 export default withRouter(BottomNavigator);
