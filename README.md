@@ -38,3 +38,25 @@ class HelloMessage extends Component {
 ```
 
 Learn more in [React tutorial](https://reactjs.org/tutorial/tutorial.html) and [TypeScript tutorial](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html), or any other documentations.
+
+
+## Installation
+
+Install [Node.js](https://nodejs.org/en/) and [git](https://git-scm.com/download). After the installation, open terminal (or git bash) and type:
+
+```bash
+git clone https://github.com/utophii/inventure-frontend
+```
+
+It will clone this repository in current working directory. After cloning, change cwd to `./inventure-frontend` and type:
+
+```bash
+npm install
+```
+
+It will install all the dependencies. After a successful installation, you can start a development server by typing `npm start`.
+
+I recommend to use [VS Codium](https://github.com/VSCodium/vscodium) or [VS Code](https://code.visualstudio.com/) as an IDE. Install the following extensions also:
+
+* Prettier
+* TSLint
