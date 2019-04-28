@@ -3,11 +3,18 @@ import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-
 import BottomNavigator from './BottomNavigator';
 import PrivateRoute from './PrivateRoute';
 import Workout from './Workout';
-import Profile from './Profile';
 
 import './Main.css';
+import Link from './Link';
 
 interface Props extends RouteComponentProps {}
+
+const NotFound: FunctionComponent = () => (
+  <div>
+    <h1 className="heading">NotFound</h1>
+    <Link to="/workout">Go to the main page</Link>
+  </div>
+);
 
 const Main: FunctionComponent<Props> = () => {
   return (
@@ -18,7 +25,7 @@ const Main: FunctionComponent<Props> = () => {
           <div>
             <Switch location={location}>
               <PrivateRoute path="/workout" component={Workout} />
-              <PrivateRoute path="/profile" component={Profile} />
+              <PrivateRoute path="/" component={NotFound} />
             </Switch>
             <BottomNavigator />
           </div>

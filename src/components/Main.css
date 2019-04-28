@@ -1,10 +1,33 @@
-div.page {
+.page {
   position: fixed;
   width: 100%;
   height: 100%;
 }
-div.page.content {
+.page .content {
   position: absolute;
   width: 100%;
-  top: 0;
+  top: 0px;
+  margin-top: 48px;
+}
+
+.content--fade-transition-enter {
+  opacity: 0;
+}
+.content--fade-transition-enter-active {
+  opacity: 1;
+  transition: opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.content--fade-transition-exit {
+  opacity: 1;
+}
+.content--fade-transition-exit-active {
+  opacity: 0;
+  transition: opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+h1.heading {
+  font-family: CircularStd, Nanum Square, serif;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  padding: 0.67em 0;
 }

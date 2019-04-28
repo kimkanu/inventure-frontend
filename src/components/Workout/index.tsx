@@ -14,9 +14,9 @@ const Workout: FunctionComponent<Props> = ({}) => {
           <Header />
           <TransitionGroup>
             <CSSTransition
-              key={location.pathname}
+              key={location.key}
               timeout={{ enter: 300, exit: 300 }}
-              classNames={'fade'}
+              classNames={'content--fade-transition'}
             >
               <div className="content">
                 <Switch location={location}>
@@ -25,7 +25,8 @@ const Workout: FunctionComponent<Props> = ({}) => {
                     path="/workout"
                     component={() => (
                       <div>
-                        workout <Link to="/workout/1">to 1</Link>
+                        <h1 className="heading">Workout</h1>
+                        <Link to="/workout/1">Go to /workout/1</Link>
                       </div>
                     )}
                   />
@@ -33,7 +34,8 @@ const Workout: FunctionComponent<Props> = ({}) => {
                     path="/workout/1"
                     component={() => (
                       <div>
-                        workout/1 <Link to="/workout">to root</Link>
+                        <h1 className="heading">Workout/1</h1>
+                        <Link to="/workout">Back to /workout</Link>
                       </div>
                     )}
                   />
