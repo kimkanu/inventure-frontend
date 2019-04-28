@@ -1,6 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
+import PrivateRoute from '../PrivateRoute';
 import Link from '../Link';
 import Header from '../Header';
 
@@ -16,9 +18,9 @@ const Profile: FunctionComponent<Props> = ({}) => {
             timeout={{ enter: 300, exit: 300 }}
             classNames={'fade'}
           >
-            <div>
+            <div className="page">
               <Switch location={location}>
-                <Route
+                <PrivateRoute
                   exact
                   path="/profile"
                   component={() => (
@@ -28,7 +30,7 @@ const Profile: FunctionComponent<Props> = ({}) => {
                     </div>
                   )}
                 />
-                <Route
+                <PrivateRoute
                   path="/profile/1"
                   component={() => (
                     <div>

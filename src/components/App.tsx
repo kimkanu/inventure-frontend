@@ -26,8 +26,16 @@ const App: FunctionComponent<Props> = ({ history }) => {
 
   return (
     <GlobalStateProvider>
-      <Route exact path="/login" component={Login} />
-      <PrivateRoute path="/" component={Main} />
+      <Route
+        render={({ location }) => (
+          <div>
+            <Switch location={location}>
+              <Route exact path="/login" component={Login} />
+              <Route path="/" component={Main} />
+            </Switch>
+          </div>
+        )}
+      />
     </GlobalStateProvider>
   );
 };

@@ -10,36 +10,38 @@ const Workout: FunctionComponent<Props> = ({}) => {
   return (
     <Route
       render={({ location }) => (
-        <TransitionGroup>
-          <CSSTransition
-            key={location.pathname}
-            timeout={{ enter: 300, exit: 300 }}
-            classNames={'fade'}
-          >
-            <div>
-              <Switch location={location}>
-                <Route
-                  exact
-                  path="/workout"
-                  component={() => (
-                    <div>
-                      <Header />
-                      workout <Link to="/workout/1">to 1</Link>
-                    </div>
-                  )}
-                />
-                <Route
-                  path="/workout/1"
-                  component={() => (
-                    <div>
-                      workout/1 <Link to="/workout">to root</Link>
-                    </div>
-                  )}
-                />
-              </Switch>
-            </div>
-          </CSSTransition>
-        </TransitionGroup>
+        <div className="page">
+          <Header />
+          <TransitionGroup>
+            <CSSTransition
+              key={location.pathname}
+              timeout={{ enter: 300, exit: 300 }}
+              classNames={'fade'}
+            >
+              <div className="content">
+                <Switch location={location}>
+                  <Route
+                    exact
+                    path="/workout"
+                    component={() => (
+                      <div>
+                        workout <Link to="/workout/1">to 1</Link>
+                      </div>
+                    )}
+                  />
+                  <Route
+                    path="/workout/1"
+                    component={() => (
+                      <div>
+                        workout/1 <Link to="/workout">to root</Link>
+                      </div>
+                    )}
+                  />
+                </Switch>
+              </div>
+            </CSSTransition>
+          </TransitionGroup>
+        </div>
       )}
     />
   );
