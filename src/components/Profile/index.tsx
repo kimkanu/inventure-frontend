@@ -6,7 +6,7 @@ import Header from '../Header';
 
 interface Props extends RouteComponentProps {}
 
-const Workout: FunctionComponent<Props> = ({}) => {
+const Profile: FunctionComponent<Props> = ({}) => {
   return (
     <Route
       render={({ location }) => (
@@ -20,19 +20,19 @@ const Workout: FunctionComponent<Props> = ({}) => {
               <Switch location={location}>
                 <Route
                   exact
-                  path="/workout"
+                  path="/profile"
                   component={() => (
                     <div>
                       <Header />
-                      workout <Link to="/workout/1">to 1</Link>
+                      profile <Link to="/profile/1">to 1</Link>
                     </div>
                   )}
                 />
                 <Route
-                  path="/workout/1"
+                  path="/profile/1"
                   component={() => (
                     <div>
-                      workout/1 <Link to="/workout">to root</Link>
+                      profile/1 <Link to="/profile">to root</Link>
                     </div>
                   )}
                 />
@@ -45,4 +45,4 @@ const Workout: FunctionComponent<Props> = ({}) => {
   );
 };
 
-export default withRouter(Workout);
+export default withRouter(Profile);

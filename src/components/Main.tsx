@@ -6,6 +6,7 @@ import { navigateTab, useGlobalState } from '../stores';
 import Link from './Link';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Workout from './Workout';
+import Profile from './Profile';
 
 interface Props extends RouteComponentProps {}
 
@@ -16,7 +17,7 @@ const Main: FunctionComponent<Props> = () => {
         render={({ location }) => (
           <TransitionGroup>
             <CSSTransition
-              key={location.pathname}
+              key={location.key}
               timeout={{ enter: 300, exit: 300 }}
               classNames={'fade'}
             >
@@ -24,7 +25,7 @@ const Main: FunctionComponent<Props> = () => {
                 <Switch location={location}>
                   <Route exact path="/" render={() => <Redirect to={{ pathname: '/workout' }} />} />
                   <Route path="/workout" component={Workout} />
-                  <Route exact path="/profile" component={Workout} />
+                  <Route path="/profile" component={Profile} />
                 </Switch>
               </div>
             </CSSTransition>
