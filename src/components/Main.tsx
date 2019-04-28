@@ -13,6 +13,7 @@ interface Props extends RouteComponentProps {}
 const Main: FunctionComponent<Props> = () => {
   return (
     <>
+      <Route exact path="/" render={() => <Redirect to={{ pathname: '/workout' }} />} />
       <Route
         render={({ location }) => (
           <TransitionGroup>
@@ -23,7 +24,6 @@ const Main: FunctionComponent<Props> = () => {
             >
               <div>
                 <Switch location={location}>
-                  <Route exact path="/" render={() => <Redirect to={{ pathname: '/workout' }} />} />
                   <Route path="/workout" component={Workout} />
                   <Route path="/profile" component={Profile} />
                 </Switch>
