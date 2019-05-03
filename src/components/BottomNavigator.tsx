@@ -7,7 +7,7 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Icon from '@bit/mui-org.material-ui.icon';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import { useGlobalState, navigateTab } from '../stores';
+import { useGlobalState, navigateTab, Tabs } from '../stores';
 import './BottomNavigator.css';
 import { full } from '../colors';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -45,7 +45,7 @@ const BottomNavigator: FunctionComponent<Props> = ({ match, location, history })
 
   const [tabs] = useGlobalState('tabs');
   const handleChange = (event: ChangeEvent<{}>, value: string) => {
-    const to = `${value}/`.slice(0, `${value}/`.slice(1).indexOf('/') + 1);
+    const to = `${value}/`.slice(0, `${value}/`.slice(1).indexOf('/') + 1) as Tabs;
     navigateTab(to, tabs.current);
     history.replace(`/${['workout', 'profile', 'friends', 'settings'].includes(to) ? to : ''}`);
   };
@@ -53,7 +53,7 @@ const BottomNavigator: FunctionComponent<Props> = ({ match, location, history })
   const category = location.pathname.slice(
     1,
     1 + location.pathname.slice(1).indexOf('/') || undefined,
-  );
+  ) as Tabs;
 
   useMemo(() => {
     navigateTab(category || 'workout', tabs.current);
