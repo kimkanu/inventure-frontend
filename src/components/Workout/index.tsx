@@ -3,6 +3,7 @@ import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from '../Link';
 import Header from '../Header';
+import { Second } from './Second';
 
 interface Props extends RouteComponentProps {}
 
@@ -39,6 +40,7 @@ const Workout: FunctionComponent<Props> = ({}) => {
                       </div>
                     )}
                   />
+                  <Route path="/workout/2" component={() => <Second text="hello" />} />
                 </Switch>
               </div>
             </CSSTransition>
