@@ -7,9 +7,14 @@ import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import 'circular-std';
 import './i18n';
+import { isMobile } from 'react-device-detect';
 
 const vh = window.innerHeight * 0.01;
 document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+if (!isMobile) {
+  document.body.classList.add('desktop');
+}
 
 const webFontConfig: WebFontConfig = {
   custom: {
