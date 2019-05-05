@@ -8,6 +8,9 @@ import * as serviceWorker from './serviceWorker';
 import 'circular-std';
 import './i18n';
 
+const vh = window.innerHeight * 0.01;
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+
 const webFontConfig: WebFontConfig = {
   custom: {
     families: ['Nanum Square'],
