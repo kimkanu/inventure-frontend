@@ -3,19 +3,12 @@ import BottomNavigator from './BottomNavigator';
 import Workout from './Workout';
 
 import Link from './Link';
-import {
-  withRouter,
-  RouteComponentProps,
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from 'react-router-dom';
+import { withRouter, RouteComponentProps, Route, Switch, Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import querystring from 'query-string';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-import { GlobalStateProvider, useGlobalState } from '../stores';
+import { GlobalStateProvider } from '../stores';
 
 import './App.css';
 import { untilNthIndex } from '../utils';
@@ -31,10 +24,12 @@ const NotFound: FunctionComponent = () => (
 interface Props extends RouteComponentProps {}
 
 const App: FunctionComponent<Props> = ({ location }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const language = querystring.parse(location.search).lang as string | null | undefined;
 
-  if (language) i18n.changeLanguage(language);
+  if (language) {
+    i18n.changeLanguage(language);
+  }
 
   return (
     <GlobalStateProvider>

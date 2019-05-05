@@ -17,7 +17,7 @@ const WorkoutTable: FunctionComponent = () => {
   };
   const firstColumnStyle = {
     paddingLeft: '1em',
-    width: 'calc(100% - 175px)',
+    width: 'calc(100% - 110px)',
   };
   const secondColumnStyle = {
     textAlign: 'center' as 'center',
@@ -26,11 +26,7 @@ const WorkoutTable: FunctionComponent = () => {
   const thirdColumnStyle = {
     textAlign: 'center' as 'center',
     width: 50,
-  };
-  const fourthColumnStyle = {
-    textAlign: 'center' as 'center',
-    width: 48,
-    paddingRight: '.33em',
+    paddingRight: '1em',
   };
   const td = ({
     key,
@@ -60,33 +56,6 @@ const WorkoutTable: FunctionComponent = () => {
       </td>
       <td style={useStyles(secondColumnStyle, nonHeaderStyle)}>{sets}</td>
       <td style={useStyles(thirdColumnStyle, nonHeaderStyle)}>{time}</td>
-      <td style={useStyles(fourthColumnStyle, nonHeaderStyle)}>
-        <div onClick={handleDelete}>
-          <ButtonBase style={{ borderRadius: '50%' }}>
-            <div
-              style={{
-                backgroundColor: colorScheme.red!.lighter,
-                display: 'inline-block',
-                width: 36,
-                height: 36,
-                borderRadius: '50%',
-                textAlign: 'center',
-                color: 'white',
-                fontFamily: 'EdgeIcons',
-                lineHeight: '33px',
-                fontSize: '1.2rem',
-                boxShadow: shadowText({
-                  depth: 6,
-                  color: new Color(colorScheme.red!.dark),
-                  opacity: 1.6,
-                }),
-              }}
-            >
-              
-            </div>
-          </ButtonBase>
-        </div>
-      </td>
     </tr>
   );
   return (
@@ -115,7 +84,6 @@ const WorkoutTable: FunctionComponent = () => {
             <th style={useStyles(firstColumnStyle)}>Workout</th>
             <th style={useStyles(secondColumnStyle)}>Sets</th>
             <th style={useStyles(thirdColumnStyle)}>Time</th>
-            <th style={useStyles(fourthColumnStyle)} />
           </tr>
         </thead>
         <tbody>
@@ -132,7 +100,7 @@ const WorkoutTable: FunctionComponent = () => {
         <tfoot>
           <tr>
             <td
-              colSpan={4}
+              colSpan={3}
               style={{
                 height: 40,
                 color: colorScheme.gray!.normal,
@@ -150,10 +118,10 @@ const WorkoutTable: FunctionComponent = () => {
         Total expected time:
       </div>
       <ButtonBase style={{ borderRadius: '50%' }}>
-        <Link to="/workout/edit/add">
+        <Link to="/workout/edit">
           <div
             style={{
-              backgroundColor: colorScheme.red!.lighter,
+              backgroundColor: colorScheme.gray!.normal,
               display: 'inline-block',
               width: 48,
               height: 48,
@@ -165,37 +133,12 @@ const WorkoutTable: FunctionComponent = () => {
               fontSize: '1.6rem',
               boxShadow: shadowText({
                 depth: 6,
-                color: new Color(colorScheme.red!.dark),
-                opacity: 1.6,
+                color: new Color(colorScheme.gray!.darker),
+                opacity: 3,
               }),
             }}
           >
-            
-          </div>
-        </Link>
-      </ButtonBase>
-      <ButtonBase style={{ borderRadius: '50%' }}>
-        <Link to="/workout/view">
-          <div
-            style={{
-              backgroundColor: colorScheme.red!.lighter,
-              display: 'inline-block',
-              width: 48,
-              height: 48,
-              borderRadius: '50%',
-              textAlign: 'center',
-              color: 'white',
-              fontFamily: 'EdgeIcons',
-              lineHeight: '45px',
-              fontSize: '1.6rem',
-              boxShadow: shadowText({
-                depth: 6,
-                color: new Color(colorScheme.red!.dark),
-                opacity: 1.6,
-              }),
-            }}
-          >
-            
+            
           </div>
         </Link>
       </ButtonBase>
@@ -247,52 +190,23 @@ const BackButton: FunctionComponent<{ to: string }> = ({ to }) => (
   </Link>
 );
 
-const EditWorkout: FunctionComponent<Props> = () => {
+const ViewWorkout: FunctionComponent<Props> = () => {
   return (
     <Route
       render={() => (
         <div>
           <Route
-            path="/workout/edit"
+            path="/workout/view"
             component={() => (
               <div className="fade">
                 <div className="content">
                   <h1 className="heading">
-                    <BackButton to={'/workout/view'} />
-                    <span>Edit Your Workout</span>
+                    <BackButton to="/workout" />
+                    <span>Your Workout</span>
                   </h1>
                   <WorkoutTable />
                 </div>
               </div>
-            )}
-          />
-          <Route
-            render={({ location }) => (
-              <TransitionGroup>
-                <CSSTransition
-                  key={location.pathname}
-                  timeout={{ enter: 400, exit: 400 }}
-                  classNames={'content--pop-up-transition'}
-                >
-                  <div>
-                    <Route
-                      location={location}
-                      exact
-                      path="/workout/edit/add"
-                      component={() => (
-                        <div className="pop-content">
-                          <div className="content" style={{ backgroundColor: '#fcfcfc' }}>
-                            <h1 className="heading">
-                              <BackButton to={'/workout/edit'} />
-                              <span>Add Workout</span>
-                            </h1>
-                          </div>
-                        </div>
-                      )}
-                    />
-                  </div>
-                </CSSTransition>
-              </TransitionGroup>
             )}
           />
         </div>
@@ -301,4 +215,4 @@ const EditWorkout: FunctionComponent<Props> = () => {
   );
 };
 
-export default withRouter(EditWorkout);
+export default withRouter(ViewWorkout);

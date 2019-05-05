@@ -4,6 +4,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from '../Link';
 import EditWorkout from './EditWorkout';
 import { untilNthIndex } from '../../utils';
+import ViewWorkout from './ViewWorkout';
 
 interface Props extends RouteComponentProps {}
 
@@ -23,14 +24,16 @@ const Workout: FunctionComponent<Props> = ({ location }) => {
                   exact
                   path="/workout"
                   render={() => (
+                    /* TODO: temporary page */
                     <div className="fade">
                       <div className="content">
                         <h1 className="heading">Workout</h1>
-                        <Link to="/workout/edit">Go to /workout/edit</Link>
+                        <Link to="/workout/view">Go to /workout/view</Link>
                       </div>
                     </div>
                   )}
                 />
+                <Route path="/workout/view" component={ViewWorkout} />
                 <Route path="/workout/edit" component={EditWorkout} />
               </Switch>
             </div>
