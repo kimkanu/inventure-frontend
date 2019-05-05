@@ -1,5 +1,3 @@
-export * from './full';
-
 type ColorName =
   | 'red'
   | 'orange'
@@ -106,3 +104,24 @@ export class Color {
     return new Color(this.r, this.g, this.b, Math.min(1, this.a * p));
   }
 }
+
+export const colorScheme: ColorSystem = {
+  red: {
+    lightest: '#ff8882',
+    lighter: '#ff5c57',
+    light: '#fd4943',
+    normal: '#ed1c1c',
+    dark: '#c3161a',
+    darker: '#ad0103',
+    darkest: '#85060c',
+  },
+  gray: {
+    lightest: '#eaeced',
+    lighter: '#c5c8cc',
+    light: '#a3a8af',
+    normal: '#7d8188',
+    dark: '#57595c',
+    darker: '#3b3e43',
+    darkest: '#14171a',
+  },
+};
