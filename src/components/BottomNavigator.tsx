@@ -46,7 +46,7 @@ const BottomNavigator: FunctionComponent<Props> = ({ location, history }) => {
   const [tabs] = useGlobalState('tabs');
   const handleChange = (event: ChangeEvent<{}>, value: string) => {
     const to = `${value}/`.slice(0, `${value}/`.slice(1).indexOf('/') + 1) as Tabs;
-    navigateTab(to, tabs.current);
+    navigateTab(to);
     history.replace(`/${TABS.includes(to) ? to : ''}`);
   };
 
@@ -56,7 +56,7 @@ const BottomNavigator: FunctionComponent<Props> = ({ location, history }) => {
   ) as Tabs;
 
   useMemo(() => {
-    navigateTab(category || 'workout', tabs.current);
+    navigateTab(category || 'workout');
   }, []);
 
   const bottomNavigationClasses = bottomNavigationStyles();

@@ -22,9 +22,7 @@ const Link: FunctionComponent<Props> = (props) => {
     [willChangeTab, name] = [false, ''];
   }
 
-  return (
-    <Lnk {...props} onClick={() => willChangeTab && navigateTab(name as Tabs, tabs.current)} />
-  );
+  return <Lnk {...props} onClick={() => willChangeTab && navigateTab(name as Tabs)} />;
 };
 
 export default Link;
