@@ -1,12 +1,12 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState, useMemo, useEffect, Component } from 'react';
 import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from '../Link';
 import Header from '../Header';
+import Timer from '../StartWorkout/Timer';
+import StartWorkout from '../StartWorkout';
 
-interface Props extends RouteComponentProps {}
-
-const Workout: FunctionComponent<Props> = ({}) => {
+const Workout: FunctionComponent = () => {
   return (
     <Route
       render={({ location }) => (
@@ -20,16 +20,7 @@ const Workout: FunctionComponent<Props> = ({}) => {
             >
               <div className="content">
                 <Switch location={location}>
-                  <Route
-                    exact
-                    path="/workout"
-                    component={() => (
-                      <div>
-                        <h1 className="heading">Workout</h1>
-                        <Link to="/workout/1">Go to /workout/1</Link>
-                      </div>
-                    )}
-                  />
+                  <Route exact path="/workout" component={() => <StartWorkout />} />
                   <Route
                     path="/workout/1"
                     component={() => (
