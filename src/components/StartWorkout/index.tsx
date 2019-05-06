@@ -1,4 +1,10 @@
-import React, { FunctionComponent, useState, useMemo, useEffect, Component } from 'react';
+import React, {
+  FunctionComponent,
+  useState,
+  useMemo,
+  useEffect,
+  Component
+} from 'react';
 import Timer from './Timer';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import EdgeIcon from '../Icons/EdgeIcon';
@@ -27,7 +33,7 @@ const NextSection: FunctionComponent<Props> = ({ nextStep }) => {
           position: 'relative',
           margin: 'auto',
           textAlign: 'center',
-          border: `1px solid ${COLORS.gray!.light}`,
+          border: `1px solid ${COLORS.gray!.light}`
         }}
       >
         <div>
@@ -37,7 +43,7 @@ const NextSection: FunctionComponent<Props> = ({ nextStep }) => {
               backgroundColor: '#f7f7f7',
               display: 'inline-block',
               transform: 'translateY(-.8em)',
-              padding: '0 .8em',
+              padding: '0 .8em'
             })}
           >
             Next
@@ -46,7 +52,7 @@ const NextSection: FunctionComponent<Props> = ({ nextStep }) => {
         <div>
           <span
             style={useStyles(sansSerifFont, {
-              fontWeight: 'bold',
+              fontWeight: 'bold'
             })}
           >
             {nextStep}
@@ -65,7 +71,9 @@ const MuteButton: FunctionComponent = () => {
       shadowColor={COLORS.gray!.darker}
       color={COLORS.gray!.dark}
     >
-      <EdgeIcon buttonSize={48}>{useGlobalState('workout')[0].muted ? '' : ''}</EdgeIcon>
+      <EdgeIcon buttonSize={48}>
+        {useGlobalState('workout')[0].muted ? '' : ''}
+      </EdgeIcon>
     </ButtonLarge>
   );
 };
@@ -77,7 +85,7 @@ class StartWorkout extends Component<{}, State> {
   state = {
     show: true,
     time: this.timeTotal,
-    sets: 1,
+    sets: 1
   };
   interval = undefined as any;
 
@@ -110,12 +118,12 @@ class StartWorkout extends Component<{}, State> {
             flexDirection: 'column',
             alignContent: 'space-between',
             height: 'calc(100% - 28px)',
-            marginTop: '28px',
+            marginTop: '28px'
           }}
         >
           <div
             style={{
-              height: '48vh',
+              height: '48vh'
             }}
           >
             <Timer
@@ -129,7 +137,7 @@ class StartWorkout extends Component<{}, State> {
             style={{
               position: 'relative',
               display: 'flex',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
           >
             <div>
@@ -144,7 +152,10 @@ class StartWorkout extends Component<{}, State> {
 
             <MuteButton />
 
-            <ButtonLarge backgroundColor={COLORS.blue!.light} shadowColor={COLORS.blue!.dark}>
+            <ButtonLarge
+              backgroundColor={COLORS.blue!.light}
+              shadowColor={COLORS.blue!.dark}
+            >
               <EdgeIcon buttonSize={48}></EdgeIcon>
             </ButtonLarge>
           </div>

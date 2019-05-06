@@ -16,7 +16,7 @@ const Timer: FunctionComponent<Props> = ({ name, sets, time }) => {
         position: 'relative',
         display: 'flex',
         width: '100%',
-        justifyContent: 'center',
+        justifyContent: 'center'
       }}
     >
       <div style={{ position: 'absolute' }}>
@@ -25,8 +25,8 @@ const Timer: FunctionComponent<Props> = ({ name, sets, time }) => {
           styles={{
             root: {
               width: '45vh',
-              height: '45vh',
-            },
+              height: '45vh'
+            }
           }}
         />
         <div
@@ -39,26 +39,26 @@ const Timer: FunctionComponent<Props> = ({ name, sets, time }) => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            top: 0,
+            top: 0
           })}
         >
           <span
             style={{
-              fontSize: '1.2em',
+              fontSize: '1.2em'
             }}
           >
             {name}
           </span>
           <span
             style={{
-              fontSize: '1.2em',
+              fontSize: '1.2em'
             }}
           >
             Set {sets.current} / {sets.total}
           </span>
           <span
             style={{
-              fontSize: '2em',
+              fontSize: '2em'
             }}
           >
             {Math.floor(time.current / 60)}:{time.current % 60}
