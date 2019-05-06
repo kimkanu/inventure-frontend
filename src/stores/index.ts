@@ -16,6 +16,7 @@ interface Plan {
 interface Workout {
   type: string;
   plan: Plan[];
+  muted: boolean;
 }
 
 // interface for entire data -- store
@@ -66,7 +67,10 @@ type DeleteWorkoutAction = {
   type: 'DELETE_WORKOUT';
   payload: number;
 };
-type StoreAction = NavigateTabAction | DeleteWorkoutAction;
+type ToggleMuteAction = {
+  type: 'TOGGLE_MUTE';
+};
+type StoreAction = NavigateTabAction | DeleteWorkoutAction | ToggleMuteAction;
 
 const reducer: Reducer<StoreState, StoreAction> = (state, action) => {
   switch (action.type) {
@@ -85,6 +89,14 @@ const reducer: Reducer<StoreState, StoreAction> = (state, action) => {
             .concat(state.workout.plan.slice(action.payload + 1)),
         },
       };
+    case 'TOGGLE_MUTE':
+      return {
+        ...state,
+        workout: {
+          ...state.workout,
+          muted: !state.workout.muted,
+        },
+      };
     default:
       return state;
   }
@@ -97,6 +109,9 @@ export const navigateTab = (c: Tabs) => {
 };
 export const deleteWorkout = (i: number) => {
   dispatch({ type: 'DELETE_WORKOUT', payload: i });
+};
+export const toggleMute = () => {
+  dispatch({ type: 'TOGGLE_MUTE' });
 };
 
 export { GlobalStateProvider, dispatch, useGlobalState };

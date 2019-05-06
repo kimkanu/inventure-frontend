@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import CircularProgressbar from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { useStyles, sansSerifFont } from '../../styles';
 
 interface Props {
   name: string;
@@ -15,16 +16,22 @@ const Timer: FunctionComponent<Props> = ({ name, sets, time }) => {
         position: 'relative',
         display: 'flex',
         width: '100%',
-        height: '100%',
         justifyContent: 'center',
       }}
     >
       <div style={{ position: 'absolute' }}>
-        <CircularProgressbar percentage={(100 * (time.total - time.current)) / time.total} />
+        <CircularProgressbar
+          percentage={(100 * (time.total - time.current)) / time.total}
+          styles={{
+            root: {
+              width: '45vh',
+              height: '45vh',
+            },
+          }}
+        />
         <div
-          style={{
+          style={useStyles(sansSerifFont, {
             fontWeight: 'bold',
-            fontSize: '1.8em',
             position: 'absolute',
             height: '100%',
             width: '100%',
@@ -33,13 +40,27 @@ const Timer: FunctionComponent<Props> = ({ name, sets, time }) => {
             justifyContent: 'center',
             alignItems: 'center',
             top: 0,
-          }}
+          })}
         >
-          <span>{name}</span>
-          <span>
+          <span
+            style={{
+              fontSize: '1.2em',
+            }}
+          >
+            {name}
+          </span>
+          <span
+            style={{
+              fontSize: '1.2em',
+            }}
+          >
             Set {sets.current} / {sets.total}
           </span>
-          <span>
+          <span
+            style={{
+              fontSize: '2em',
+            }}
+          >
             {Math.floor(time.current / 60)}:{time.current % 60}
           </span>
         </div>
