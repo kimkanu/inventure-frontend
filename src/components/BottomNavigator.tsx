@@ -7,9 +7,9 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Icon from '@bit/mui-org.material-ui.icon';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import { useGlobalState, navigateTab, Tabs } from '../stores';
+import { useGlobalState, navigateTab, Tabs, TABS } from '../stores';
 import './BottomNavigator.css';
-import { full } from '../colors';
+import { COLORS } from '../colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { shadowText } from '../styles';
 import { useTranslation } from 'react-i18next';
@@ -19,9 +19,9 @@ interface Props extends RouteComponentProps {}
 const bottomNavigatorTheme = createMuiTheme({
   palette: {
     primary: {
-      light: full.red!.lighter,
-      main: full.red!.light,
-      dark: full.red!.dark,
+      light: COLORS.red!.lighter,
+      main: COLORS.red!.light,
+      dark: COLORS.red!.dark,
     },
   },
   typography: {
@@ -35,19 +35,19 @@ const bottomNavigationStyles = makeStyles({
     width: '100%',
     position: 'fixed',
     bottom: 0,
-    borderTop: `1px solid ${full.gray!.lightest}`,
+    borderTop: `1px solid ${COLORS.gray!.lightest}`,
     boxShadow: shadowText({ depth: 4, opacity: 1.2 }),
   },
 });
 
-const BottomNavigator: FunctionComponent<Props> = ({ match, location, history }) => {
+const BottomNavigator: FunctionComponent<Props> = ({ location, history }) => {
   const { t } = useTranslation();
 
   const [tabs] = useGlobalState('tabs');
   const handleChange = (event: ChangeEvent<{}>, value: string) => {
     const to = `${value}/`.slice(0, `${value}/`.slice(1).indexOf('/') + 1) as Tabs;
-    navigateTab(to, tabs.current);
-    history.replace(`/${['workout', 'profile', 'friends', 'settings'].includes(to) ? to : ''}`);
+    navigateTab(to);
+    history.replace(`/${TABS.includes(to) ? to : ''}`);
   };
 
   const category = location.pathname.slice(
@@ -56,12 +56,12 @@ const BottomNavigator: FunctionComponent<Props> = ({ match, location, history })
   ) as Tabs;
 
   useMemo(() => {
-    navigateTab(category || 'workout', tabs.current);
+    navigateTab(category || 'workout');
   }, []);
 
   const bottomNavigationClasses = bottomNavigationStyles();
 
-  return ['workout', 'profile', 'friends', 'settings'].includes(category) ? (
+  return TABS.includes(category) ? (
     <MuiThemeProvider theme={bottomNavigatorTheme}>
       <BottomNavigation
         value={tabs.current}

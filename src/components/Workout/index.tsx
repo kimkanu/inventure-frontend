@@ -2,48 +2,47 @@ import React, { FunctionComponent } from 'react';
 import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from '../Link';
-import Header from '../Header';
+import EditWorkout from './EditWorkout';
+import { untilNthIndex } from '../../utils';
+import ViewWorkout from './ViewWorkout';
+import Firebase, { FirebaseContext } from '../Firebase';
 
 interface Props extends RouteComponentProps {}
 
-const Workout: FunctionComponent<Props> = ({}) => {
+const Workout: FunctionComponent<Props> = ({ location }) => {
   return (
     <Route
-      render={({ location }) => (
-        <div className="page">
-          <Header />
-          <TransitionGroup>
-            <CSSTransition
-              key={location.key}
-              timeout={{ enter: 300, exit: 300 }}
-              classNames={'content--fade-transition'}
-            >
-              <div className="content">
-                <Switch location={location}>
-                  <Route
-                    exact
-                    path="/workout"
-                    component={() => (
-                      <div>
+      render={() => (
+        <TransitionGroup className="top-level" style={{ height: '100vh', position: 'absolute' }}>
+          <CSSTransition
+            key={untilNthIndex(location.pathname, '/', 3)}
+            timeout={{ enter: 300, exit: 300 }}
+            classNames={'content--fade-transition'}
+          >
+            <div>
+              <Switch location={location}>
+                <Route
+                  exact
+                  path="/workout"
+                  render={() => (
+                    /* TODO: temporary page */
+                    <div className="fade">
+                      <div className="content">
                         <h1 className="heading">Workout</h1>
-                        <Link to="/workout/1">Go to /workout/1</Link>
+                        <Link to="/workout/view">Go to /workout/view</Link>
+                        <FirebaseContext.Consumer>
+                          {(firebase) => <div>{}</div>}
+                        </FirebaseContext.Consumer>
                       </div>
-                    )}
-                  />
-                  <Route
-                    path="/workout/1"
-                    component={() => (
-                      <div>
-                        <h1 className="heading">Workout/1</h1>
-                        <Link to="/workout">Back to /workout</Link>
-                      </div>
-                    )}
-                  />
-                </Switch>
-              </div>
-            </CSSTransition>
-          </TransitionGroup>
-        </div>
+                    </div>
+                  )}
+                />
+                <Route path="/workout/view" component={ViewWorkout} />
+                <Route path="/workout/edit" component={EditWorkout} />
+              </Switch>
+            </div>
+          </CSSTransition>
+        </TransitionGroup>
       )}
     />
   );
