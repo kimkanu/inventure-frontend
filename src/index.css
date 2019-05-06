@@ -5,12 +5,12 @@ body,
   padding: 0;
   width: 100%;
   height: 100%;
-  background-color: #fcfcfc;
+  background-color: #f7f7f7;
   overflow: hidden;
 }
 /* https://stackoverflow.com/questions/18061308/prevent-address-bar-hiding-in-mobile-browsers */
 html {
-  background-color: #fcfcfc;
+  background-color: #f7f7f7;
   overflow: hidden;
   width: 100%;
   text-rendering: optimizeLegibility;

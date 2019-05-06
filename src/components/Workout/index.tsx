@@ -5,6 +5,7 @@ import Link from '../Link';
 import EditWorkout from './EditWorkout';
 import { untilNthIndex } from '../../utils';
 import ViewWorkout from './ViewWorkout';
+import Firebase, { FirebaseContext } from '../Firebase';
 
 interface Props extends RouteComponentProps {}
 
@@ -29,6 +30,9 @@ const Workout: FunctionComponent<Props> = ({ location }) => {
                       <div className="content">
                         <h1 className="heading">Workout</h1>
                         <Link to="/workout/view">Go to /workout/view</Link>
+                        <FirebaseContext.Consumer>
+                          {(firebase) => <div>{}</div>}
+                        </FirebaseContext.Consumer>
                       </div>
                     </div>
                   )}

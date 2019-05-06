@@ -9,7 +9,7 @@ import Icon from '@bit/mui-org.material-ui.icon';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { useGlobalState, navigateTab, Tabs, TABS } from '../stores';
 import './BottomNavigator.css';
-import { colorScheme } from '../colors';
+import { COLORS } from '../colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { shadowText } from '../styles';
 import { useTranslation } from 'react-i18next';
@@ -19,9 +19,9 @@ interface Props extends RouteComponentProps {}
 const bottomNavigatorTheme = createMuiTheme({
   palette: {
     primary: {
-      light: colorScheme.red!.lighter,
-      main: colorScheme.red!.light,
-      dark: colorScheme.red!.dark,
+      light: COLORS.red!.lighter,
+      main: COLORS.red!.light,
+      dark: COLORS.red!.dark,
     },
   },
   typography: {
@@ -35,7 +35,7 @@ const bottomNavigationStyles = makeStyles({
     width: '100%',
     position: 'fixed',
     bottom: 0,
-    borderTop: `1px solid ${colorScheme.gray!.lightest}`,
+    borderTop: `1px solid ${COLORS.gray!.lightest}`,
     boxShadow: shadowText({ depth: 4, opacity: 1.2 }),
   },
 });

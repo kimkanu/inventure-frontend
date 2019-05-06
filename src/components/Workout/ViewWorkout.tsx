@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { shadowText, shadow, useStyles, fullWidth, sansSerifFont } from '../../styles';
-import { Color, colorScheme } from '../../colors';
+import { Color, COLORS } from '../../colors';
 import { useGlobalState, deleteWorkout } from '../../stores';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Link from '../Link';
@@ -46,7 +46,7 @@ const WorkoutTable: FunctionComponent = () => {
     <tr
       style={{
         height: 56,
-        borderBottom: `1pt solid ${colorScheme.gray!.lightest}`,
+        borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
         fontSize: '1.07rem',
       }}
       key={key}
@@ -62,7 +62,7 @@ const WorkoutTable: FunctionComponent = () => {
     <div style={useStyles({ padding: '0 -0.33em' })}>
       <table
         style={useStyles(
-          shadow({ depth: 6, color: new Color(132, 139, 179) }),
+          shadow({ depth: 8, color: new Color(143, 146, 169), opacity: 1.8 }),
           fullWidth,
           sansSerifFont,
           {
@@ -76,7 +76,7 @@ const WorkoutTable: FunctionComponent = () => {
           <tr
             style={{
               height: 42,
-              borderBottom: `1pt solid ${colorScheme.gray!.lightest}`,
+              borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
               textAlign: 'center',
               fontWeight: 'bold',
             }}
@@ -103,7 +103,7 @@ const WorkoutTable: FunctionComponent = () => {
               colSpan={3}
               style={{
                 height: 40,
-                color: colorScheme.gray!.normal,
+                color: COLORS.gray!.normal,
                 fontSize: '.9rem',
                 textAlign: 'center',
                 fontStyle: 'italic',
@@ -121,7 +121,7 @@ const WorkoutTable: FunctionComponent = () => {
         <Link to="/workout/edit">
           <div
             style={{
-              backgroundColor: colorScheme.gray!.normal,
+              backgroundColor: COLORS.gray!.normal,
               display: 'inline-block',
               width: 48,
               height: 48,
@@ -133,7 +133,7 @@ const WorkoutTable: FunctionComponent = () => {
               fontSize: '1.6rem',
               boxShadow: shadowText({
                 depth: 6,
-                color: new Color(colorScheme.gray!.darker),
+                color: new Color(COLORS.gray!.darker),
                 opacity: 3,
               }),
             }}
@@ -166,7 +166,7 @@ const BackButton: FunctionComponent<{ to: string }> = ({ to }) => (
     to={to}
     style={{
       textDecoration: 'none',
-      color: colorScheme.gray!.darkest,
+      color: COLORS.gray!.darkest,
     }}
   >
     <ButtonBase

@@ -2,11 +2,13 @@ import React, { FunctionComponent } from 'react';
 import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { shadowText, shadow, useStyles, fullWidth, sansSerifFont } from '../../styles';
-import { Color, colorScheme } from '../../colors';
+import { Color, COLORS } from '../../colors';
 import { useGlobalState, deleteWorkout } from '../../stores';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Link from '../Link';
 import { LongContent } from '../LongContent';
+import ButtonLarge from '../Buttons/ButtonLarge';
+import EdgeIcon from '../Icons/EdgeIcon';
 
 interface Props extends RouteComponentProps {}
 
@@ -50,7 +52,7 @@ const WorkoutTable: FunctionComponent = () => {
     <tr
       style={{
         height: 56,
-        borderBottom: `1pt solid ${colorScheme.gray!.lightest}`,
+        borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
         fontSize: '1.07rem',
       }}
       key={key}
@@ -65,7 +67,7 @@ const WorkoutTable: FunctionComponent = () => {
           <ButtonBase style={{ borderRadius: '50%' }}>
             <div
               style={{
-                backgroundColor: colorScheme.red!.lighter,
+                backgroundColor: COLORS.red!.lighter,
                 display: 'inline-block',
                 width: 36,
                 height: 36,
@@ -77,7 +79,7 @@ const WorkoutTable: FunctionComponent = () => {
                 fontSize: '1.2rem',
                 boxShadow: shadowText({
                   depth: 6,
-                  color: new Color(colorScheme.red!.dark),
+                  color: new Color(COLORS.red!.dark),
                   opacity: 1.6,
                 }),
               }}
@@ -93,7 +95,7 @@ const WorkoutTable: FunctionComponent = () => {
     <div style={useStyles({ padding: '0 -0.33em' })}>
       <table
         style={useStyles(
-          shadow({ depth: 6, color: new Color(132, 139, 179) }),
+          shadow({ depth: 8, color: new Color(143, 146, 169), opacity: 1.8 }),
           fullWidth,
           sansSerifFont,
           {
@@ -107,7 +109,7 @@ const WorkoutTable: FunctionComponent = () => {
           <tr
             style={{
               height: 42,
-              borderBottom: `1pt solid ${colorScheme.gray!.lightest}`,
+              borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
               textAlign: 'center',
               fontWeight: 'bold',
             }}
@@ -135,7 +137,7 @@ const WorkoutTable: FunctionComponent = () => {
               colSpan={4}
               style={{
                 height: 40,
-                color: colorScheme.gray!.normal,
+                color: COLORS.gray!.normal,
                 fontSize: '.9rem',
                 textAlign: 'center',
                 fontStyle: 'italic',
@@ -149,72 +151,46 @@ const WorkoutTable: FunctionComponent = () => {
       <div style={useStyles(sansSerifFont, { margin: '1rem 0', fontSize: '1.1rem' })}>
         Total expected time:
       </div>
-      <ButtonBase style={{ borderRadius: '50%' }}>
-        <Link to="/workout/edit/add">
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <ButtonLarge
+          backgroundColor={COLORS.gray!.light}
+          shadowColor={COLORS.gray!.dark}
+          label="undo"
+          margin="1.5rem"
+        >
           <div
             style={{
-              backgroundColor: colorScheme.red!.lighter,
-              display: 'inline-block',
-              width: 48,
-              height: 48,
-              borderRadius: '50%',
-              textAlign: 'center',
-              color: 'white',
-              fontFamily: 'EdgeIcons',
-              lineHeight: '45px',
-              fontSize: '1.6rem',
-              boxShadow: shadowText({
-                depth: 6,
-                color: new Color(colorScheme.red!.dark),
-                opacity: 1.6,
-              }),
+              transform: 'scaleX(-1)',
             }}
           >
-            
+            <EdgeIcon buttonSize={48}></EdgeIcon>
           </div>
-        </Link>
-      </ButtonBase>
-      <ButtonBase style={{ borderRadius: '50%' }}>
-        <Link to="/workout/view">
-          <div
-            style={{
-              backgroundColor: colorScheme.red!.lighter,
-              display: 'inline-block',
-              width: 48,
-              height: 48,
-              borderRadius: '50%',
-              textAlign: 'center',
-              color: 'white',
-              fontFamily: 'EdgeIcons',
-              lineHeight: '45px',
-              fontSize: '1.6rem',
-              boxShadow: shadowText({
-                depth: 6,
-                color: new Color(colorScheme.red!.dark),
-                opacity: 1.6,
-              }),
-            }}
-          >
-            
-          </div>
-        </Link>
-      </ButtonBase>
+        </ButtonLarge>
+        <ButtonLarge
+          backgroundColor={COLORS.red!.lighter}
+          shadowColor={COLORS.red!.dark}
+          link="/workout/edit/add"
+          label="add"
+          margin="1.5rem"
+        >
+          <EdgeIcon buttonSize={48}></EdgeIcon>
+        </ButtonLarge>
+        <ButtonLarge
+          backgroundColor={COLORS.blue!.lighter}
+          shadowColor={COLORS.blue!.darker}
+          link="/workout/view"
+          label="save"
+          margin="1.5rem"
+        >
+          <EdgeIcon buttonSize={48}></EdgeIcon>
+        </ButtonLarge>
+      </div>
     </div>
-  );
-};
-
-const EdgeIcon: FunctionComponent = ({ children }) => {
-  return (
-    <span
-      style={{
-        fontFamily: 'EdgeIcons',
-        display: 'inline-block',
-        lineHeight: '0.7em',
-        transform: 'translateY(-0.064em)',
-      }}
-    >
-      {children}
-    </span>
   );
 };
 
@@ -223,7 +199,7 @@ const BackButton: FunctionComponent<{ to: string }> = ({ to }) => (
     to={to}
     style={{
       textDecoration: 'none',
-      color: colorScheme.gray!.darkest,
+      color: COLORS.gray!.darker,
     }}
   >
     <ButtonBase
@@ -242,7 +218,7 @@ const BackButton: FunctionComponent<{ to: string }> = ({ to }) => (
         borderRadius: '50%',
       }}
     >
-      <EdgeIcon></EdgeIcon>
+      <EdgeIcon buttonSize="back"></EdgeIcon>
     </ButtonBase>
   </Link>
 );
