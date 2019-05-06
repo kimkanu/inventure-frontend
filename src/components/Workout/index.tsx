@@ -1,11 +1,25 @@
-import React, { FunctionComponent } from 'react';
-import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
+import React, {
+  FunctionComponent,
+  useState,
+  useMemo,
+  useEffect,
+  Component
+} from 'react';
+import {
+  withRouter,
+  RouteComponentProps,
+  Route,
+  Redirect,
+  Switch
+} from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from '../Link';
 import EditWorkout from './EditWorkout';
 import { untilNthIndex } from '../../utils';
 import ViewWorkout from './ViewWorkout';
 import Firebase, { FirebaseContext } from '../Firebase';
+import Timer from '../StartWorkout/Timer';
+import StartWorkout from '../StartWorkout';
 
 interface Props extends RouteComponentProps {}
 
@@ -13,7 +27,10 @@ const Workout: FunctionComponent<Props> = ({ location }) => {
   return (
     <Route
       render={() => (
-        <TransitionGroup className="top-level" style={{ height: '100vh', position: 'absolute' }}>
+        <TransitionGroup
+          className="top-level"
+          style={{ height: '100vh', position: 'absolute' }}
+        >
           <CSSTransition
             key={untilNthIndex(location.pathname, '/', 3)}
             timeout={{ enter: 300, exit: 300 }}

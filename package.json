@@ -26,6 +26,7 @@
     "query-string": "^6.4.2",
     "react": "^16.8.6",
     "react-device-detect": "^1.6.2",
+    "react-circular-progressbar": "^1.2.1",
     "react-dom": "^16.8.6",
     "react-headroom": "^2.2.8",
     "react-hooks-global-state": "^0.9.0",
