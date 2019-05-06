@@ -15,6 +15,45 @@ export type ColorSystem = Partial<{ [color in ColorName]: ColorGradient }>;
 type ColorHex = string;
 export const COLOR_UNKNOWN = '#149858';
 
+export const COLORS: ColorSystem = {
+  red: {
+    lightest: '#ff8882',
+    lighter: '#ff5c57',
+    light: '#fd4943',
+    normal: '#ed1c1c',
+    dark: '#c3161a',
+    darker: '#ad0103',
+    darkest: '#85060c',
+  },
+  orange: {
+    lightest: '#FFE0B2',
+    lighter: '#FFB74D',
+    light: '#FB8C00',
+    normal: '#EF6C00',
+    dark: '#E65100',
+    darker: '#bc4b05',
+    darkest: '#7a3002',
+  },
+  blue: {
+    lightest: '#93a4ff',
+    lighter: '#586fef',
+    light: '#485edb',
+    normal: '#273fc6',
+    dark: '#162ba3',
+    darker: '#0e1f84',
+    darkest: '#071563',
+  },
+  gray: {
+    lightest: '#eaeced',
+    lighter: '#c5c8cc',
+    light: '#a3a8af',
+    normal: '#7d8188',
+    dark: '#57595c',
+    darker: '#3b3e43',
+    darkest: '#14171a',
+  },
+};
+
 // https://gist.github.com/EvAlex/ad0e43f4087e2e813a8f4cd872b433b8
 export const RGB_COLOR_REGEX = /\((\d+),\s*(\d+),\s*(\d+)(,\s*(\d*.\d*))?\)/;
 export class Color {
@@ -104,24 +143,3 @@ export class Color {
     return new Color(this.r, this.g, this.b, Math.min(1, this.a * p));
   }
 }
-
-export const colorScheme: ColorSystem = {
-  red: {
-    lightest: '#ff8882',
-    lighter: '#ff5c57',
-    light: '#fd4943',
-    normal: '#ed1c1c',
-    dark: '#c3161a',
-    darker: '#ad0103',
-    darkest: '#85060c',
-  },
-  gray: {
-    lightest: '#eaeced',
-    lighter: '#c5c8cc',
-    light: '#a3a8af',
-    normal: '#7d8188',
-    dark: '#57595c',
-    darker: '#3b3e43',
-    darkest: '#14171a',
-  },
-};
