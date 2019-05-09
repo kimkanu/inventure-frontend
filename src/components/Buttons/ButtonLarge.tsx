@@ -11,6 +11,7 @@ interface Props {
   clickHandler?: (e: React.MouseEvent) => void;
   link?: string;
   label?: string;
+  labelInside?: string;
   margin?: number | string;
   depth?: number;
   opacity?: number;
@@ -24,6 +25,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
   link,
   children,
   label,
+  labelInside,
   margin = '1rem',
   depth = 8,
   opacity = 1.6,
@@ -35,9 +37,10 @@ const ButtonLarge: FunctionComponent<Props> = ({
           typeof backgroundColor === 'string' ? backgroundColor : backgroundColor.toHex(),
         color: typeof color === 'string' ? color : color.toHex(),
         display: 'inline-block',
-        width: 48,
-        height: 48,
-        borderRadius: '50%',
+        width: 'fit-content',
+        minWidth: '48px',
+        height: '48px',
+        borderRadius: '24px',
         textAlign: 'center',
         boxShadow: shadowText({
           depth,
@@ -46,7 +49,22 @@ const ButtonLarge: FunctionComponent<Props> = ({
         }),
       }}
     >
-      {children}
+      <div style={labelInside ? { margin: '0 15px' } : {}}>
+        {children}
+        {labelInside ? (
+          <span
+            style={useStyles(sansSerifFont, {
+              display: 'inline-block',
+              fontSize: '1rem',
+              marginLeft: '0.3em',
+              lineHeight: '31px',
+              verticalAlign: 'text-bottom',
+            })}
+          >
+            {labelInside}
+          </span>
+        ) : null}
+      </div>
     </div>
   );
   return (
