@@ -14,6 +14,7 @@ type ColorGradient = { [brightness in ColorBrightness]: ColorHex };
 export type ColorSystem = Partial<{ [color in ColorName]: ColorGradient }>;
 type ColorHex = string;
 export const COLOR_UNKNOWN = '#149858';
+export const COLOR_BACKGROUND = '#f7f7f7';
 
 export const COLORS: ColorSystem = {
   red: {
@@ -33,6 +34,15 @@ export const COLORS: ColorSystem = {
     dark: '#E65100',
     darker: '#bc4b05',
     darkest: '#7a3002',
+  },
+  green: {
+    lightest: '#C8E6C9',
+    lighter: '#81C784',
+    light: '#66BB6A',
+    normal: '#4CAF50',
+    dark: '#43A047',
+    darker: '#2E7D32',
+    darkest: '#1B5E20',
   },
   blue: {
     lightest: '#93a4ff',
