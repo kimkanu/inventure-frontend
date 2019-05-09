@@ -13,7 +13,10 @@ const Workout: FunctionComponent<Props> = ({ location }) => {
   return (
     <Route
       render={() => (
-        <TransitionGroup className="top-level" style={{ height: '100vh', position: 'absolute' }}>
+        <TransitionGroup
+          className="top-level"
+          style={{ height: 'calc(100 * var(--vh))', position: 'absolute' }}
+        >
           <CSSTransition
             key={untilNthIndex(location.pathname, '/', 3)}
             timeout={{ enter: 300, exit: 300 }}

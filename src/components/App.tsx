@@ -8,10 +8,11 @@ import { useTranslation } from 'react-i18next';
 import querystring from 'query-string';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-import { GlobalStateProvider } from '../stores';
+import { GlobalStateProvider, useGlobalState } from '../stores';
 
 import './App.css';
 import { untilNthIndex } from '../utils';
+import { sansSerifFont, useStyles } from '../styles';
 
 const NotFound: FunctionComponent = () => (
   <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
@@ -40,7 +41,7 @@ const App: FunctionComponent<Props> = ({ location }) => {
           timeout={{ enter: 150, exit: 150 }}
           classNames={'content--top-level-transition'}
         >
-          <div>
+          <div style={useStyles(sansSerifFont)}>
             <Switch location={location}>
               <Route path="/workout" component={Workout} />
               <Route path="/" component={NotFound} />

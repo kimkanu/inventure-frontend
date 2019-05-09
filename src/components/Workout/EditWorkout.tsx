@@ -1,232 +1,92 @@
-import React, { FunctionComponent } from 'react';
-import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
+import React, { FunctionComponent, useState, useEffect } from 'react';
+import { withRouter, RouteComponentProps, Route } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { shadowText, shadow, useStyles, fullWidth, sansSerifFont } from '../../styles';
-import { Color, COLORS } from '../../colors';
-import { useGlobalState, deleteWorkout } from '../../stores';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import Link from '../Link';
-import { LongContent } from '../LongContent';
+import { COLORS } from '../../colors';
+import { useGlobalState } from '../../stores';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import EdgeIcon from '../Icons/EdgeIcon';
+import BackButton from '../Buttons/BackButton';
+import BottomToolbar from '../BottomToolbar';
+import WorkoutTable from './WorkoutTable';
+import { randomString, convertRemToPixels } from '../../utils';
+import { undoEditWorkoutPlan } from '../../stores/workout';
+import Dialog from '../Dialog';
+import { History } from 'history';
 
 interface Props extends RouteComponentProps {}
 
-const WorkoutTable: FunctionComponent = () => {
-  const nonHeaderStyle = {
-    paddingTop: '0.5em',
-    paddingBottom: '0.5em',
-  };
-  const firstColumnStyle = {
-    paddingLeft: '1em',
-    width: 'calc(100% - 175px)',
-  };
-  const secondColumnStyle = {
-    textAlign: 'center' as 'center',
-    width: 50,
-  };
-  const thirdColumnStyle = {
-    textAlign: 'center' as 'center',
-    width: 50,
-  };
-  const fourthColumnStyle = {
-    textAlign: 'center' as 'center',
-    width: 48,
-    paddingRight: '.33em',
-  };
-  const td = ({
-    key,
-    name,
-    reps,
-    sets,
-    time,
-    handleDelete,
-  }: {
-    key: number | string;
-    name: string;
-    reps: number;
-    sets: number;
-    time: string;
-    handleDelete: () => void;
-  }) => (
-    <tr
-      style={{
-        height: 56,
-        borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
-        fontSize: '1.07rem',
-      }}
-      key={key}
-    >
-      <td style={useStyles(firstColumnStyle, nonHeaderStyle)}>
-        {reps} {name}
-      </td>
-      <td style={useStyles(secondColumnStyle, nonHeaderStyle)}>{sets}</td>
-      <td style={useStyles(thirdColumnStyle, nonHeaderStyle)}>{time}</td>
-      <td style={useStyles(fourthColumnStyle, nonHeaderStyle)}>
-        <div onClick={handleDelete}>
-          <ButtonBase style={{ borderRadius: '50%' }}>
-            <div
-              style={{
-                backgroundColor: COLORS.red!.lighter,
-                display: 'inline-block',
-                width: 36,
-                height: 36,
-                borderRadius: '50%',
-                textAlign: 'center',
-                color: 'white',
-                fontFamily: 'EdgeIcons',
-                lineHeight: '33px',
-                fontSize: '1.2rem',
-                boxShadow: shadowText({
-                  depth: 6,
-                  color: new Color(COLORS.red!.dark),
-                  opacity: 1.6,
-                }),
-              }}
-            >
-              
-            </div>
-          </ButtonBase>
-        </div>
-      </td>
-    </tr>
-  );
+const bottomToolbarId = `bottom-toolbar--${randomString(10)}`;
+
+const adjustTablePosition = (
+  id: string,
+  setPosition: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+  const tableElement = document.querySelector('.workout-table') as HTMLTableElement;
+  const clientBottom = tableElement.clientTop + tableElement.clientHeight;
+  const bottomToolbar = document.getElementById(id) as HTMLDivElement;
+  const threshold = clientBottom + convertRemToPixels(1) + bottomToolbar.clientHeight + 72 + 104;
+  setPosition(window.innerHeight <= threshold);
+};
+
+const backButtonClickHandler = (history: History<any>, setDialog: any) => {
+  setDialog({
+    show: true,
+    title: 'Discard changes?',
+    children: <div>hihi</div>,
+  });
+  history.push('/workout/edit/confirm');
+};
+
+interface DialogProps {
+  show: boolean;
+  title: string;
+  children: React.ReactNode;
+}
+
+const EditWorkoutDialog: FunctionComponent<DialogProps> = (dialog) => {
   return (
-    <div style={useStyles({ padding: '0 -0.33em' })}>
-      <table
-        style={useStyles(
-          shadow({ depth: 8, color: new Color(143, 146, 169), opacity: 1.8 }),
-          fullWidth,
-          sansSerifFont,
-          {
-            borderRadius: 2,
-            backgroundColor: 'white',
-            borderCollapse: 'collapse',
-          },
-        )}
-      >
-        <thead>
-          <tr
-            style={{
-              height: 42,
-              borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
-              textAlign: 'center',
-              fontWeight: 'bold',
-            }}
-          >
-            <th style={useStyles(firstColumnStyle)}>Workout</th>
-            <th style={useStyles(secondColumnStyle)}>Sets</th>
-            <th style={useStyles(thirdColumnStyle)}>Time</th>
-            <th style={useStyles(fourthColumnStyle)} />
-          </tr>
-        </thead>
-        <tbody>
-          {useGlobalState('workout')[0].plan.map((x, i) =>
-            td({
-              ...x,
-              key: i,
-              handleDelete: () => {
-                deleteWorkout(i);
-              },
-            }),
-          )}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td
-              colSpan={4}
-              style={{
-                height: 40,
-                color: COLORS.gray!.normal,
-                fontSize: '.9rem',
-                textAlign: 'center',
-                fontStyle: 'italic',
-              }}
-            >
-              1-MINUTE BREAK BETWEEN EACH SET
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-      <div style={useStyles(sansSerifFont, { margin: '1rem 0', fontSize: '1.1rem' })}>
-        Total expected time:
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <ButtonLarge
-          backgroundColor={COLORS.gray!.light}
-          shadowColor={COLORS.gray!.dark}
-          label="undo"
-          margin="1.5rem"
-        >
-          <div
-            style={{
-              transform: 'scaleX(-1)',
-            }}
-          >
-            <EdgeIcon buttonSize={48}></EdgeIcon>
-          </div>
-        </ButtonLarge>
-        <ButtonLarge
-          backgroundColor={COLORS.red!.lighter}
-          shadowColor={COLORS.red!.dark}
-          link="/workout/edit/add"
-          label="add"
-          margin="1.5rem"
-        >
-          <EdgeIcon buttonSize={48}></EdgeIcon>
-        </ButtonLarge>
-        <ButtonLarge
-          backgroundColor={COLORS.blue!.lighter}
-          shadowColor={COLORS.blue!.darker}
-          link="/workout/view"
-          label="save"
-          margin="1.5rem"
-        >
-          <EdgeIcon buttonSize={48}></EdgeIcon>
-        </ButtonLarge>
-      </div>
-    </div>
+    <Dialog show={dialog.show} title={dialog.title}>
+      {dialog.children}
+    </Dialog>
   );
 };
 
-const BackButton: FunctionComponent<{ to: string }> = ({ to }) => (
-  <Link
-    to={to}
-    style={{
-      textDecoration: 'none',
-      color: COLORS.gray!.darker,
-    }}
-  >
-    <ButtonBase
-      style={{
-        fontSize: '1em',
-        display: 'inline-flex',
-        width: 48,
-        height: 48,
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-        padding: '6px',
-        transform: 'translateY(-4px)',
-        marginLeft: '-6px',
-        marginRight: '6px',
-        borderRadius: '50%',
-      }}
-    >
-      <EdgeIcon buttonSize="back"></EdgeIcon>
-    </ButtonBase>
-  </Link>
-);
+const EditWorkout: FunctionComponent<Props> = ({ location }) => {
+  const [position, setPosition] = useState(true); // true for relative, false for absolute
+  const workout = useGlobalState('workout')[0];
 
-const EditWorkout: FunctionComponent<Props> = () => {
+  const [dialog, setDialog] = useState({
+    show: false,
+    title: 'Discard changes?',
+    children: <div>hihi</div> as React.ReactNode,
+  });
+
+  useEffect(() => {
+    if (location.pathname === '/workout/edit/confirm') {
+      setDialog({
+        show: true,
+        title: 'Discard changes?',
+        children: <div>hihi</div>,
+      });
+    } else {
+      setDialog({
+        show: false,
+        title: '',
+        children: null,
+      });
+    }
+
+    adjustTablePosition(bottomToolbarId, setPosition);
+    const handler = () => adjustTablePosition(bottomToolbarId, setPosition);
+    window.addEventListener('resize', handler);
+    return () => {
+      window.removeEventListener('resize', handler);
+    };
+  }, [location.pathname]);
+
   return (
     <Route
-      render={() => (
+      render={({ history }) => (
         <div>
           <Route
             path="/workout/edit"
@@ -234,10 +94,55 @@ const EditWorkout: FunctionComponent<Props> = () => {
               <div className="fade">
                 <div className="content">
                   <h1 className="heading">
-                    <BackButton to={'/workout/view'} />
+                    <BackButton onClick={() => backButtonClickHandler(history, setDialog)} />
                     <span>Edit Your Workout</span>
                   </h1>
-                  <WorkoutTable />
+
+                  <WorkoutTable
+                    workout={workout}
+                    editable={true}
+                    onChange={() => adjustTablePosition(bottomToolbarId, setPosition)}
+                  />
+
+                  <BottomToolbar
+                    id={bottomToolbarId}
+                    position={position ? 'relative' : 'absolute'}
+                    bottom={position ? undefined : '80px'}
+                  >
+                    <ButtonLarge
+                      backgroundColor={COLORS.gray!.light}
+                      shadowColor={COLORS.gray!.dark}
+                      label="undo"
+                      margin="1.5rem"
+                      clickHandler={() => undoEditWorkoutPlan()}
+                    >
+                      <div
+                        style={{
+                          transform: 'scaleX(-1)',
+                        }}
+                      >
+                        <EdgeIcon buttonSize={48}></EdgeIcon>
+                      </div>
+                    </ButtonLarge>
+                    <ButtonLarge
+                      backgroundColor={COLORS.green!.normal}
+                      shadowColor={COLORS.green!.dark}
+                      link="/workout/edit/add"
+                      label="add"
+                      margin="1.5rem"
+                    >
+                      <EdgeIcon buttonSize={48}></EdgeIcon>
+                    </ButtonLarge>
+                    <ButtonLarge
+                      backgroundColor={COLORS.blue!.lighter}
+                      shadowColor={COLORS.blue!.darker}
+                      clickHandler={() => {}}
+                      label="save"
+                      margin="1.5rem"
+                    >
+                      <EdgeIcon buttonSize={48}></EdgeIcon>
+                    </ButtonLarge>
+                  </BottomToolbar>
                 </div>
               </div>
             )}
@@ -271,6 +176,9 @@ const EditWorkout: FunctionComponent<Props> = () => {
               </TransitionGroup>
             )}
           />
+          <EditWorkoutDialog show={dialog.show} title="hi">
+            hihi
+          </EditWorkoutDialog>
         </div>
       )}
     />

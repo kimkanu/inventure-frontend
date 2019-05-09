@@ -7,24 +7,16 @@ import {
   WORKOUT_ACTION_TYPES,
   initialWorkoutState,
 } from './workout';
-import {
-  DialogState,
-  initialDialogState,
-  DialogAction,
-  DIALOG_ACTION_TYPES,
-  dialogReducer,
-} from './dialog';
 
 // interface for entire data -- store
-interface StoreState extends TabState, WorkoutState, DialogState {}
+interface StoreState extends TabState, WorkoutState {}
 
 const initialState: StoreState = {
   ...initialTabState,
   ...initialWorkoutState,
-  ...initialDialogState,
 };
 
-type StoreAction = TabAction | WorkoutAction | DialogAction;
+type StoreAction = TabAction | WorkoutAction;
 
 const reducer: Reducer<StoreState, StoreAction> = (state, action) => {
   switch (true) {
@@ -32,8 +24,6 @@ const reducer: Reducer<StoreState, StoreAction> = (state, action) => {
       return { ...state, ...tabReducer(state as TabState, action as TabAction) };
     case WORKOUT_ACTION_TYPES.includes(action.type):
       return { ...state, ...workoutReducer(state as WorkoutState, action as WorkoutAction) };
-    case DIALOG_ACTION_TYPES.includes(action.type):
-      return { ...state, ...dialogReducer(state as DialogState, action as DialogAction) };
     default:
       return state;
   }

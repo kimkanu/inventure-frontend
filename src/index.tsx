@@ -10,8 +10,10 @@ import './i18n';
 import { isMobile } from 'react-device-detect';
 import Firebase, { FirebaseContext } from './components/Firebase';
 
-const vh = window.innerHeight * 0.01;
-document.documentElement.style.setProperty('--vh', `${vh}px`);
+document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+window.addEventListener('resize', () => {
+  document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+});
 
 if (!isMobile) {
   document.body.classList.add('desktop');
