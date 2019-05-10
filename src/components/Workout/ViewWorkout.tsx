@@ -13,7 +13,7 @@ interface Props extends RouteComponentProps {}
 
 const bottomToolbarId = `bottom-toolbar--${randomString(10)}`;
 
-const adjustTablePosition = (
+const adjustToolbarPosition = (
   id: string,
   setPosition: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
@@ -29,8 +29,8 @@ const ViewWorkout: FunctionComponent<Props> = () => {
   const workout = useGlobalState('workout')[0];
 
   useEffect(() => {
-    adjustTablePosition(bottomToolbarId, setPosition);
-    const handler = () => adjustTablePosition(bottomToolbarId, setPosition);
+    adjustToolbarPosition(bottomToolbarId, setPosition);
+    const handler = () => adjustToolbarPosition(bottomToolbarId, setPosition);
     window.addEventListener('resize', handler);
     return () => {
       window.removeEventListener('resize', handler);

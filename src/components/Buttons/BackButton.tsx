@@ -6,7 +6,7 @@ import EdgeIcon from '../Icons/EdgeIcon';
 
 interface Props {
   to?: string;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 const BackButton: FunctionComponent<Props> = ({ to, onClick }) => {

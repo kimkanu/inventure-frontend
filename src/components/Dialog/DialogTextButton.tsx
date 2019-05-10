@@ -1,20 +1,51 @@
 import React, { FunctionComponent } from 'react';
 import './index.css';
 import { useStyles, sansSerifFont } from '../../styles';
+import { Color, primaryColor } from '../../colors';
+import { ButtonBase, Button } from '@material-ui/core';
+import { styled } from '@material-ui/styles';
 
 interface Props {
-  show: boolean;
-  title: string;
+  text: string;
+  backgroundColor?: string | Color;
+  color?: string | Color;
+  bold?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
-const Dialog: FunctionComponent<Props> = ({ show, title, children }) => (
-  <div
-    style={{
-      padding: '1.3rem',
-    }}
-  >
-    <div style={useStyles(sansSerifFont)}>{children}</div>
-  </div>
-);
+const DialogTextButton: FunctionComponent<Props> = ({
+  text,
+  backgroundColor = 'transparent',
+  color = primaryColor.normal,
+  bold = false,
+  onClick,
+}) => {
+  const Button = styled(ButtonBase)({
+    hover: { backgroundColor: 'red' },
+  });
 
-export default Dialog;
+  return (
+    <Button
+      style={{
+        margin: '0 0.2rem',
+        borderRadius: '4px',
+      }}
+      onClick={onClick}
+    >
+      <div
+        style={useStyles(sansSerifFont, {
+          padding: '0.4rem 0.7rem',
+          fontSize: '0.9rem',
+          borderRadius: '4px',
+          color: typeof color === 'string' ? color : color.toHex(),
+          backgroundColor:
+            typeof backgroundColor === 'string' ? backgroundColor : backgroundColor.toHex(),
+          fontWeight: bold ? 'bold' : 'normal',
+        })}
+      >
+        {text.toLocaleUpperCase()}
+      </div>
+    </Button>
+  );
+};
+export default DialogTextButton;

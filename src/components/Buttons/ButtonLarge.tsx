@@ -8,7 +8,7 @@ interface Props {
   backgroundColor: string | Color;
   color?: string | Color;
   shadowColor: string | Color;
-  clickHandler?: (e: React.MouseEvent) => void;
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   link?: string;
   label?: string;
   labelInside?: string;
@@ -20,7 +20,7 @@ interface Props {
 const ButtonLarge: FunctionComponent<Props> = ({
   backgroundColor,
   shadowColor,
-  clickHandler = () => {},
+  onClick = () => {},
   color = 'white',
   link,
   children,
@@ -77,7 +77,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
         margin: `.4rem ${typeof margin === 'number' ? `${margin}px` : margin}`,
       }}
     >
-      <div onClick={clickHandler}>
+      <div onClick={onClick}>
         <ButtonBase style={{ borderRadius: '50%' }}>
           {link ? <Link to={link}>{content}</Link> : content}
         </ButtonBase>

@@ -5,7 +5,7 @@ import './index.css';
 
 interface Props {
   show: boolean;
-  title: string;
+  title?: string;
 }
 
 const Dialog: FunctionComponent<Props> = ({ show, title, children }) => (
@@ -23,9 +23,11 @@ const Dialog: FunctionComponent<Props> = ({ show, title, children }) => (
         padding: '1.3rem',
       }}
     >
-      <header style={useStyles(headingFont)}>
-        <h2 style={{ marginTop: '0' }}>{title}</h2>
-      </header>
+      {title ? (
+        <header style={useStyles(headingFont)}>
+          <h2 style={{ marginTop: '0' }}>{title}</h2>
+        </header>
+      ) : null}
       <div style={useStyles(sansSerifFont)}>{children}</div>
     </div>
   </D>

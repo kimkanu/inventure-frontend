@@ -7,7 +7,7 @@ import Link from '../Link';
 interface Props {
   backgroundColor: string | Color;
   shadowColor: string | Color;
-  clickHandler?: (e: React.MouseEvent) => void;
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   link?: string;
   color?: string | Color;
   depth?: number;
@@ -17,7 +17,7 @@ interface Props {
 const ButtonSmall: FunctionComponent<Props> = ({
   backgroundColor,
   shadowColor,
-  clickHandler = () => {},
+  onClick = () => {},
   color = 'white',
   link,
   children,
@@ -46,7 +46,7 @@ const ButtonSmall: FunctionComponent<Props> = ({
     </div>
   );
   return (
-    <div onClick={clickHandler}>
+    <div onClick={onClick}>
       <ButtonBase style={{ borderRadius: '50%' }}>
         {link ? <Link to={link}>{content}</Link> : content}
       </ButtonBase>

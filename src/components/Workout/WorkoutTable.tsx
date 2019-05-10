@@ -15,6 +15,7 @@ interface Props {
 
 const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange }) => {
   const plan = editable ? workout.tempPlan : workout.plan;
+  const visiblePlan = plan.filter((x) => !x.hidden);
   const breakTime = 60;
 
   const nonHeaderStyle = {
@@ -68,7 +69,7 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
           <ButtonSmall
             backgroundColor={COLORS.red!.lighter}
             shadowColor={COLORS.red!.dark}
-            clickHandler={() => {
+            onClick={() => {
               if (handleDelete) handleDelete();
               if (onChange) setTimeout(onChange, 0);
             }}
@@ -168,8 +169,8 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
               >
                 {' '}
                 {secondsToTimeLiteral(
-                  plan.map((x) => x.time * x.sets).reduce((a, b) => a + b, 0) +
-                    breakTime * (plan.map((x) => x.sets).reduce((a, b) => a + b, 0) - 1),
+                  visiblePlan.map((x) => x.time * x.sets).reduce((a, b) => a + b, 0) +
+                    breakTime * (visiblePlan.map((x) => x.sets).reduce((a, b) => a + b, 0) - 1),
                 )}
               </span>
               {editable ? null : (

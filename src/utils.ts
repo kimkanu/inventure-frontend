@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 export function nthIndexOf(string: string, subString: string, index: number) {
   return string.split(subString, index).join(subString).length;
 }
@@ -23,7 +25,7 @@ export function randomString(
   charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
 ) {
   let randomString = '';
-  for (let i = 0; i < len; i++) {
+  for (let i = 0; i < len; i += 1) {
     const pos = Math.floor(Math.random() * charSet.length);
     randomString += charSet.substring(pos, pos + 1);
   }
@@ -32,4 +34,31 @@ export function randomString(
 
 export function convertRemToPixels(rem: number) {
   return rem * parseFloat(getComputedStyle(document.documentElement).fontSize || '16');
+}
+
+export function useAsyncEffect(effect: () => Promise<void | (() => void)>, dependencies?: any[]) {
+  return useEffect(() => {
+    const cleanupPromise = effect();
+    return () => {
+      cleanupPromise.then((cleanup) => cleanup && cleanup());
+    };
+  }, dependencies);
+}
+
+export function unique<T>(
+  array: T[],
+  eq: (left: T, right: T) => boolean = (left, right) => left === right,
+) {
+  const res = [];
+  for (let i = 0; i < array.length; i += 1) {
+    let duplicate = false;
+    for (let j = 0; j < i - 1; j += 1) {
+      if (eq(array[i], array[j])) {
+        duplicate = true;
+        break;
+      }
+    }
+    if (!duplicate) res.push(array[i]);
+  }
+  return res;
 }

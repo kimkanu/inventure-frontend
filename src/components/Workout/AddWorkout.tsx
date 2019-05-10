@@ -1,22 +1,22 @@
-/*
-import React, { Component, FunctionComponent, useEffect } from 'react';
+import React, { Component, FunctionComponent, useEffect, useState } from 'react';
 import BackButton from '../Buttons/BackButton';
 import Firebase, { FirebaseContext } from '../Firebase';
 import { COLOR_BACKGROUND } from '../../colors';
-import { WorkoutImageName, useGlobalState, pushWorkoutStaticInfo } from '../../stores';
+import { useGlobalState } from '../../stores';
 import { Link, Route } from 'react-router-dom';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { untilNthIndex } from '../../utils';
+import { useAsyncEffect, unique } from '../../utils';
 
 interface Props {
   firebase: Firebase;
-  download: boolean;
 }
 
+interface WorkoutImageName {
+  name: string;
+  image: string;
+}
 interface AlbumProps {
   workouts: WorkoutImageName[];
 }
-interface State extends AlbumProps {}
 
 const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts }) => {
   return (
@@ -50,52 +50,52 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts }) => {
   );
 };
 
-function useAsyncEffect(effect: () => Promise<void | (() => void)>, dependencies?: any[]) {
-  return useEffect(() => {
-    const cleanupPromise = effect();
-    return () => {
-      cleanupPromise.then((cleanup) => cleanup && cleanup());
-    };
-  }, dependencies);
-}
+const AddWorkoutConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
+  const [workoutList, setWorkoutList] = useState([] as { image: string; name: string }[]);
 
-const AddWorkoutConsumingFirebase: FunctionComponent<Props> = ({ firebase, download }) => {
   useAsyncEffect(async () => {
-    if (!download) return;
-    const databaseResponse = await firebase.database.ref('staticInfo/workouts').once('value');
-    const workoutData = databaseResponse.val() as { imageUrl: string; name: string }[];
+    let isSubscribed = true;
 
-    workoutData.forEach(({ imageUrl, name }) => {
-      const local = localStorage.getItem(`staticInfo/${name}`);
-      if (local) {
-        pushWorkoutStaticInfo(JSON.parse(local));
-      } else {
-        firebase.storage
-          .ref(imageUrl)
-          .getDownloadURL()
-          .then((url) => {
-            fetch(url, {
+    if (location.pathname !== '/workout/edit/add') return;
+
+    const databaseResponse = await firebase.database.ref('staticInfo/workouts').once('value');
+    const workoutData = databaseResponse.val() as { imagePath: string; name: string }[];
+
+    const a = Promise.all(
+      workoutData
+        .map(({ imagePath, name }) => async () => {
+          {
+            const local = localStorage.getItem(`workoutInfo/${imagePath}`);
+            if (local) {
+              return { name, image: local };
+            }
+            const url = await firebase.storage.ref(imagePath).getDownloadURL();
+            const response = await fetch(url, {
               method: 'GET',
               headers: {
                 origin: '*',
               },
-            }).then((response) => {
-              response.arrayBuffer().then((buffer) => {
-                const base64Flag = 'data:image/png;base64,';
-                const imageStr = arrayBufferToBase64(buffer);
-                pushWorkoutStaticInfo({
-                  name,
-                  imageUrl: url,
-                  image: base64Flag + imageStr,
-                });
-              });
             });
-          });
-      }
-    });
+
+            const buffer = await response.arrayBuffer();
+            const base64Flag = 'data:image/png;base64,';
+            const imageStr = arrayBufferToBase64(buffer);
+            const base64Image = base64Flag + imageStr;
+            localStorage.setItem(`workoutInfo/${imagePath}`, base64Image);
+            return { name, image: base64Image };
+          }
+        })
+        .map((x) => x()),
+    )
+      .then((list) => unique(list, (x, y) => x.name === y.name))
+      .then((list) => {
+        if (isSubscribed) setWorkoutList(list);
+      });
+    return () => {
+      isSubscribed = false;
+    };
   }, []);
 
-  const { workouts } = useGlobalState('staticInfo')[0];
   return (
     <div className="pop-content">
       <div className="content" style={{ backgroundColor: COLOR_BACKGROUND }}>
@@ -103,14 +103,13 @@ const AddWorkoutConsumingFirebase: FunctionComponent<Props> = ({ firebase, downl
           <BackButton to={'/workout/edit'} />
           <span>Add Workout</span>
         </h1>
-        <WorkoutAlbum workouts={workouts} />
+        <WorkoutAlbum workouts={workoutList} />
       </div>
     </div>
   );
 };
 
 const AddWorkout: FunctionComponent = () => {
-  const download = useGlobalState('staticInfo')[0].workouts.length === 0;
   return (
     <Route
       render={() => (
@@ -119,40 +118,8 @@ const AddWorkout: FunctionComponent = () => {
             path="/workout/edit/add"
             component={() => (
               <FirebaseContext.Consumer>
-                {(firebase) => (
-                  <AddWorkoutConsumingFirebase firebase={firebase} download={download} />
-                )}
+                {(firebase) => <AddWorkoutConsumingFirebase firebase={firebase} />}
               </FirebaseContext.Consumer>
-            )}
-          />
-          <Route
-            render={({ location }) => (
-              <TransitionGroup>
-                <CSSTransition
-                  key={untilNthIndex(location.pathname, '/', 5)}
-                  timeout={{ enter: 400, exit: 400 }}
-                  classNames={'content--pop-dialogue-transition'}
-                >
-                  <div
-                    style={{
-                      position: 'absolute',
-                      width: '100%',
-                      height: '100%',
-                      zIndex: 999999,
-                    }}
-                  >
-                    <Route
-                      location={location}
-                      path="/workout/edit/add/detail"
-                      component={() => (
-                        <div className="pop-dialogue">
-                          <div className="content" />
-                        </div>
-                      )}
-                    />
-                  </div>
-                </CSSTransition>
-              </TransitionGroup>
             )}
           />
         </div>
@@ -167,7 +134,3 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
   const bytes = [].slice.call(new Uint8Array(buffer)) as number[];
   return btoa(bytes.map((b) => String.fromCharCode(b)).reduce((a, b) => a + b));
 }
-
-*/
-
-export const a = 3;

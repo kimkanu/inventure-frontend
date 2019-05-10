@@ -16,8 +16,8 @@ export interface Workout {
   plan: WorkoutPlan[];
   tempPlan: WorkoutPlan[];
   actionRecords: ActionRecord[];
+  nameToImagePathMap: Map<string, string>;
 }
-
 export interface CreateRecord {
   type: 'create';
 }
@@ -62,6 +62,7 @@ export const initialWorkoutState: WorkoutState = {
     plan: initialPlan,
     tempPlan: initialPlan,
     actionRecords: [],
+    nameToImagePathMap: new Map(),
   },
 };
 
@@ -78,17 +79,23 @@ export interface SaveEditWorkoutPlanAction {
 export interface DiscardEditWorkoutPlanAction {
   type: 'DISCARD_EDIT_WORKOUT_PLAN';
 }
+export interface StoreWorkoutNameToImagePathAction {
+  type: 'STORE_WORKOUT_NAME_TO_IMAGE_PATH';
+  payload: Map<string, string>;
+}
 
 export type WorkoutAction =
   | DeleteWorkoutAction
   | UndoEditWorkoutPlanAction
   | SaveEditWorkoutPlanAction
-  | DiscardEditWorkoutPlanAction;
+  | DiscardEditWorkoutPlanAction
+  | StoreWorkoutNameToImagePathAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
   'UNDO_EDIT_WORKOUT_PLAN',
   'SAVE_EDIT_WORKOUT_PLAN',
   'DISCARD_EDIT_WORKOUT_PLAN',
+  'STORE_WORKOUT_NAME_TO_IMAGE_PATH',
 ];
 
 const toggledPlan = (plan: WorkoutPlan[], i: number) => {
@@ -158,6 +165,14 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
           ...state.workout,
           tempPlan: state.workout.plan,
           actionRecords: [],
+        },
+      };
+    case 'STORE_WORKOUT_NAME_TO_IMAGE_PATH':
+      return {
+        ...state,
+        workout: {
+          ...state.workout,
+          nameToImagePathMap: action.payload,
         },
       };
     default:
