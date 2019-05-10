@@ -78,7 +78,11 @@ const ButtonLarge: FunctionComponent<Props> = ({
       }}
     >
       <div onClick={onClick}>
-        <ButtonBase style={{ borderRadius: '50%' }}>
+        <ButtonBase
+          style={{
+            borderRadius: '24px',
+          }}
+        >
           {link ? <Link to={link}>{content}</Link> : content}
         </ButtonBase>
       </div>
