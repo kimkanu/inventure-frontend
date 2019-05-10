@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 export function nthIndexOf(string: string, subString: string, index: number) {
   return string.split(subString, index).join(subString).length;
@@ -39,6 +39,15 @@ export function convertRemToPixels(rem: number) {
 export function useAsyncEffect(effect: () => Promise<void | (() => void)>, dependencies?: any[]) {
   return useEffect(() => {
     const cleanupPromise = effect();
+    return () => {
+      cleanupPromise.then((cleanup) => cleanup && cleanup());
+    };
+  }, dependencies);
+}
+
+export function useAsyncMemo(memo: () => Promise<void | (() => void)>, dependencies?: any[]) {
+  return useMemo(() => {
+    const cleanupPromise = memo();
     return () => {
       cleanupPromise.then((cleanup) => cleanup && cleanup());
     };

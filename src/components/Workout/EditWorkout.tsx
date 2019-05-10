@@ -8,7 +8,7 @@ import EdgeIcon from '../Icons/EdgeIcon';
 import BackButton from '../Buttons/BackButton';
 import BottomToolbar from '../BottomToolbar';
 import WorkoutTable from './WorkoutTable';
-import { randomString, convertRemToPixels } from '../../utils';
+import { randomString, convertRemToPixels, untilNthIndex } from '../../utils';
 import {
   undoEditWorkoutPlan,
   ActionRecord,
@@ -200,6 +200,7 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
                       label="undo"
                       margin="1.5rem"
                       onClick={() => undoEditWorkoutPlan()}
+                      hidden={workout.actionRecords.length === 0}
                     >
                       <div
                         style={{
@@ -236,15 +237,17 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
             render={({ location }) => (
               <TransitionGroup>
                 <CSSTransition
-                  key={location.pathname}
-                  timeout={{ enter: 400, exit: 400 }}
+                  key={untilNthIndex(location.pathname, '/', 4)}
+                  timeout={{ enter: 500, exit: 500 }}
                   classNames={'content--pop-up-transition'}
+                  unmountOnExit={false}
+                  mountOnEnter={false}
                 >
                   <div>
                     <Route
                       location={location}
                       path="/workout/edit/add"
-                      component={() => <AddWorkout />}
+                      render={() => <AddWorkout />}
                     />
                   </div>
                 </CSSTransition>

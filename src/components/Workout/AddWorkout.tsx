@@ -3,11 +3,18 @@ import BackButton from '../Buttons/BackButton';
 import Firebase, { FirebaseContext } from '../Firebase';
 import { COLOR_BACKGROUND } from '../../colors';
 import { useGlobalState } from '../../stores';
-import { Link, Route } from 'react-router-dom';
-import { useAsyncEffect, unique } from '../../utils';
+import { Link, Route, RouteComponentProps, withRouter } from 'react-router-dom';
+import { useAsyncEffect, unique, untilNthIndex } from '../../utils';
+import { History, Location } from 'history';
+import { ButtonBase } from '@material-ui/core';
+import { setNameToImagePath, setNameToImage } from '../../stores/static';
+import Dialog from '../Dialog';
+import DialogTextButton from '../Dialog/DialogTextButton';
 
 interface Props {
   firebase: Firebase;
+  location: Location;
+  history: History;
 }
 
 interface WorkoutImageName {
@@ -16,13 +23,31 @@ interface WorkoutImageName {
 }
 interface AlbumProps {
   workouts: WorkoutImageName[];
+  setDialog: any;
 }
 
-const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts }) => {
+interface DialogProps {
+  show: boolean;
+  title: string;
+  children: React.ReactNode;
+}
+const AddWorkoutDialog: FunctionComponent<DialogProps> = (dialog) => {
+  return (
+    <Dialog show={dialog.show} title={dialog.title}>
+      {dialog.children}
+    </Dialog>
+  );
+};
+const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog }) => {
   return (
     <div>
       {workouts.map((x, i) => (
-        <Link to={`/workout/edit/add/detail?name=${x.name}`} key={i}>
+        <ButtonBase
+          onClick={() => {
+            setDialog({ show: true });
+          }}
+          key={i}
+        >
           <div
             style={{
               width: '156px',
@@ -44,24 +69,72 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts }) => {
               }}
             />
           </div>
-        </Link>
+        </ButtonBase>
       ))}
     </div>
   );
 };
 
-const AddWorkoutConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
-  const [workoutList, setWorkoutList] = useState([] as { image: string; name: string }[]);
+const AddWorkoutConsumingFirebase: FunctionComponent<Props> = ({ firebase, location, history }) => {
+  const [staticInfo] = useGlobalState('static');
+
+  const [dialog, s] = useState<DialogProps>({
+    show: false,
+    title: 'Discard changes?',
+    children: (
+      <>
+        <p>There are unsaved changes. Do you want to save them?</p>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: 'calc(100% + 1.6rem)',
+            marginLeft: '-0.8rem',
+            marginBottom: '-0.7rem',
+          }}
+        >
+          <div>
+            <DialogTextButton
+              text="discard"
+              onClick={() => {
+                console.log('button1');
+              }}
+            />
+          </div>
+          <div>
+            <DialogTextButton
+              text="cancel"
+              onClick={() => {
+                console.log('button2');
+              }}
+            />
+            <DialogTextButton
+              text="save"
+              bold
+              onClick={() => {
+                console.log('button3');
+              }}
+            />
+          </div>
+        </div>
+      </>
+    ) as React.ReactNode,
+  });
+  const setDialog = (newDialog: Partial<DialogProps>) => {
+    if (newDialog.show && !dialog.show) history.push('/workout/edit/add/c');
+    s({
+      ...dialog,
+      ...newDialog,
+    });
+  };
 
   useAsyncEffect(async () => {
     let isSubscribed = true;
 
-    if (location.pathname !== '/workout/edit/add') return;
-
     const databaseResponse = await firebase.database.ref('staticInfo/workouts').once('value');
     const workoutData = databaseResponse.val() as { imagePath: string; name: string }[];
 
-    const a = Promise.all(
+    Promise.all(
       workoutData
         .map(({ imagePath, name }) => async () => {
           {
@@ -89,37 +162,53 @@ const AddWorkoutConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => 
     )
       .then((list) => unique(list, (x, y) => x.name === y.name))
       .then((list) => {
-        if (isSubscribed) setWorkoutList(list);
+        if (isSubscribed) {
+          setNameToImage(list);
+        }
       });
     return () => {
       isSubscribed = false;
     };
   }, []);
 
-  return (
-    <div className="pop-content">
-      <div className="content" style={{ backgroundColor: COLOR_BACKGROUND }}>
-        <h1 className="heading">
-          <BackButton to={'/workout/edit'} />
-          <span>Add Workout</span>
-        </h1>
-        <WorkoutAlbum workouts={workoutList} />
-      </div>
-    </div>
-  );
-};
+  useEffect(() => {
+    if (location.pathname === '/workout/edit/add') setDialog({ show: false });
+    else setDialog({ show: true });
+    const origOnPopState = window.onpopstate;
 
-const AddWorkout: FunctionComponent = () => {
+    window.onpopstate = null;
+
+    return () => {
+      window.onpopstate = origOnPopState;
+    };
+  }, [location.pathname]);
+
   return (
     <Route
+      location={{
+        ...location,
+        pathname: untilNthIndex(location.pathname, '/', 4),
+      }}
       render={() => (
         <div>
           <Route
             path="/workout/edit/add"
             component={() => (
-              <FirebaseContext.Consumer>
-                {(firebase) => <AddWorkoutConsumingFirebase firebase={firebase} />}
-              </FirebaseContext.Consumer>
+              <div className="pop-content">
+                <div className="content" style={{ backgroundColor: COLOR_BACKGROUND }}>
+                  <h1 className="heading">
+                    <BackButton to={'/workout/edit'} />
+                    <span>Add Workout</span>
+                  </h1>
+                  <WorkoutAlbum
+                    workouts={staticInfo.workoutInfo.nameToImage}
+                    setDialog={setDialog}
+                  />
+                  <AddWorkoutDialog show={dialog.show} title={dialog.title}>
+                    {dialog.children}
+                  </AddWorkoutDialog>
+                </div>
+              </div>
             )}
           />
         </div>
@@ -128,7 +217,18 @@ const AddWorkout: FunctionComponent = () => {
   );
 };
 
-export default AddWorkout;
+interface P extends RouteComponentProps {}
+const AddWorkout: FunctionComponent<P> = ({ history, location }) => {
+  return (
+    <FirebaseContext.Consumer>
+      {(firebase) => (
+        <AddWorkoutConsumingFirebase location={location} history={history} firebase={firebase} />
+      )}
+    </FirebaseContext.Consumer>
+  );
+};
+
+export default withRouter(AddWorkout);
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
   const bytes = [].slice.call(new Uint8Array(buffer)) as number[];

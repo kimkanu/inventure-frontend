@@ -5,13 +5,9 @@ import { dispatch } from '.';
 export type Tab = 'workout' | 'profile' | 'friends' | 'settings' | ''; // '' for initial state
 export const TABS = ['workout', 'profile', 'friends', 'settings'];
 
-export interface TabState {
-  tab: Tab;
-}
+export type TabState = Tab;
 
-export const initialTabState: TabState = {
-  tab: '',
-};
+export const initialTabState: TabState = '';
 
 export interface NavigateTabAction {
   type: 'NAVIGATE_TAB';
@@ -24,10 +20,7 @@ export const TAB_ACTION_TYPES = ['NAVIGATE_TAB'];
 export const tabReducer: Reducer<TabState, TabAction> = (state, action) => {
   switch (action.type) {
     case 'NAVIGATE_TAB':
-      if (state.tab === action.payload) {
-        return state;
-      }
-      return { ...state, tab: action.payload };
+      return action.payload;
     default:
       return state;
   }

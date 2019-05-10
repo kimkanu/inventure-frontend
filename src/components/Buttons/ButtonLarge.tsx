@@ -15,6 +15,7 @@ interface Props {
   margin?: number | string;
   depth?: number;
   opacity?: number;
+  hidden?: boolean;
 }
 
 const ButtonLarge: FunctionComponent<Props> = ({
@@ -29,6 +30,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
   margin = '1rem',
   depth = 8,
   opacity = 1.6,
+  hidden = false,
 }) => {
   const content = (
     <div
@@ -75,13 +77,19 @@ const ButtonLarge: FunctionComponent<Props> = ({
         alignItems: 'center',
         flexDirection: 'column',
         margin: `.4rem ${typeof margin === 'number' ? `${margin}px` : margin}`,
+        opacity: hidden ? 0 : 1,
       }}
+      hidden={hidden}
+      aria-hidden={hidden}
     >
       <div onClick={onClick}>
         <ButtonBase
           style={{
             borderRadius: '24px',
+            cursor: hidden ? 'default' : 'pointer',
           }}
+          hidden={hidden}
+          aria-hidden={hidden}
         >
           {link ? <Link to={link}>{content}</Link> : content}
         </ButtonBase>
@@ -92,7 +100,10 @@ const ButtonLarge: FunctionComponent<Props> = ({
             fontSize: '0.9rem',
             width: 'fit-content',
             marginTop: '.4em',
+            cursor: hidden ? 'default' : 'pointer',
           })}
+          hidden={hidden}
+          aria-hidden={hidden}
         >
           {label.toLocaleUpperCase()}
         </div>

@@ -38,7 +38,7 @@ const App: FunctionComponent<Props> = ({ location }) => {
       <TransitionGroup>
         <CSSTransition
           key={untilNthIndex(location.pathname, '/', 2)}
-          timeout={{ enter: 150, exit: 150 }}
+          timeout={{ enter: 1000, exit: 1000 }}
           classNames={'content--top-level-transition'}
         >
           <div style={useStyles(sansSerifFont)}>

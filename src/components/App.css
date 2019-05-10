@@ -70,22 +70,25 @@
 
 .pop-content {
   position: absolute;
-  z-index: 9999;
+  z-index: 999;
   height: 100%;
 }
 
 .content--pop-up-transition-enter .pop-content {
-  position: absolute;
+  top: 0;
   transform: translateY(100vh);
 }
 .content--pop-up-transition-enter-active .pop-content {
+  top: 0;
   transform: translateY(0vh);
-  transition: transform 0.34s cubic-bezier(0, 0, 0.24, 1);
+  transition: transform 0.4s cubic-bezier(0, 0, 0.2, 1);
 }
 .content--pop-up-transition-exit .pop-content {
+  top: 0;
   transform: translateY(0vh);
 }
 .content--pop-up-transition-exit-active .pop-content {
+  top: 0;
   transform: translateY(100vh);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0, 1);
 }

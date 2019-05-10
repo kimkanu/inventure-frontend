@@ -16,7 +16,6 @@ export interface Workout {
   plan: WorkoutPlan[];
   tempPlan: WorkoutPlan[];
   actionRecords: ActionRecord[];
-  nameToImagePathMap: Map<string, string>;
 }
 export interface CreateRecord {
   type: 'create';
@@ -26,11 +25,9 @@ export interface DeleteRecord {
   payload: number;
 }
 
+export type WorkoutState = Workout;
 export type ActionRecord = CreateRecord | DeleteRecord;
 
-export interface WorkoutState {
-  workout: Workout;
-}
 const initialPlan = [
   // FIXME: temporary value
   {
@@ -57,13 +54,10 @@ const initialPlan = [
 ];
 
 export const initialWorkoutState: WorkoutState = {
-  workout: {
-    type: '' as string,
-    plan: initialPlan,
-    tempPlan: initialPlan,
-    actionRecords: [],
-    nameToImagePathMap: new Map(),
-  },
+  type: '' as string,
+  plan: initialPlan,
+  tempPlan: initialPlan,
+  actionRecords: [],
 };
 
 export interface DeleteWorkoutAction {
@@ -79,23 +73,17 @@ export interface SaveEditWorkoutPlanAction {
 export interface DiscardEditWorkoutPlanAction {
   type: 'DISCARD_EDIT_WORKOUT_PLAN';
 }
-export interface StoreWorkoutNameToImagePathAction {
-  type: 'STORE_WORKOUT_NAME_TO_IMAGE_PATH';
-  payload: Map<string, string>;
-}
 
 export type WorkoutAction =
   | DeleteWorkoutAction
   | UndoEditWorkoutPlanAction
   | SaveEditWorkoutPlanAction
-  | DiscardEditWorkoutPlanAction
-  | StoreWorkoutNameToImagePathAction;
+  | DiscardEditWorkoutPlanAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
   'UNDO_EDIT_WORKOUT_PLAN',
   'SAVE_EDIT_WORKOUT_PLAN',
   'DISCARD_EDIT_WORKOUT_PLAN',
-  'STORE_WORKOUT_NAME_TO_IMAGE_PATH',
 ];
 
 const toggledPlan = (plan: WorkoutPlan[], i: number) => {
@@ -112,39 +100,29 @@ const toggledPlan = (plan: WorkoutPlan[], i: number) => {
 export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, action) => {
   switch (action.type) {
     case 'DELETE_WORKOUT':
-      const c = {
+      return {
         ...state,
-        workout: {
-          ...state.workout,
-          tempPlan: toggledPlan(state.workout.tempPlan, action.payload),
-          actionRecords: [
-            ...state.workout.actionRecords,
-            { type: 'delete', payload: action.payload } as DeleteRecord,
-          ],
-        },
+        tempPlan: toggledPlan(state.tempPlan, action.payload),
+        actionRecords: [
+          ...state.actionRecords,
+          { type: 'delete', payload: action.payload } as DeleteRecord,
+        ],
       };
-      return c;
     case 'UNDO_EDIT_WORKOUT_PLAN':
-      if (state.workout.actionRecords.length === 0) return state;
-      const lastAction = state.workout.actionRecords[state.workout.actionRecords.length - 1];
+      if (state.actionRecords.length === 0) return state;
+      const lastAction = state.actionRecords[state.actionRecords.length - 1];
       switch (lastAction.type) {
         case 'create':
           return {
             ...state,
-            workout: {
-              ...state.workout,
-              tempPlan: state.workout.tempPlan.slice(0, -1),
-              actionRecords: state.workout.actionRecords.slice(0, -1),
-            },
+            tempPlan: state.tempPlan.slice(0, -1),
+            actionRecords: state.actionRecords.slice(0, -1),
           };
         case 'delete':
           return {
             ...state,
-            workout: {
-              ...state.workout,
-              tempPlan: toggledPlan(state.workout.tempPlan, lastAction.payload),
-              actionRecords: state.workout.actionRecords.slice(0, -1),
-            },
+            tempPlan: toggledPlan(state.tempPlan, lastAction.payload),
+            actionRecords: state.actionRecords.slice(0, -1),
           };
         default:
           return state;
@@ -152,28 +130,14 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
     case 'SAVE_EDIT_WORKOUT_PLAN':
       return {
         ...state,
-        workout: {
-          ...state.workout,
-          plan: state.workout.tempPlan,
-          actionRecords: [],
-        },
+        plan: state.tempPlan,
+        actionRecords: [],
       };
     case 'DISCARD_EDIT_WORKOUT_PLAN':
       return {
         ...state,
-        workout: {
-          ...state.workout,
-          tempPlan: state.workout.plan,
-          actionRecords: [],
-        },
-      };
-    case 'STORE_WORKOUT_NAME_TO_IMAGE_PATH':
-      return {
-        ...state,
-        workout: {
-          ...state.workout,
-          nameToImagePathMap: action.payload,
-        },
+        tempPlan: state.plan,
+        actionRecords: [],
       };
     default:
       return state;
