@@ -238,7 +238,7 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
               <TransitionGroup>
                 <CSSTransition
                   key={untilNthIndex(location.pathname, '/', 4)}
-                  timeout={{ enter: 500, exit: 500 }}
+                  timeout={{ enter: 300, exit: 500 }}
                   classNames={'content--pop-up-transition'}
                   unmountOnExit={false}
                   mountOnEnter={false}

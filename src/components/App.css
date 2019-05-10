@@ -75,22 +75,22 @@
 }
 
 .content--pop-up-transition-enter .pop-content {
-  top: 0;
-  transform: translateY(100vh);
+  top: 0 !important;
+  transform: translateY(calc(100 * var(--vh))) !important;
 }
 .content--pop-up-transition-enter-active .pop-content {
-  top: 0;
-  transform: translateY(0vh);
-  transition: transform 0.4s cubic-bezier(0, 0, 0.2, 1);
+  top: 0 !important;
+  transform: translateY(0vh) !important;
+  transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1) !important;
 }
 .content--pop-up-transition-exit .pop-content {
-  top: 0;
-  transform: translateY(0vh);
+  top: 0 !important;
+  transform: translateY(0vh) !important;
 }
 .content--pop-up-transition-exit-active .pop-content {
-  top: 0;
-  transform: translateY(100vh);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0, 1);
+  top: 0 !important;
+  transform: translateY(calc(100 * var(--vh))) !important;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0, 1) !important;
 }
 
 h1.heading {
