@@ -7,18 +7,8 @@
     <link rel="prefetch" href="%PUBLIC_URL%/fonts/notokr-light.woff" as="font" />
     <link rel="prefetch" href="%PUBLIC_URL%/fonts/notokr-bold.woff" as="font" />
     <link rel="prefetch" href="%PUBLIC_URL%/fonts/edge-icons-Regular.ttf" as="font" />
-    <link
-      rel="preload"
-      href="%PUBLIC_URL%/static/media/CircularStd-Book.ed76eb21.woff"
-      as="font"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="%PUBLIC_URL%/static/media/CircularStd-Black.59880bb7.woff"
-      as="font"
-      crossorigin
-    />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/CircularStd-Book.woff" as="font" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/CircularStd-Black.woff" as="font" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="theme-color" content="#000000" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
@@ -50,13 +40,15 @@
       @font-face {
         font-family: CircularStd;
         font-display: fallback;
-        src: url(/static/media/CircularStd-Book.ed76eb21.woff);
+        src: url(/fonts/CircularStd-Book.woff2) format('woff2'),
+          url(/fonts/CircularStd-Book.woff) format('woff');
         font-weight: normal;
       }
       @font-face {
         font-family: CircularStd;
         font-display: fallback;
-        src: url(/static/media/CircularStd-Black.59880bb7.woff);
+        src: url(/fonts/CircularStd-Black.woff2) format('woff2'),
+          url(/fonts/CircularStd-Black.woff) format('woff');
         font-weight: bold;
       }
       html,
