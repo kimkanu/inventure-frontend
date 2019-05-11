@@ -38,10 +38,10 @@ const App: FunctionComponent<Props> = ({ location }) => {
     const timeout = setTimeout(() => {
       toggleLoading(LoadingData.App);
       document.getElementById('loader')!.className = 'hidden';
-    }, 500);
+    }, 10);
     const timeout2 = setTimeout(() => {
       document.getElementById('loader')!.style.display = 'none';
-    }, 800);
+    }, 200);
     return () => {
       clearTimeout(timeout);
       clearTimeout(timeout2);
