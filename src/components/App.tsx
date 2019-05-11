@@ -35,16 +35,13 @@ const App: FunctionComponent<Props> = ({ location }) => {
   }
 
   useEffect(() => {
+    toggleLoading(LoadingData.App);
+    document.getElementById('loader')!.className = 'hidden';
     const timeout = setTimeout(() => {
-      toggleLoading(LoadingData.App);
-      document.getElementById('loader')!.className = 'hidden';
-    }, 10);
-    const timeout2 = setTimeout(() => {
       document.getElementById('loader')!.style.display = 'none';
-    }, 200);
+    }, 300);
     return () => {
       clearTimeout(timeout);
-      clearTimeout(timeout2);
     };
   }, []);
 
