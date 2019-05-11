@@ -99,10 +99,6 @@ const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog }) => 
             value={s}
             type="text"
             id={`search-${id}`}
-            onChange={(e) => {
-              setS(e.target.value);
-            }}
-            autoFocus
             style={useStyles(sansSerifFont, {
               border: 'none',
               padding: '1rem .5rem .2rem .5rem',
@@ -112,12 +108,6 @@ const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog }) => 
               maxWidth: 'calc(100vw - 3rem)',
               marginBottom: '.4rem',
             })}
-            onFocus={() => {
-              setActive(true);
-            }}
-            onBlur={(e) => {
-              if (!e.target.value) setActive(false);
-            }}
           />
         </div>
       </div>
@@ -194,7 +184,7 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
         <div>
           <Route
             path="/workout/edit/add"
-            render={() => (
+            component={() => (
               <div className="pop-content">
                 <Prompt
                   when={dialog.show}
