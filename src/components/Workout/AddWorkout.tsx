@@ -9,29 +9,23 @@ import React, {
 import BackButton from '../Buttons/BackButton';
 import { COLOR_BACKGROUND } from '../../colors';
 import { useGlobalState } from '../../stores';
-import { Link, Route, RouteComponentProps, withRouter, Prompt } from 'react-router-dom';
+import { Route, RouteComponentProps, withRouter, Prompt } from 'react-router-dom';
 import { untilNthIndex, randomString } from '../../utils';
 import { ButtonBase } from '@material-ui/core';
 import Dialog from '../Dialog';
 import DialogTextButton from '../Dialog/DialogTextButton';
-import { useStyles, shadow, sansSerifFont } from '../../styles';
+import { useStyles, sansSerifFont } from '../../styles';
 import { WorkoutInfo } from '../../stores/static';
-import { updateSearchInput } from '../../stores/workout';
 import Fuse from 'fuse.js';
 
 const id = randomString(8);
 
-interface WorkoutImageName {
-  name: string;
-  image: string;
-}
 interface AlbumProps {
   workouts: ({ name: string } & WorkoutInfo)[];
   setDialog: any;
 }
 
 const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog }) => {
-  const setWorkout = (x: WorkoutImageName) => {};
   return (
     <div>
       {workouts.map((x, i) => (
@@ -74,8 +68,8 @@ interface SearchProps {
 }
 
 const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog }) => {
-  const [active, setActive] = useState(!!useGlobalState('workout')[0].searchInput);
-  const [s, setS] = useState(useGlobalState('workout')[0].searchInput);
+  const [active, setActive] = useState(false);
+  const [s, setS] = useState('');
   const [staticInfo] = useGlobalState('static');
   const workouts = Object.keys(staticInfo.workoutInfo).map((name) => ({
     name,
