@@ -85,7 +85,7 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
       <table
         className="workout-table"
         style={useStyles(
-          shadow({ depth: 8, color: new Color(143, 146, 169), opacity: 1.8 }),
+          shadow({ depth: 4, color: new Color(143, 146, 169), opacity: 1.8 }),
           fullWidth,
           sansSerifFont,
           {
@@ -178,6 +178,7 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
                   <ButtonLarge
                     backgroundColor={COLORS.gray!.normal}
                     shadowColor={COLORS.gray!.darker}
+                    depth={6}
                     link="/workout/edit"
                     labelInside="EDIT"
                   >

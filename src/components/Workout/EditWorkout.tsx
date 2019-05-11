@@ -57,7 +57,7 @@ const saveButtonClickHandler = (history: History<any>, setDialog: any) => {
   history.goBack();
 };
 // click handler for cancel button
-const cancelButtonClickHandler = (history: History<any>, setDialog: any) => {
+const cancelButtonClickHandler = (setDialog: any) => {
   setDialog({
     show: false,
   });
@@ -78,17 +78,9 @@ interface DialogProps {
   show: boolean;
   title: string;
   children: React.ReactNode;
-  onClose: (event: React.SyntheticEvent<{}, Event>) => void;
 }
-const EditWorkoutDialog: FunctionComponent<DialogProps> = (dialog) => {
-  return (
-    <Dialog show={dialog.show} title={dialog.title} onClose={dialog.onClose}>
-      {dialog.children}
-    </Dialog>
-  );
-};
-
 interface Props extends RouteComponentProps {}
+
 const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
   const [position, setPosition] = useState(true); // true for relative, false for absolute
   const workout = useGlobalState('workout')[0];
@@ -97,7 +89,6 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
   const [dialog, s] = useState<DialogProps>({
     show: false,
     title: 'Discard changes?',
-    onClose: () => cancelButtonClickHandler(history, setDialog),
     children: (
       <>
         <p>There are unsaved changes. Do you want to save them?</p>
@@ -117,10 +108,7 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
             />
           </div>
           <div>
-            <DialogTextButton
-              text="cancel"
-              onClick={() => cancelButtonClickHandler(history, setDialog)}
-            />
+            <DialogTextButton text="cancel" onClick={() => cancelButtonClickHandler(setDialog)} />
             <DialogTextButton
               text="save"
               bold
@@ -266,9 +254,13 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
               </TransitionGroup>
             )}
           />
-          <EditWorkoutDialog show={dialog.show} title={dialog.title} onClose={dialog.onClose}>
+          <Dialog
+            show={dialog.show}
+            title={dialog.title}
+            onClose={() => cancelButtonClickHandler(setDialog)}
+          >
             {dialog.children}
-          </EditWorkoutDialog>
+          </Dialog>
         </div>
       )}
     />

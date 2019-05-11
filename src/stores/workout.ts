@@ -16,6 +16,7 @@ export interface Workout {
   plan: WorkoutPlan[];
   tempPlan: WorkoutPlan[];
   actionRecords: ActionRecord[];
+  searchInput: string;
 }
 export interface CreateRecord {
   type: 'create';
@@ -58,6 +59,7 @@ export const initialWorkoutState: WorkoutState = {
   plan: initialPlan,
   tempPlan: initialPlan,
   actionRecords: [],
+  searchInput: '',
 };
 
 export interface DeleteWorkoutAction {
@@ -73,17 +75,23 @@ export interface SaveEditWorkoutPlanAction {
 export interface DiscardEditWorkoutPlanAction {
   type: 'DISCARD_EDIT_WORKOUT_PLAN';
 }
+export interface UpdateSearchInputAction {
+  type: 'UPDATE_SEARCH_INPUT';
+  payload: string;
+}
 
 export type WorkoutAction =
   | DeleteWorkoutAction
   | UndoEditWorkoutPlanAction
   | SaveEditWorkoutPlanAction
-  | DiscardEditWorkoutPlanAction;
+  | DiscardEditWorkoutPlanAction
+  | UpdateSearchInputAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
   'UNDO_EDIT_WORKOUT_PLAN',
   'SAVE_EDIT_WORKOUT_PLAN',
   'DISCARD_EDIT_WORKOUT_PLAN',
+  'UPDATE_SEARCH_INPUT',
 ];
 
 const toggledPlan = (plan: WorkoutPlan[], i: number) => {
@@ -139,13 +147,19 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         tempPlan: state.plan,
         actionRecords: [],
       };
+    case 'UPDATE_SEARCH_INPUT':
+      return {
+        ...state,
+        searchInput: action.payload,
+      };
+
     default:
       return state;
   }
 };
 
-export const deleteWorkout = (i: number) => {
-  dispatch({ type: 'DELETE_WORKOUT', payload: i });
+export const deleteWorkout = (payload: number) => {
+  dispatch({ payload, type: 'DELETE_WORKOUT' });
 };
 export const undoEditWorkoutPlan = () => {
   dispatch({ type: 'UNDO_EDIT_WORKOUT_PLAN' });
@@ -155,6 +169,9 @@ export const saveEditWorkoutPlan = () => {
 };
 export const discardEditWorkoutPlan = () => {
   dispatch({ type: 'DISCARD_EDIT_WORKOUT_PLAN' });
+};
+export const updateSearchInput = (payload: string) => {
+  dispatch({ payload, type: 'UPDATE_SEARCH_INPUT' });
 };
 /*
 export const addWorkout = (i: number) => {

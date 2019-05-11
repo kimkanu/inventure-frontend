@@ -1,9 +1,7 @@
-import React, { Component, FunctionComponent, useEffect, useState } from 'react';
-import BackButton from './Buttons/BackButton';
+import React, { FunctionComponent } from 'react';
 import Firebase, { FirebaseContext } from './Firebase';
-import { withRouter } from 'react-router-dom';
 import { useAsyncEffect, unique } from '../utils';
-import { setNameToImage, setNameToImagePath } from '../stores/static';
+import { setWorkoutInfo, setWorkoutImage } from '../stores/static';
 
 interface Props {
   firebase: Firebase;
@@ -15,7 +13,7 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
 
     const databaseResponse = await firebase.database.ref('staticInfo/workouts').once('value');
     const workoutData = databaseResponse.val() as { imagePath: string; name: string }[];
-    setNameToImagePath(workoutData);
+    setWorkoutInfo(workoutData);
 
     Promise.all(
       workoutData
@@ -46,7 +44,7 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
       .then((list) => unique(list, (x, y) => x.name === y.name))
       .then((list) => {
         if (isSubscribed) {
-          setNameToImage(list);
+          setWorkoutImage(list);
           console.log('data loaded!');
         }
       });

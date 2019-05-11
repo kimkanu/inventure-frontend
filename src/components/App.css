@@ -101,3 +101,34 @@ h1.heading {
   font-size: 2em;
   color: #3b3e43;
 }
+
+.search-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+.search-container label {
+  position: absolute;
+  font-size: 1.1rem;
+  bottom: 0.6rem;
+  margin-left: 0.5rem;
+  cursor: text;
+  opacity: 0.78;
+  transition: font-size 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.15s cubic-bezier(0.2, 0, 0.2, 1);
+}
+.search-container input {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 5px 0px, rgba(0, 0, 0, 0.08) 0px 1px 10px 0px,
+    rgba(0, 0, 0, 0.03) 0px 2px 4px -1px;
+  transition: box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.search-container.active label {
+  font-size: 0.8rem;
+  transform: translateY(-1.4rem);
+  margin-left: 0.5rem;
+}
+.search-container.active input {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 10px 1px, rgba(0, 0, 0, 0.08) 0px 6px 10px 1px,
+    rgba(0, 0, 0, 0.03) 0px 5px 5px -3px;
+}

@@ -21,6 +21,7 @@
     "detect-browser-language": "^0.0.2",
     "env-cmd": "^9.0.0",
     "firebase": "^5.11.1",
+    "fuse.js": "^3.4.4",
     "i18next": "^15.0.9",
     "lorem-ipsum": "^2.0.1",
     "query-string": "^6.4.2",

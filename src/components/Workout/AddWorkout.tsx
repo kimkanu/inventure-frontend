@@ -1,43 +1,44 @@
-import React, { Component, FunctionComponent, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useState,
+  Component,
+  PureComponent,
+  useEffect,
+  useMemo,
+} from 'react';
 import BackButton from '../Buttons/BackButton';
-import Firebase, { FirebaseContext } from '../Firebase';
 import { COLOR_BACKGROUND } from '../../colors';
 import { useGlobalState } from '../../stores';
-import { Link, Route, RouteComponentProps, withRouter } from 'react-router-dom';
-import { useAsyncEffect, unique, untilNthIndex } from '../../utils';
+import { Link, Route, RouteComponentProps, withRouter, Prompt } from 'react-router-dom';
+import { untilNthIndex, randomString } from '../../utils';
 import { ButtonBase } from '@material-ui/core';
-import { setNameToImagePath, setNameToImage } from '../../stores/static';
 import Dialog from '../Dialog';
 import DialogTextButton from '../Dialog/DialogTextButton';
+import { useStyles, shadow, sansSerifFont } from '../../styles';
+import { WorkoutInfo } from '../../stores/static';
+import { updateSearchInput } from '../../stores/workout';
+import Fuse from 'fuse.js';
 
-interface DialogProps {
-  show: boolean;
-  title: string;
-  children: React.ReactNode;
-}
-const AddWorkoutDialog: FunctionComponent<DialogProps> = (dialog) => {
-  return (
-    <Dialog show={dialog.show} title={dialog.title}>
-      {dialog.children}
-    </Dialog>
-  );
-};
+const id = randomString(8);
 
 interface WorkoutImageName {
   name: string;
   image: string;
 }
 interface AlbumProps {
-  workouts: WorkoutImageName[];
+  workouts: ({ name: string } & WorkoutInfo)[];
   setDialog: any;
 }
+
 const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog }) => {
+  const setWorkout = (x: WorkoutImageName) => {};
   return (
     <div>
       {workouts.map((x, i) => (
         <ButtonBase
           onClick={() => {
-            setDialog({ show: true });
+            updateSearchInput((document.getElementById(`search-${id}`) as HTMLInputElement).value);
+            setDialog({ show: true, title: x.name });
           }}
           key={i}
         >
@@ -68,22 +69,75 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog }) =>
   );
 };
 
-const WorkoutSearch: FunctionComponent = () => {
+interface SearchProps {
+  label: string;
+  setDialog: any;
+}
+
+const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog }) => {
+  const [active, setActive] = useState(!!useGlobalState('workout')[0].searchInput);
+  const [s, setS] = useState(useGlobalState('workout')[0].searchInput);
+  const [staticInfo] = useGlobalState('static');
+  const workouts = Object.keys(staticInfo.workoutInfo).map((name) => ({
+    name,
+    ...staticInfo.workoutInfo[name],
+  }));
+  const fuse = new Fuse(workouts, { keys: ['name'] });
+  const filteredWorkouts = s ? fuse.search(s) : workouts;
+
   return (
-    <div>
-      <input type="text" onChange={(x) => console.log(x.target.value)} />
-    </div>
+    <>
+      <div className={`search-container${active ? ' active' : ''}`} id={`search-container-${id}`}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'left',
+            position: 'relative',
+          }}
+        >
+          <label htmlFor={`search-${id}`}>{label}</label>
+          <input
+            value={s}
+            type="text"
+            id={`search-${id}`}
+            onChange={(e) => {
+              setS(e.target.value);
+            }}
+            autoFocus
+            style={useStyles(sansSerifFont, {
+              border: 'none',
+              padding: '1rem .5rem .2rem .5rem',
+              fontSize: '1.1rem',
+              borderRadius: '4px',
+              width: '300px',
+              maxWidth: 'calc(100vw - 3rem)',
+              marginBottom: '.4rem',
+            })}
+            onFocus={() => {
+              setActive(true);
+            }}
+            onBlur={(e) => {
+              if (!e.target.value) setActive(false);
+            }}
+          />
+        </div>
+      </div>
+      <WorkoutAlbum workouts={filteredWorkouts} setDialog={setDialog} />
+    </>
   );
 };
-const workoutFilter = (x: any) => true;
 
+interface DialogProps {
+  show: boolean;
+  title: string;
+  children: React.ReactNode;
+}
 interface Props extends RouteComponentProps {}
-const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
-  const [staticInfo] = useGlobalState('static');
 
+const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
   const [dialog, s] = useState<DialogProps>({
     show: false,
-    title: 'Discard changes?',
+    title: '',
     children: (
       <>
         <p>There are unsaved changes. Do you want to save them?</p>
@@ -142,23 +196,39 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
             path="/workout/edit/add"
             component={() => (
               <div className="pop-content">
+                <Prompt
+                  when={dialog.show}
+                  message={(location) => {
+                    if (location.pathname === '/workout/edit') {
+                      setDialog({
+                        show: false,
+                      });
+                      return false;
+                    }
+                    return true;
+                  }}
+                />
                 <div className="content" style={{ backgroundColor: COLOR_BACKGROUND }}>
                   <h1 className="heading">
                     <BackButton onClick={history.goBack} />
                     <span>Add Workout</span>
                   </h1>
-                  <WorkoutSearch />
-                  <WorkoutAlbum
-                    workouts={staticInfo.workoutInfo.nameToImage.filter(workoutFilter)}
-                    setDialog={setDialog}
-                  />
-                  <AddWorkoutDialog show={dialog.show} title={dialog.title}>
-                    {dialog.children}
-                  </AddWorkoutDialog>
+                  <WorkoutSearch label="Search" setDialog={setDialog} />
                 </div>
               </div>
             )}
           />
+          <Dialog
+            show={dialog.show}
+            title={dialog.title}
+            onClose={() =>
+              setDialog({
+                show: false,
+              })
+            }
+          >
+            {dialog.children}
+          </Dialog>
         </div>
       )}
     />

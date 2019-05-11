@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Dialog: FunctionComponent<Props> = ({ show, title, children, onClose }) => (
-  <D open={show} onClose={onClose} closeAfterTransition transitionDuration={300}>
+  <D open={show} onClose={onClose} closeAfterTransition transitionDuration={200}>
     <div
       style={{
         padding: '1.3rem',

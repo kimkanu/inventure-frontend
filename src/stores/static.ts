@@ -1,46 +1,63 @@
 import { Reducer } from 'react-hooks-global-state';
 import { dispatch } from '.';
 
+export interface WorkoutInfo {
+  imagePath: string;
+  image?: string;
+}
+
 export interface StaticState {
-  workoutInfo: {
-    nameToImagePath: { name: string; imagePath: string }[];
-    nameToImage: { name: string; image: string }[];
-  };
+  workoutInfo: { [name: string]: WorkoutInfo };
 }
 
 export const initialStaticState: StaticState = {
-  workoutInfo: {
-    nameToImagePath: [],
-    nameToImage: [],
-  },
+  workoutInfo: {},
 };
 
-export interface SetNameToImagePathAction {
-  type: 'SET_NAME_TO_IMAGE_PATH_ACTION';
-  payload: { name: string; imagePath: string }[];
+export interface SetWorkoutInfoAction {
+  type: 'SET_WORKOUT_INFO_ACTION';
+  payload: { name: string; imagePath: string; image?: string }[];
 }
-export interface SetNameToImageAction {
-  type: 'SET_NAME_TO_IMAGE_ACTION';
+export interface SetWorkoutImageAction {
+  type: 'SET_WORKOUT_IMAGE_ACTION';
   payload: { name: string; image: string }[];
 }
 
-export type StaticAction = SetNameToImagePathAction | SetNameToImageAction;
-export const STATIC_ACTION_TYPES = ['SET_NAME_TO_IMAGE_PATH_ACTION', 'SET_NAME_TO_IMAGE_ACTION'];
+export type StaticAction = SetWorkoutInfoAction | SetWorkoutImageAction;
+export const STATIC_ACTION_TYPES = ['SET_WORKOUT_INFO_ACTION', 'SET_WORKOUT_IMAGE_ACTION'];
 
 export const staticReducer: Reducer<StaticState, StaticAction> = (state, action) => {
   switch (action.type) {
-    case 'SET_NAME_TO_IMAGE_PATH_ACTION':
-      return { ...state, workoutInfo: { ...state.workoutInfo, nameToImagePath: action.payload } };
-    case 'SET_NAME_TO_IMAGE_ACTION':
-      return { ...state, workoutInfo: { ...state.workoutInfo, nameToImage: action.payload } };
+    case 'SET_WORKOUT_INFO_ACTION':
+      return {
+        ...state,
+        workoutInfo: {
+          ...state.workoutInfo,
+          ...action.payload
+            .map(({ name, imagePath, image }) => ({ [name]: { imagePath, image } }))
+            .reduce((a, b) => ({ ...a, ...b })),
+        },
+      };
+    case 'SET_WORKOUT_IMAGE_ACTION':
+      return {
+        ...state,
+        workoutInfo: {
+          ...state.workoutInfo,
+          ...action.payload
+            .map(({ name, image }) => ({
+              [name]: { image, imagePath: state.workoutInfo[name].imagePath },
+            }))
+            .reduce((a, b) => ({ ...a, ...b })),
+        },
+      };
     default:
       return state;
   }
 };
 
-export const setNameToImagePath = (payload: { name: string; imagePath: string }[]) => {
-  dispatch({ payload, type: 'SET_NAME_TO_IMAGE_PATH_ACTION' });
+export const setWorkoutInfo = (payload: { name: string; imagePath: string; image?: string }[]) => {
+  dispatch({ payload, type: 'SET_WORKOUT_INFO_ACTION' });
 };
-export const setNameToImage = (payload: { name: string; image: string }[]) => {
-  dispatch({ payload, type: 'SET_NAME_TO_IMAGE_ACTION' });
+export const setWorkoutImage = (payload: { name: string; image: string }[]) => {
+  dispatch({ payload, type: 'SET_WORKOUT_IMAGE_ACTION' });
 };
