@@ -37,7 +37,6 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog }) =>
       {workouts.map((x, i) => (
         <ButtonBase
           onClick={() => {
-            updateSearchInput((document.getElementById(`search-${id}`) as HTMLInputElement).value);
             setDialog({ show: true, title: x.name });
           }}
           key={i}

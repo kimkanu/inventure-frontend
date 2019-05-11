@@ -184,7 +184,7 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
         <div>
           <Route
             path="/workout/edit/add"
-            component={() => (
+            render={() => (
               <div className="pop-content">
                 <Prompt
                   when={dialog.show}

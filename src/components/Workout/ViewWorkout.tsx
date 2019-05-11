@@ -40,7 +40,7 @@ const ViewWorkout: FunctionComponent<Props> = ({}) => {
         <div>
           <Route
             path="/workout/view"
-            component={() => (
+            render={() => (
               <div className="fade">
                 <div className="content">
                   <h1 className="heading">

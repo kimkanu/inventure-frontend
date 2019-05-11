@@ -155,7 +155,7 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
         <div>
           <Route
             path="/workout/edit"
-            component={() => (
+            render={() => (
               <div className="fade">
                 <Prompt
                   when={!!workout.actionRecords.length}
