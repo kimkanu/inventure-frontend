@@ -13,6 +13,8 @@ import { GlobalStateProvider, useGlobalState } from '../stores';
 import './App.css';
 import { untilNthIndex } from '../utils';
 import { sansSerifFont, useStyles } from '../styles';
+import FirebaseDataPreloader from './FirebaseDataPreloader';
+import { toggleLoading, LoadingData } from '../stores/loading';
 
 const NotFound: FunctionComponent = () => (
   <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
@@ -32,13 +34,27 @@ const App: FunctionComponent<Props> = ({ location }) => {
     i18n.changeLanguage(language);
   }
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      toggleLoading(LoadingData.App);
+      document.getElementById('loader')!.className = 'hidden';
+    }, 500);
+    const timeout2 = setTimeout(() => {
+      document.getElementById('loader')!.style.display = 'none';
+    }, 800);
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(timeout2);
+    };
+  }, []);
+
   return (
     <GlobalStateProvider>
       <Route exact path="/" render={() => <Redirect to={{ pathname: '/workout' }} />} />
       <TransitionGroup>
         <CSSTransition
           key={untilNthIndex(location.pathname, '/', 2)}
-          timeout={{ enter: 1000, exit: 1000 }}
+          timeout={{ enter: 300, exit: 300 }}
           classNames={'content--top-level-transition'}
         >
           <div style={useStyles(sansSerifFont)}>
@@ -50,6 +66,7 @@ const App: FunctionComponent<Props> = ({ location }) => {
         </CSSTransition>
       </TransitionGroup>
       <BottomNavigator />
+      <FirebaseDataPreloader />
     </GlobalStateProvider>
   );
 };

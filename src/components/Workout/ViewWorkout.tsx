@@ -1,15 +1,12 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
-import { COLORS } from '../../colors';
+import { withRouter, Route } from 'react-router-dom';
 import { useGlobalState } from '../../stores';
 import WorkoutTable from './WorkoutTable';
 import BackButton from '../Buttons/BackButton';
-import ButtonLarge from '../Buttons/ButtonLarge';
-import EdgeIcon from '../Icons/EdgeIcon';
 import BottomToolbar from '../BottomToolbar';
 import { convertRemToPixels, randomString } from '../../utils';
 
-interface Props extends RouteComponentProps {}
+interface Props {}
 
 const bottomToolbarId = `bottom-toolbar--${randomString(10)}`;
 
@@ -24,7 +21,7 @@ const adjustToolbarPosition = (
   setPosition(window.innerHeight <= threshold);
 };
 
-const ViewWorkout: FunctionComponent<Props> = () => {
+const ViewWorkout: FunctionComponent<Props> = ({}) => {
   const [position, setPosition] = useState(true); // true for relative, false for absolute
   const workout = useGlobalState('workout')[0];
 

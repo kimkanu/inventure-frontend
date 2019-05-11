@@ -6,18 +6,11 @@ import './index.css';
 interface Props {
   show: boolean;
   title?: string;
+  onClose?: (event: React.SyntheticEvent<{}, Event>) => void;
 }
 
-const Dialog: FunctionComponent<Props> = ({ show, title, children }) => (
-  <D
-    open={show}
-    closeAfterTransition
-    transitionDuration={300}
-    fullWidth={true}
-    classes={{
-      paperFullWidth: 'dialog--fullscreen',
-    }}
-  >
+const Dialog: FunctionComponent<Props> = ({ show, title, children, onClose }) => (
+  <D open={show} onClose={onClose} closeAfterTransition transitionDuration={300}>
     <div
       style={{
         padding: '1.3rem',

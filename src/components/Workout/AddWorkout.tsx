@@ -5,26 +5,10 @@ import { COLOR_BACKGROUND } from '../../colors';
 import { useGlobalState } from '../../stores';
 import { Link, Route, RouteComponentProps, withRouter } from 'react-router-dom';
 import { useAsyncEffect, unique, untilNthIndex } from '../../utils';
-import { History, Location } from 'history';
 import { ButtonBase } from '@material-ui/core';
 import { setNameToImagePath, setNameToImage } from '../../stores/static';
 import Dialog from '../Dialog';
 import DialogTextButton from '../Dialog/DialogTextButton';
-
-interface Props {
-  firebase: Firebase;
-  location: Location;
-  history: History;
-}
-
-interface WorkoutImageName {
-  name: string;
-  image: string;
-}
-interface AlbumProps {
-  workouts: WorkoutImageName[];
-  setDialog: any;
-}
 
 interface DialogProps {
   show: boolean;
@@ -38,6 +22,15 @@ const AddWorkoutDialog: FunctionComponent<DialogProps> = (dialog) => {
     </Dialog>
   );
 };
+
+interface WorkoutImageName {
+  name: string;
+  image: string;
+}
+interface AlbumProps {
+  workouts: WorkoutImageName[];
+  setDialog: any;
+}
 const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog }) => {
   return (
     <div>
@@ -75,7 +68,17 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog }) =>
   );
 };
 
-const AddWorkoutConsumingFirebase: FunctionComponent<Props> = ({ firebase, location, history }) => {
+const WorkoutSearch: FunctionComponent = () => {
+  return (
+    <div>
+      <input type="text" onChange={(x) => console.log(x.target.value)} />
+    </div>
+  );
+};
+const workoutFilter = (x: any) => true;
+
+interface Props extends RouteComponentProps {}
+const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
   const [staticInfo] = useGlobalState('static');
 
   const [dialog, s] = useState<DialogProps>({
@@ -121,67 +124,11 @@ const AddWorkoutConsumingFirebase: FunctionComponent<Props> = ({ firebase, locat
     ) as React.ReactNode,
   });
   const setDialog = (newDialog: Partial<DialogProps>) => {
-    if (newDialog.show && !dialog.show) history.push('/workout/edit/add/c');
     s({
       ...dialog,
       ...newDialog,
     });
   };
-
-  useAsyncEffect(async () => {
-    let isSubscribed = true;
-
-    const databaseResponse = await firebase.database.ref('staticInfo/workouts').once('value');
-    const workoutData = databaseResponse.val() as { imagePath: string; name: string }[];
-
-    Promise.all(
-      workoutData
-        .map(({ imagePath, name }) => async () => {
-          {
-            const local = localStorage.getItem(`workoutInfo/${imagePath}`);
-            if (local) {
-              return { name, image: local };
-            }
-            const url = await firebase.storage.ref(imagePath).getDownloadURL();
-            const response = await fetch(url, {
-              method: 'GET',
-              headers: {
-                origin: '*',
-              },
-            });
-
-            const buffer = await response.arrayBuffer();
-            const base64Flag = 'data:image/png;base64,';
-            const imageStr = arrayBufferToBase64(buffer);
-            const base64Image = base64Flag + imageStr;
-            localStorage.setItem(`workoutInfo/${imagePath}`, base64Image);
-            return { name, image: base64Image };
-          }
-        })
-        .map((x) => x()),
-    )
-      .then((list) => unique(list, (x, y) => x.name === y.name))
-      .then((list) => {
-        if (isSubscribed) {
-          setNameToImage(list);
-        }
-      });
-    return () => {
-      isSubscribed = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (location.pathname === '/workout/edit/add') setDialog({ show: false });
-    else setDialog({ show: true });
-    const origOnPopState = window.onpopstate;
-
-    window.onpopstate = null;
-
-    return () => {
-      window.onpopstate = origOnPopState;
-    };
-  }, [location.pathname]);
 
   return (
     <Route
@@ -197,11 +144,12 @@ const AddWorkoutConsumingFirebase: FunctionComponent<Props> = ({ firebase, locat
               <div className="pop-content">
                 <div className="content" style={{ backgroundColor: COLOR_BACKGROUND }}>
                   <h1 className="heading">
-                    <BackButton to={'/workout/edit'} />
+                    <BackButton onClick={history.goBack} />
                     <span>Add Workout</span>
                   </h1>
+                  <WorkoutSearch />
                   <WorkoutAlbum
-                    workouts={staticInfo.workoutInfo.nameToImage}
+                    workouts={staticInfo.workoutInfo.nameToImage.filter(workoutFilter)}
                     setDialog={setDialog}
                   />
                   <AddWorkoutDialog show={dialog.show} title={dialog.title}>
@@ -217,20 +165,4 @@ const AddWorkoutConsumingFirebase: FunctionComponent<Props> = ({ firebase, locat
   );
 };
 
-interface P extends RouteComponentProps {}
-const AddWorkout: FunctionComponent<P> = ({ history, location }) => {
-  return (
-    <FirebaseContext.Consumer>
-      {(firebase) => (
-        <AddWorkoutConsumingFirebase location={location} history={history} firebase={firebase} />
-      )}
-    </FirebaseContext.Consumer>
-  );
-};
-
 export default withRouter(AddWorkout);
-
-function arrayBufferToBase64(buffer: ArrayBuffer) {
-  const bytes = [].slice.call(new Uint8Array(buffer)) as number[];
-  return btoa(bytes.map((b) => String.fromCharCode(b)).reduce((a, b) => a + b));
-}

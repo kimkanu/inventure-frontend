@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
-import { withRouter, RouteComponentProps, Route } from 'react-router-dom';
+import React, { FunctionComponent, useState, useEffect, useMemo } from 'react';
+import { withRouter, RouteComponentProps, Route, Prompt } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { COLORS, primaryColor } from '../../colors';
 import { useGlobalState } from '../../stores';
@@ -39,14 +39,13 @@ const backButtonClickHandler = (
   setDialog: any,
   actionRecords: ActionRecord[],
 ) => {
-  if (actionRecords.length === 0) {
-    history.push('/workout/view');
-    return;
+  if (actionRecords.length !== 0) {
+    setDialog({
+      show: true,
+    });
+  } else {
+    history.goBack();
   }
-  history.push('/workout/edit/confirm');
-  setDialog({
-    show: true,
-  });
 };
 
 // click handler for save button
@@ -55,36 +54,35 @@ const saveButtonClickHandler = (history: History<any>, setDialog: any) => {
   setDialog({
     show: false,
   });
-  history.push('/workout/view');
+  history.goBack();
 };
 // click handler for cancel button
 const cancelButtonClickHandler = (history: History<any>, setDialog: any) => {
-  history.push('/workout/edit');
   setDialog({
     show: false,
   });
 };
 // click handler for discard button
-const discardButtonClickHandler = (history: History<any>, setDialog: any) => {
+const discardButtonClickHandler = (history: History<any>, setDialog: any, setSaved: any) => {
   setDialog({
     show: false,
   });
-  setTimeout(() => {
-    history.push('/workout/view');
-  }, 100);
+  setSaved(true);
   setTimeout(() => {
     discardEditWorkoutPlan();
   }, 500);
+  history.goBack();
 };
 
 interface DialogProps {
   show: boolean;
   title: string;
   children: React.ReactNode;
+  onClose: (event: React.SyntheticEvent<{}, Event>) => void;
 }
 const EditWorkoutDialog: FunctionComponent<DialogProps> = (dialog) => {
   return (
-    <Dialog show={dialog.show} title={dialog.title}>
+    <Dialog show={dialog.show} title={dialog.title} onClose={dialog.onClose}>
       {dialog.children}
     </Dialog>
   );
@@ -94,10 +92,12 @@ interface Props extends RouteComponentProps {}
 const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
   const [position, setPosition] = useState(true); // true for relative, false for absolute
   const workout = useGlobalState('workout')[0];
+  const [saved, setSaved] = useState(true);
 
   const [dialog, s] = useState<DialogProps>({
     show: false,
     title: 'Discard changes?',
+    onClose: () => cancelButtonClickHandler(history, setDialog),
     children: (
       <>
         <p>There are unsaved changes. Do you want to save them?</p>
@@ -113,7 +113,7 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
           <div>
             <DialogTextButton
               text="discard"
-              onClick={() => discardButtonClickHandler(history, setDialog)}
+              onClick={() => discardButtonClickHandler(history, setDialog, setSaved)}
             />
           </div>
           <div>
@@ -131,6 +131,11 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
       </>
     ) as React.ReactNode,
   });
+
+  useEffect(() => {
+    setSaved(!workout.actionRecords.length);
+  }, [workout.actionRecords.length]);
+
   const setDialog = (newDialog: Partial<DialogProps>) =>
     s({
       ...dialog,
@@ -155,15 +160,6 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
       window.removeEventListener('resize', handler);
     };
   }, []);
-  useEffect(() => {
-    window.onpopstate = () => {
-      history.push('/workout/edit/confirm');
-      backButtonClickHandler(history, setDialog, workout.actionRecords);
-    };
-    return () => {
-      window.onpopstate = null;
-    };
-  }, [workout.actionRecords.length]);
 
   return (
     <Route
@@ -173,6 +169,20 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
             path="/workout/edit"
             component={() => (
               <div className="fade">
+                <Prompt
+                  when={!!workout.actionRecords.length}
+                  message={(location) => {
+                    if (location.pathname === '/workout/view') {
+                      if (!saved) {
+                        setDialog({
+                          show: true,
+                        });
+                      }
+                      return saved;
+                    }
+                    return true;
+                  }}
+                />
                 <div className="content">
                   <h1 className="heading">
                     <BackButton
@@ -186,7 +196,9 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
                   <WorkoutTable
                     workout={workout}
                     editable={true}
-                    onChange={() => adjustToolbarPosition(setPosition)}
+                    onChange={() => {
+                      adjustToolbarPosition(setPosition);
+                    }}
                   />
 
                   <BottomToolbar
@@ -254,7 +266,7 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
               </TransitionGroup>
             )}
           />
-          <EditWorkoutDialog show={dialog.show} title={dialog.title}>
+          <EditWorkoutDialog show={dialog.show} title={dialog.title} onClose={dialog.onClose}>
             {dialog.children}
           </EditWorkoutDialog>
         </div>

@@ -14,21 +14,30 @@ import {
   STATIC_ACTION_TYPES,
   staticReducer,
 } from './static';
+import {
+  LoadingAction,
+  initialLoadingState,
+  LoadingState,
+  LOADING_ACTION_TYPES,
+  loadingReducer,
+} from './loading';
 
 // interface for entire data -- store
 interface StoreState {
   tab: TabState;
   workout: WorkoutState;
   static: StaticState;
+  loading: LoadingState;
 }
 
 const initialState: StoreState = {
   tab: initialTabState,
   workout: initialWorkoutState,
   static: initialStaticState,
+  loading: initialLoadingState,
 };
 
-type StoreAction = TabAction | WorkoutAction | StaticAction;
+type StoreAction = TabAction | WorkoutAction | StaticAction | LoadingAction;
 
 const reducer: Reducer<StoreState, StoreAction> = (state, action) => {
   switch (true) {
@@ -38,6 +47,8 @@ const reducer: Reducer<StoreState, StoreAction> = (state, action) => {
       return { ...state, workout: workoutReducer(state.workout, action as WorkoutAction) };
     case STATIC_ACTION_TYPES.includes(action.type):
       return { ...state, static: staticReducer(state.static, action as StaticAction) };
+    case LOADING_ACTION_TYPES.includes(action.type):
+      return { ...state, loading: loadingReducer(state.loading, action as LoadingAction) };
     default:
       return state;
   }

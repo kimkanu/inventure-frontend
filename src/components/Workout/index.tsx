@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from '../Link';
@@ -9,7 +9,7 @@ import Firebase, { FirebaseContext } from '../Firebase';
 
 interface Props extends RouteComponentProps {}
 
-const Workout: FunctionComponent<Props> = ({ location }) => {
+const Workout: FunctionComponent<Props> = ({ location, history }) => {
   return (
     <Route
       render={() => (
@@ -19,7 +19,7 @@ const Workout: FunctionComponent<Props> = ({ location }) => {
         >
           <CSSTransition
             key={untilNthIndex(location.pathname, '/', 3)}
-            timeout={{ enter: 1000, exit: 1000 }}
+            timeout={{ enter: 300, exit: 300 }}
             classNames={'content--fade-transition'}
           >
             <div>
@@ -40,8 +40,8 @@ const Workout: FunctionComponent<Props> = ({ location }) => {
                     </div>
                   )}
                 />
-                <Route path="/workout/view" component={ViewWorkout} />
-                <Route path="/workout/edit" component={EditWorkout} />
+                <Route path="/workout/view" render={() => <ViewWorkout />} />
+                <Route path="/workout/edit" render={() => <EditWorkout />} />
               </Switch>
             </div>
           </CSSTransition>
