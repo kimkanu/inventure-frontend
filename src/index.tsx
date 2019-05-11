@@ -5,7 +5,6 @@ import WebfontLoader, { WebFontConfig, WebFontStatus } from '@dr-kobros/react-we
 import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
-import 'circular-std';
 import './i18n';
 import { isMobile } from 'react-device-detect';
 import Firebase, { FirebaseContext } from './components/Firebase';
