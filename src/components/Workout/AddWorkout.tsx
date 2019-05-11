@@ -17,20 +17,27 @@ import DialogTextButton from '../Dialog/DialogTextButton';
 import { useStyles, sansSerifFont } from '../../styles';
 import { WorkoutInfo } from '../../stores/static';
 import Fuse from 'fuse.js';
+import Slider from '../Slider';
+import { addWorkout, WorkoutPlan } from '../../stores/workout';
 
-const id = randomString(8);
+const searchId = randomString(8);
 
 interface AlbumProps {
   workouts: ({ name: string } & WorkoutInfo)[];
   setDialog: any;
+  setSelected: any;
 }
 
-const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog }) => {
+const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setSelected }) => {
   return (
     <div>
       {workouts.map((x, i) => (
         <ButtonBase
           onClick={() => {
+            setSelected((ss: WorkoutPlan) => ({
+              ...ss,
+              name: x.name,
+            }));
             setDialog({ show: true, title: x.name });
           }}
           key={i}
@@ -65,9 +72,10 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog }) =>
 interface SearchProps {
   label: string;
   setDialog: any;
+  setSelected: any;
 }
 
-const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog }) => {
+const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog, setSelected }) => {
   const [active, setActive] = useState(false);
   const [s, setS] = useState('');
   const [staticInfo] = useGlobalState('static');
@@ -75,11 +83,14 @@ const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog }) => 
     name,
     ...staticInfo.workoutInfo[name],
   }));
-  const fuse = new Fuse(workouts, { keys: ['name'] });
+  const fuse = new Fuse(workouts, { keys: ['name'], threshold: 0.3 });
   const filteredWorkouts = s ? fuse.search(s) : workouts;
   return (
     <>
-      <div className={`search-container${active ? ' active' : ''}`} id={`search-container-${id}`}>
+      <div
+        className={`search-container${active ? ' active' : ''}`}
+        id={`search-container-${searchId}`}
+      >
         <div
           style={{
             display: 'flex',
@@ -87,11 +98,11 @@ const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog }) => 
             position: 'relative',
           }}
         >
-          <label htmlFor={`search-${id}`}>{label}</label>
+          <label htmlFor={`search-${searchId}`}>{label}</label>
           <input
             value={s}
             type="text"
-            id={`search-${id}`}
+            id={`search-${searchId}`}
             onChange={(e) => {
               setS(e.target.value);
             }}
@@ -114,7 +125,7 @@ const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog }) => 
           />
         </div>
       </div>
-      <WorkoutAlbum workouts={filteredWorkouts} setDialog={setDialog} />
+      <WorkoutAlbum workouts={filteredWorkouts} setDialog={setDialog} setSelected={setSelected} />
     </>
   );
 };
@@ -125,14 +136,23 @@ interface DialogProps {
   children: React.ReactNode;
 }
 interface Props extends RouteComponentProps {}
+const sliderId = randomString(8);
 
 const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
+  const [selected, setSelected] = useState<WorkoutPlan>({
+    name: '',
+    reps: 5,
+    sets: 1,
+    time: 10,
+    hidden: false,
+  });
   const [dialog, s] = useState<DialogProps>({
     show: false,
     title: '',
     children: (
       <>
-        <p>There are unsaved changes. Do you want to save them?</p>
+        <p>There are unsaved changes. Do you want to save ?</p>
+        <Slider id={sliderId} />
         <div
           style={{
             display: 'flex',
@@ -161,6 +181,10 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
               text="save"
               bold
               onClick={() => {
+                setSelected((ss: WorkoutPlan) => {
+                  addWorkout(ss);
+                  return ss;
+                });
                 setDialog({ show: false });
                 history.goBack();
               }}
@@ -171,10 +195,10 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
     ) as React.ReactNode,
   });
   const setDialog = (newDialog: Partial<DialogProps>) => {
-    s({
-      ...dialog,
+    s((d) => ({
+      ...d,
       ...newDialog,
-    });
+    }));
   };
 
   return (
@@ -206,7 +230,7 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
                     <BackButton onClick={history.goBack} />
                     <span>Add Workout</span>
                   </h1>
-                  <WorkoutSearch label="Search" setDialog={setDialog} />
+                  <WorkoutSearch label="Search" setDialog={setDialog} setSelected={setSelected} />
                 </div>
               </div>
             )}

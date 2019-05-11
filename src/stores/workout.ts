@@ -73,17 +73,23 @@ export interface SaveEditWorkoutPlanAction {
 export interface DiscardEditWorkoutPlanAction {
   type: 'DISCARD_EDIT_WORKOUT_PLAN';
 }
+export interface AddWorkoutAction {
+  type: 'ADD_WORKOUT';
+  payload: WorkoutPlan;
+}
 
 export type WorkoutAction =
   | DeleteWorkoutAction
   | UndoEditWorkoutPlanAction
   | SaveEditWorkoutPlanAction
-  | DiscardEditWorkoutPlanAction;
+  | DiscardEditWorkoutPlanAction
+  | AddWorkoutAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
   'UNDO_EDIT_WORKOUT_PLAN',
   'SAVE_EDIT_WORKOUT_PLAN',
   'DISCARD_EDIT_WORKOUT_PLAN',
+  'ADD_WORKOUT',
 ];
 
 const toggledPlan = (plan: WorkoutPlan[], i: number) => {
@@ -139,13 +145,19 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         tempPlan: state.plan,
         actionRecords: [],
       };
+    case 'ADD_WORKOUT':
+      return {
+        ...state,
+        tempPlan: [...state.tempPlan, action.payload],
+        actionRecords: [...state.actionRecords, { type: 'create' } as CreateRecord],
+      };
     default:
       return state;
   }
 };
 
-export const deleteWorkout = (i: number) => {
-  dispatch({ type: 'DELETE_WORKOUT', payload: i });
+export const deleteWorkout = (payload: number) => {
+  dispatch({ payload, type: 'DELETE_WORKOUT' });
 };
 export const undoEditWorkoutPlan = () => {
   dispatch({ type: 'UNDO_EDIT_WORKOUT_PLAN' });
@@ -155,6 +167,9 @@ export const saveEditWorkoutPlan = () => {
 };
 export const discardEditWorkoutPlan = () => {
   dispatch({ type: 'DISCARD_EDIT_WORKOUT_PLAN' });
+};
+export const addWorkout = (payload: WorkoutPlan) => {
+  dispatch({ payload, type: 'ADD_WORKOUT' });
 };
 /*
 export const addWorkout = (i: number) => {
