@@ -19,7 +19,16 @@ import { toggleLoading, LoadingData } from '../stores/loading';
 const NotFound: FunctionComponent = () => (
   <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
     <div className="content">
-      <h1 className="heading">NotFound</h1>
+      <h1 className="heading">Not Found</h1>
+      <Link to="/workout">Go to the main page</Link>
+    </div>
+  </div>
+);
+const NotImplemented: FunctionComponent = () => (
+  <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
+    <div className="content">
+      <h1 className="heading">Not Implemented</h1>
+      <p>This is not in the main tasks, so we temporarily skipped to implement it.</p>
       <Link to="/workout">Go to the main page</Link>
     </div>
   </div>
@@ -57,6 +66,7 @@ const App: FunctionComponent<Props> = ({ location }) => {
           <div style={useStyles(sansSerifFont)}>
             <Switch location={location}>
               <Route path="/workout" component={Workout} />
+              <Route path="/settings" component={NotImplemented} />
               <Route path="/" component={NotFound} />
             </Switch>
           </div>

@@ -139,7 +139,7 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
                 fontStyle: 'italic',
               }}
             >
-              {plan.length === 0
+              {visiblePlan.length === 0
                 ? 'CLICK ADD BUTTON TO ADD A NEW WORKOUT'
                 : '1-MINUTE BREAK BETWEEN EACH SET'}
             </td>

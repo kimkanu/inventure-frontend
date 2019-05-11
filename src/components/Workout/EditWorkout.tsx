@@ -211,7 +211,7 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
                       </div>
                     </ButtonLarge>
                     <ButtonLarge
-                      backgroundColor={COLORS.green!.normal}
+                      backgroundColor={COLORS.green!.light}
                       shadowColor={COLORS.green!.dark}
                       link="/workout/edit/add"
                       label="add"

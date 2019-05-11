@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import Firebase, { FirebaseContext } from './Firebase';
 import { useAsyncEffect, unique } from '../utils';
 import { setWorkoutInfo, setWorkoutImage } from '../stores/static';
+import { toggleLoading, LoadingData } from '../stores/loading';
 
 interface Props {
   firebase: Firebase;
@@ -45,7 +46,7 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
       .then((list) => {
         if (isSubscribed) {
           setWorkoutImage(list);
-          console.log('data loaded!');
+          toggleLoading(LoadingData.WorkoutInfo);
         }
       });
     return () => {
