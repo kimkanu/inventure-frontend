@@ -36,7 +36,7 @@ const NotImplemented: FunctionComponent = () => (
 );
 interface Props extends RouteComponentProps {}
 
-const App: FunctionComponent<Props> = ({ location }) => {
+const App: FunctionComponent<Props> = ({ location, history }) => {
   const { i18n } = useTranslation();
   const language = querystring.parse(location.search).lang as string | null | undefined;
 
@@ -45,11 +45,12 @@ const App: FunctionComponent<Props> = ({ location }) => {
   }
 
   useEffect(() => {
+    history.push('/');
     toggleLoading(LoadingData.App);
     document.getElementById('loader')!.className = 'hidden';
     const timeout = setTimeout(() => {
       document.getElementById('loader')!.style.display = 'none';
-    }, 300);
+    }, 330);
     return () => {
       clearTimeout(timeout);
     };

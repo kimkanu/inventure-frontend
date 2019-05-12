@@ -28,7 +28,7 @@ const bottomNavigatorTheme = createMuiTheme({
   },
   typography: {
     useNextVariants: true,
-    fontFamily: 'CircularStd, Nanum Square !important',
+    fontFamily: 'CircularStd, NotoSans !important',
   },
 });
 

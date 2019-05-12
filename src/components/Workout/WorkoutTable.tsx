@@ -69,6 +69,8 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
           <ButtonSmall
             backgroundColor={COLORS.red!.lighter}
             shadowColor={COLORS.red!.dark}
+            depth={4}
+            opacity={2}
             onClick={() => {
               if (handleDelete) handleDelete();
               if (onChange) setTimeout(onChange, 0);

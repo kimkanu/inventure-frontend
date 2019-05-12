@@ -14,7 +14,7 @@ import { untilNthIndex, randomString } from '../../utils';
 import { ButtonBase } from '@material-ui/core';
 import Dialog from '../Dialog';
 import DialogTextButton from '../Dialog/DialogTextButton';
-import { useStyles, sansSerifFont } from '../../styles';
+import { useStyles, sansSerifFont, shadow } from '../../styles';
 import { WorkoutInfo } from '../../stores/static';
 import Fuse from 'fuse.js';
 import Slider from '../Slider';
@@ -30,9 +30,20 @@ interface AlbumProps {
 
 const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setSelected }) => {
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        marginTop: '16px',
+      }}
+    >
       {workouts.map((x, i) => (
         <ButtonBase
+          style={{
+            borderRadius: '8px',
+            margin: '12px',
+          }}
           onClick={() => {
             setSelected((ss: WorkoutPlan) => ({
               ...ss,
@@ -43,25 +54,45 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setS
           key={i}
         >
           <div
-            style={{
+            style={useStyles(shadow({ depth: 6, opacity: 2 }), {
               width: '156px',
               height: '156px',
-              background: 'linear-gradient(#fff,#ccc)',
+              background: '#3b3e43',
               borderRadius: '8px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-            }}
+              color: 'white',
+            })}
           >
-            <span>{x.name}</span>
-            <img
-              src={x.image}
+            <div
               style={{
-                width: '128px',
-                height: '128px',
+                maxWidth: '156px',
+                height: '124px',
               }}
-            />
+            >
+              <img
+                src={x.image}
+                style={{
+                  maxWidth: '140px',
+                  maxHeight: '116px',
+                  margin: '8px 8px 0',
+                  borderRadius: '8px',
+                }}
+                alt={`An image of the workout '${x.name}'`}
+              />
+            </div>
+            <div
+              style={useStyles(sansSerifFont, {
+                width: '156px',
+                height: '32px',
+                lineHeight: '32px',
+                fontSize: '0.9rem',
+              })}
+            >
+              {x.name.toLocaleUpperCase()}
+            </div>
           </div>
         </ButtonBase>
       ))}
@@ -83,7 +114,7 @@ const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog, setSe
     name,
     ...staticInfo.workoutInfo[name],
   }));
-  const fuse = new Fuse(workouts, { keys: ['name'], threshold: 0.3 });
+  const fuse = new Fuse(workouts, { keys: ['name'], threshold: 0.5 });
   const filteredWorkouts = s ? fuse.search(s) : workouts;
   return (
     <>
@@ -149,10 +180,48 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
     show: false,
     title: '',
     children: (
-      <div style={{ minWidth: '300px', width: '80%' }}>
-        <Slider integer onChange={(e) => console.log(e)} title="Replications" />
-        <Slider integer onChange={(e) => console.log(e)} title="Sets" min={1} max={20} />
-        <Slider integer onChange={(e) => console.log(e)} title="Time" min={10} max={240} unit="s" />
+      <div style={{ width: '400px', maxWidth: '100%' }}>
+        <Slider
+          title="Replications"
+          integer
+          onChange={(reps) => {
+            setSelected((ss: WorkoutPlan) => ({
+              ...ss,
+              reps,
+            }));
+          }}
+          min={5}
+          defaultVal={15}
+          max={25}
+        />
+        <Slider
+          integer
+          onChange={(sets) => {
+            setSelected((ss: WorkoutPlan) => ({
+              ...ss,
+              sets,
+            }));
+          }}
+          title="Sets"
+          min={2}
+          defaultVal={5}
+          max={15}
+        />
+        <Slider
+          integer
+          onChange={(time) => {
+            setSelected((ss: WorkoutPlan) => ({
+              ...ss,
+              time,
+            }));
+          }}
+          title="Time Per Set"
+          min={10}
+          defaultVal={120}
+          max={240}
+          gap={5}
+          unit="s"
+        />
         <div
           style={{
             display: 'flex',
@@ -172,7 +241,7 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
           </div>
           <div>
             <DialogTextButton
-              text="save"
+              text="add"
               bold
               onClick={() => {
                 setSelected((ss: WorkoutPlan) => {
@@ -224,7 +293,11 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
                     <BackButton onClick={history.goBack} />
                     <span>Add Workout</span>
                   </h1>
-                  <WorkoutSearch label="Search" setDialog={setDialog} setSelected={setSelected} />
+                  <WorkoutSearch
+                    label="Search Workout"
+                    setDialog={setDialog}
+                    setSelected={setSelected}
+                  />
                 </div>
               </div>
             )}

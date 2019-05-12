@@ -17,12 +17,7 @@ if (!isMobile) {
   document.body.classList.add('desktop');
 }
 
-const webFontConfig: WebFontConfig = {
-  custom: {
-    families: ['Nanum Square'],
-    urls: ['https://cdn.rawgit.com/hiun/NanumSquare/master/nanumsquare.css'],
-  },
-};
+const webFontConfig: WebFontConfig = {};
 
 const onWebFontLoad = (status: WebFontStatus) => {};
 
