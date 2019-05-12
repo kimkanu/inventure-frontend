@@ -1,4 +1,4 @@
-﻿var dude = {
+var dude = {
     name: "Chadwick",
     id: "@ chadrulez",
     bio: "Love my Gainzz"
@@ -47,11 +47,15 @@ ctx.fillStyle = "#33cc33";
 ctx.fillRect(canvas.width * (605 / 800), canvas.height * (65 / 300), canvas.width * (130 / 800), canvas.height * (7 / 300));
 
 //make stats
-var workout = {
-    exer: "Bench Press",
-    rank: "1",
-    max: "70 kg"
-}
+var workout = [{
+  exer: "Bench Press",
+  rank: "1",
+  max: "70 kg"
+}, {
+  exer: "Deadlift",
+  rank: "3",
+  max: "95 kg"
+}];
 var canvas2 = document.getElementById("pro1");
 var ctx2 = canvas2.getContext("2d");
 ctx2.fillStyle = "white";
@@ -59,11 +63,24 @@ ctx2.fillRect(0, 0, canvas2.width, canvas2.height, 30, ctx2);
 makeround(canvas2.width * (20 / 800), canvas2.height * (15 / 150), canvas2.width / 5, canvas2.height * (120 / 150), 10, ctx2);
 ctx2.fillStyle = "black";
 ctx2.font = "40px Calibri";
-ctx2.fillText(workout.exer, canvas2.width * (150 / 600), canvas2.height * (50 / 150));
+ctx2.fillText(workout[0].exer, canvas2.width * (150 / 600), canvas2.height * (50 / 150));
 ctx2.font = "25px Calibri";
 ctx2.fillText("Recent achievement: Pecs of Steel", canvas2.width * (150 / 600), canvas2.height * (90 / 150));
-ctx2.fillText("Current Best " + workout.max, canvas2.width * (150 / 600), canvas2.height * (120 / 150));
-ctx2.fillText("#" + workout.rank + " in friends", canvas2.width * (450 / 600), canvas2.height * (40 / 150));
+ctx2.fillText("Current Best " + workout[0].max, canvas2.width * (150 / 600), canvas2.height * (120 / 150));
+ctx2.fillText("#" + workout[0].rank + " in friends", canvas2.width * (450 / 600), canvas2.height * (40 / 150));
+
+var canvas2 = document.getElementById("pro2");
+var ctx2 = canvas2.getContext("2d");
+ctx2.fillStyle = "white";
+ctx2.fillRect(0, 0, canvas2.width, canvas2.height, 30, ctx2);
+makeround(canvas2.width * (20 / 800), canvas2.height * (15 / 150), canvas2.width / 5, canvas2.height * (120 / 150), 10, ctx2);
+ctx2.fillStyle = "black";
+ctx2.font = "40px Calibri";
+ctx2.fillText(workout[1].exer, canvas2.width * (150 / 600), canvas2.height * (50 / 150));
+ctx2.font = "25px Calibri";
+ctx2.fillText("Recent achievement: Son of Thor", canvas2.width * (150 / 600), canvas2.height * (90 / 150));
+ctx2.fillText("Current Best " + workout[1].max, canvas2.width * (150 / 600), canvas2.height * (120 / 150));
+ctx2.fillText("#" + workout[1].rank + " in friends", canvas2.width * (450 / 600), canvas2.height * (40 / 150));
 
 
 
