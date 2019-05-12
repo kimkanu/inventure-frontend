@@ -1,95 +1,186 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 import { randomString } from '../utils';
+import './Slider.css';
+import { useStyles, sansSerifFont } from '../styles';
+
+// TODO: impliment gap and unit
+
 interface Props {
   id?: string;
   min?: number;
+  defaultVal?: number;
   max?: number;
   integer?: boolean;
+  style?: React.CSSProperties;
+  onChange?: (value: number) => void;
+  title?: string;
+  gap?: number;
+  unit?: string;
 }
 
-const fallbackId = randomString(8);
-
 const Slider: FunctionComponent<Props> = ({
-  min = 0,
-  max = 100,
+  min = 5,
+  defaultVal = min,
+  max = 10,
   integer = false,
-  id = fallbackId,
+  id = randomString(8),
+  style = {},
+  onChange = () => {},
+  title,
+  gap = 1,
+  unit,
 }) => {
-  const maxValue = 100;
+  const minValue = integer ? Math.round(min) : min;
+  const maxValue = integer ? Math.round(max) : max;
+  const defaultValue = integer ? Math.round(defaultVal) : defaultVal;
   const [active, setActive] = useState(false);
-  const [value, setValue] = useState(0);
-  const thumbSize = 48;
+  const [value, setValue] = useState(defaultValue);
+  const [inputString, setInputString] = useState(value.toString());
   let sliderBar: HTMLDivElement;
   let sliderThumb: HTMLDivElement;
+  let sliderThumbContainer: HTMLDivElement;
+
   useEffect(() => {
     sliderBar = document.getElementById(`slider-bar-${id}`) as HTMLDivElement;
     sliderThumb = document.getElementById(`slider-thumb-${id}`) as HTMLDivElement;
+    sliderThumbContainer = document.getElementById(
+      `slider-thumb-container-${id}`,
+    ) as HTMLDivElement;
   });
-  console.log(value);
+
+  const uptoSecond = (s: string) => {
+    const i = s.indexOf('.');
+    if (i < 0) return s;
+    if (i === 0) return `0${s}`;
+    return s.slice(0, i + 3);
+  };
+
+  const mouseMoveHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const { left, right } = sliderBar.getClientRects()[0];
+    const thumbPosition = Math.max(left, Math.min(e.clientX, right));
+    const ratio = (thumbPosition - left) / (right - left);
+    const integralRatio = Math.round(ratio * (maxValue - minValue)) / (maxValue - minValue);
+    const percentage = Math.min(Math.max(0, (integer ? integralRatio : ratio) * 100), 100);
+    sliderThumbContainer.style.transform = `translateX(calc(${percentage}% - 24px))`;
+    const nextValue =
+      (integer ? Math.round(ratio * (maxValue - minValue)) : ratio * (maxValue - minValue)) +
+      minValue;
+    setValue(nextValue);
+    setInputString(uptoSecond(nextValue.toString()));
+    if (value !== nextValue) onChange(nextValue);
+  };
+  const touchMoveHandler = (e: React.TouchEvent<HTMLDivElement>) => {
+    const { left, right } = sliderBar.getClientRects()[0];
+    const thumbPosition = Math.max(Math.min(e.touches[0].clientX, right), left);
+    const ratio = (thumbPosition - left) / (right - left);
+    const integralRatio = Math.round(ratio * (maxValue - minValue)) / (maxValue - minValue);
+    const percentage = (integer ? integralRatio : ratio) * 100;
+    sliderThumbContainer.style.transform = `translateX(calc(${percentage}% - 24px))`;
+    const nextValue = (integer ? integralRatio : ratio) * (maxValue - minValue) + minValue;
+    setValue(nextValue);
+    setInputString(uptoSecond(nextValue.toString()));
+    if (value !== nextValue) onChange(nextValue);
+  };
+  const stringFilter = (s: string) => {
+    return s
+      .replace(/^0(\d)/, '$1')
+      .replace(/[^0-9\.]/, '')
+      .replace(/(\d*\..*?)\./, '$1');
+  };
+
   return (
     <div
-      style={{ padding: '3rem', display: 'flex' }}
-      onMouseMove={(e) => {
-        if (active && sliderBar && sliderThumb) {
-          const { left, right } = sliderBar.getClientRects()[0];
-          const thumbPosition = Math.max(Math.min(e.clientX, right), left);
-          sliderThumb.style.left = `calc(${((thumbPosition - left) / (right - left)) *
-            100}% - ${thumbSize / 2}px)`;
-          setValue(((thumbPosition - left) / (right - left)) * maxValue);
-        }
+      style={{
+        margin: '1rem 0',
+        overflowX: 'hidden',
       }}
-      onTouchMove={(e) => {
-        if (active && sliderBar && sliderThumb) {
-          const { left, right } = sliderBar.getClientRects()[0];
-          const thumbPosition = Math.max(Math.min(e.touches[0].clientX, right), left);
-          sliderThumb.style.left = `calc(${((thumbPosition - left) / (right - left)) *
-            100}% - ${thumbSize / 2}px)`;
-          setValue(((thumbPosition - left) / (right - left)) * maxValue);
-        }
-      }}
-      onMouseUp={() => setActive(false)}
-      onTouchEnd={() => setActive(false)}
     >
-      <div style={{ position: 'relative', height: thumbSize, width: '70%' }} id={`slider-${id}`}>
+      {title ? (
+        <div>
+          <span>{title}</span>
+        </div>
+      ) : null}
+      <div
+        style={{
+          margin: '0 0.5rem',
+          display: 'flex',
+          ...style,
+        }}
+        onMouseMove={(e) => {
+          if (active && sliderBar && sliderThumb) mouseMoveHandler(e);
+        }}
+        onTouchMove={(e) => {
+          if (active && sliderBar && sliderThumb) touchMoveHandler(e);
+        }}
+        onMouseUp={() => {
+          setActive(false);
+          setTimeout(() => setActive(false), 100);
+        }}
+        onTouchEnd={() => {
+          setActive(false);
+          setTimeout(() => setActive(false), 100);
+        }}
+      >
         <div
-          id={`slider-bar-${id}`}
-          style={{
-            height: '4px',
-            backgroundColor: 'gray',
-            top: `${thumbSize / 2 - 2}px`,
-            position: 'absolute',
-            width: '100%',
-          }}
-        />
-        <div
-          id={`slider-thumb-${id}`}
-          style={{
-            position: 'absolute',
-            width: thumbSize,
-            height: thumbSize,
-            top: 0,
-            left: `calc(${(value / maxValue) * 100}% - ${thumbSize / 2}px)`,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '50%',
-          }}
-          onMouseDown={() => {
-            setActive(true);
-          }}
-          onTouchStart={() => setActive(true)}
+          className={`slider${active ? ' active' : ''}`}
+          style={{ position: 'relative', height: '48px', width: '100%', margin: '0 36px 0 16px' }}
+          id={`slider-${id}`}
         >
           <div
-            style={{
-              backgroundColor: active ? 'red' : 'green',
-              width: thumbSize / 2,
-              height: thumbSize / 2,
-              borderRadius: '50%',
+            id={`slider-bar-${id}`}
+            className="slider-bar"
+            onMouseDown={(e) => {
+              setTimeout(() => setActive(true), 100);
+              mouseMoveHandler(e);
             }}
-          />
+            onTouchStart={(e) => {
+              setTimeout(() => setActive(true), 100);
+              touchMoveHandler(e);
+            }}
+          >
+            <div />
+          </div>
+          <div
+            id={`slider-thumb-container-${id}`}
+            style={{
+              position: 'absolute',
+              width: '100%',
+              transform: `translateX(calc(${Math.min(
+                Math.max(0, ((value - minValue) / (maxValue - minValue)) * 100),
+                100,
+              )}% - 24px))`,
+              transition:
+                integer && !active ? 'transform 0.1s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+            }}
+          >
+            <div
+              id={`slider-thumb-${id}`}
+              className="slider-thumb"
+              onMouseDown={() => {
+                setActive(true);
+              }}
+              onTouchStart={() => {
+                setActive(true);
+              }}
+            >
+              <div />
+            </div>
+          </div>
         </div>
+        <input
+          className="slider-input"
+          type="number"
+          value={inputString}
+          min={minValue}
+          max={maxValue}
+          style={useStyles(sansSerifFont)}
+          onChange={(e) => {
+            onChange(parseFloat(e.currentTarget.value));
+            setValue(parseFloat(e.currentTarget.value));
+            setInputString(stringFilter(e.currentTarget.value));
+          }}
+        />
       </div>
-      <input value={value} />
     </div>
   );
 };

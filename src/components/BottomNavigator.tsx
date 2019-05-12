@@ -21,9 +21,9 @@ interface Props extends RouteComponentProps {}
 const bottomNavigatorTheme = createMuiTheme({
   palette: {
     primary: {
-      light: COLORS.red!.lighter,
-      main: COLORS.red!.light,
-      dark: COLORS.red!.dark,
+      light: COLORS.blue!.lighter,
+      main: COLORS.blue!.light,
+      dark: COLORS.blue!.dark,
     },
   },
   typography: {

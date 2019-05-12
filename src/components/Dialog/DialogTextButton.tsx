@@ -20,12 +20,8 @@ const DialogTextButton: FunctionComponent<Props> = ({
   bold = false,
   onClick,
 }) => {
-  const Button = styled(ButtonBase)({
-    hover: { backgroundColor: 'red' },
-  });
-
   return (
-    <Button
+    <ButtonBase
       style={{
         margin: '0 0.2rem',
         borderRadius: '4px',
@@ -45,7 +41,7 @@ const DialogTextButton: FunctionComponent<Props> = ({
       >
         {text.toLocaleUpperCase()}
       </div>
-    </Button>
+    </ButtonBase>
   );
 };
 export default DialogTextButton;

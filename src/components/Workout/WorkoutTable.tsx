@@ -174,7 +174,7 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
                 )}
               </span>
               {editable ? null : (
-                <div style={{ float: 'right', margin: '-0.17rem 0.5rem 0.4rem 0' }}>
+                <div style={{ float: 'right', margin: '-0.17rem 0.5rem 0rem 0' }}>
                   <ButtonLarge
                     backgroundColor={COLORS.gray!.normal}
                     shadowColor={COLORS.gray!.darker}

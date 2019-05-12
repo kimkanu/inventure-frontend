@@ -15,6 +15,7 @@ import { untilNthIndex } from '../utils';
 import { sansSerifFont, useStyles } from '../styles';
 import FirebaseDataPreloader from './FirebaseDataPreloader';
 import { toggleLoading, LoadingData } from '../stores/loading';
+import SliderContainer from './test/SliderContainer';
 
 const NotFound: FunctionComponent = () => (
   <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
@@ -67,6 +68,7 @@ const App: FunctionComponent<Props> = ({ location }) => {
             <Switch location={location}>
               <Route path="/workout" component={Workout} />
               <Route path="/settings" component={NotImplemented} />
+              <Route path="/test/slider" component={SliderContainer} />
               <Route path="/" component={NotFound} />
             </Switch>
           </div>

@@ -136,10 +136,9 @@ interface DialogProps {
   children: React.ReactNode;
 }
 interface Props extends RouteComponentProps {}
-const sliderId = randomString(8);
 
 const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
-  const [selected, setSelected] = useState<WorkoutPlan>({
+  const [, setSelected] = useState<WorkoutPlan>({
     name: '',
     reps: 5,
     sets: 1,
@@ -150,9 +149,10 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
     show: false,
     title: '',
     children: (
-      <>
-        <p>There are unsaved changes. Do you want to save ?</p>
-        <Slider id={sliderId} />
+      <div style={{ minWidth: '300px', width: '80%' }}>
+        <Slider integer onChange={(e) => console.log(e)} title="Replications" />
+        <Slider integer onChange={(e) => console.log(e)} title="Sets" min={1} max={20} />
+        <Slider integer onChange={(e) => console.log(e)} title="Time" min={10} max={240} unit="s" />
         <div
           style={{
             display: 'flex',
@@ -164,19 +164,13 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
         >
           <div>
             <DialogTextButton
-              text="discard"
-              onClick={() => {
-                console.log('button1');
-              }}
-            />
-          </div>
-          <div>
-            <DialogTextButton
               text="cancel"
               onClick={() => {
                 setDialog({ show: false });
               }}
             />
+          </div>
+          <div>
             <DialogTextButton
               text="save"
               bold
@@ -191,7 +185,7 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
             />
           </div>
         </div>
-      </>
+      </div>
     ) as React.ReactNode,
   });
   const setDialog = (newDialog: Partial<DialogProps>) => {
