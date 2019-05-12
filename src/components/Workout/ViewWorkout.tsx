@@ -4,7 +4,9 @@ import { useGlobalState } from '../../stores';
 import WorkoutTable from './WorkoutTable';
 import BackButton from '../Buttons/BackButton';
 import BottomToolbar from '../BottomToolbar';
-import { convertRemToPixels, randomString } from '../../utils';
+import { convertRemToPixels, randomString, untilNthIndex } from '../../utils';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import EditWorkout from './EditWorkout';
 
 interface Props {}
 
@@ -36,30 +38,28 @@ const ViewWorkout: FunctionComponent<Props> = ({}) => {
 
   return (
     <Route
-      render={() => (
-        <div>
-          <Route
-            path="/workout/view"
-            render={() => (
-              <div className="fade">
-                <div className="content">
-                  <h1 className="heading">
-                    <BackButton to="/workout" />
-                    <span>Your Workout</span>
-                  </h1>
-                  <WorkoutTable workout={workout} editable={false} />
+      path={['/workout/view', '/workout/edit']}
+      render={({ history }) => (
+        <div className="to-right">
+          <div className="content">
+            <h1 className="heading">
+              <BackButton
+                onClick={() => {
+                  history.goBack();
+                }}
+              />
+              <span>Your Workout</span>
+            </h1>
+            <WorkoutTable workout={workout} editable={false} />
 
-                  <BottomToolbar
-                    id={bottomToolbarId}
-                    position={position ? 'relative' : 'absolute'}
-                    bottom={position ? undefined : '80px'}
-                  >
-                    ㅇㅅ
-                  </BottomToolbar>
-                </div>
-              </div>
-            )}
-          />
+            <BottomToolbar
+              id={bottomToolbarId}
+              position={position ? 'relative' : 'absolute'}
+              bottom={position ? undefined : '80px'}
+            >
+              ㅇㅅ
+            </BottomToolbar>
+          </div>
         </div>
       )}
     />

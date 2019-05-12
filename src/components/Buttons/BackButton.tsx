@@ -35,6 +35,7 @@ const BackButton: FunctionComponent<Props> = ({ to, onClick }) => {
             marginRight: '6px',
             borderRadius: '50%',
           }}
+          onClick={onClick}
         >
           <EdgeIcon buttonSize="back"></EdgeIcon>
         </ButtonBase>

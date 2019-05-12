@@ -27,10 +27,12 @@ const bottomToolbarId = `bottom-toolbar--${randomString(10)}`;
 // called when the component is loaded, the window is resized, or the table height is changed.
 const adjustToolbarPosition = (setPosition: React.Dispatch<React.SetStateAction<boolean>>) => {
   const tableElement = document.querySelector('.workout-table') as HTMLTableElement;
-  const clientBottom = tableElement.clientTop + tableElement.clientHeight;
   const bottomToolbar = document.getElementById(bottomToolbarId) as HTMLDivElement;
-  const threshold = clientBottom + convertRemToPixels(1) + bottomToolbar.clientHeight + 72 + 104;
-  setPosition(window.innerHeight <= threshold);
+  if (tableElement && bottomToolbar) {
+    const clientBottom = tableElement.clientTop + tableElement.clientHeight;
+    const threshold = clientBottom + convertRemToPixels(1) + bottomToolbar.clientHeight + 72 + 104;
+    setPosition(window.innerHeight <= threshold);
+  }
 };
 
 // click handler for back button
@@ -131,16 +133,6 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
     });
 
   useEffect(() => {
-    if (location.pathname === '/workout/edit/confirm') {
-      setDialog({
-        show: true,
-      });
-    } else {
-      setDialog({
-        show: false,
-      });
-    }
-
     adjustToolbarPosition(setPosition);
     const handler = () => adjustToolbarPosition(setPosition);
     window.addEventListener('resize', handler);
@@ -240,8 +232,6 @@ const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
                   key={untilNthIndex(location.pathname, '/', 4)}
                   timeout={{ enter: 300, exit: 500 }}
                   classNames={'content--pop-up-transition'}
-                  unmountOnExit={false}
-                  mountOnEnter={false}
                 >
                   <div>
                     <Route

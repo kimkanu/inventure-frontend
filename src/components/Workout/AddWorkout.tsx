@@ -266,42 +266,32 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
 
   return (
     <Route
+      path="/workout/edit/add"
       location={{
         ...location,
         pathname: untilNthIndex(location.pathname, '/', 4),
       }}
       render={() => (
-        <div>
-          <Route
-            path="/workout/edit/add"
-            render={() => (
-              <div className="pop-content">
-                <Prompt
-                  when={dialog.show}
-                  message={(location) => {
-                    if (location.pathname === '/workout/edit') {
-                      setDialog({
-                        show: false,
-                      });
-                      return false;
-                    }
-                    return true;
-                  }}
-                />
-                <div className="content" style={{ backgroundColor: COLOR_BACKGROUND }}>
-                  <h1 className="heading">
-                    <BackButton onClick={history.goBack} />
-                    <span>Add Workout</span>
-                  </h1>
-                  <WorkoutSearch
-                    label="Search Workout"
-                    setDialog={setDialog}
-                    setSelected={setSelected}
-                  />
-                </div>
-              </div>
-            )}
+        <div className="pop-content">
+          <Prompt
+            when={dialog.show}
+            message={(location) => {
+              if (location.pathname === '/workout/edit') {
+                setDialog({
+                  show: false,
+                });
+                return false;
+              }
+              return true;
+            }}
           />
+          <div className="content" style={{ backgroundColor: COLOR_BACKGROUND }}>
+            <h1 className="heading">
+              <BackButton onClick={history.goBack} />
+              <span>Add Workout</span>
+            </h1>
+            <WorkoutSearch label="Search Workout" setDialog={setDialog} setSelected={setSelected} />
+          </div>
           <Dialog
             show={dialog.show}
             title={dialog.title}

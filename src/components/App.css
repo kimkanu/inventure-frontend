@@ -7,6 +7,7 @@
   box-sizing: border-box;
   overflow: auto;
   color: #14171a;
+  background-color: #eff1f2;
 }
 
 .content--top-level-transition-enter .top-level {
@@ -39,18 +40,31 @@
 }
 
 .content--to-right-transition-enter .to-right {
-  opacity: 0;
+  position: absolute;
+  height: calc(100 * var(--vh));
+  transform: translateX(100vw);
 }
 .content--to-right-transition-enter-active .to-right {
-  opacity: 1;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(0vw);
+  transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 .content--to-right-transition-exit .to-right {
-  opacity: 1;
+  height: calc(100 * var(--vh));
+  transform: translateX(0vw);
 }
 .content--to-right-transition-exit-active .to-right {
-  opacity: 0;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(100vw);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content--to-right-transition-enter .to-right-no-back {
+  position: absolute;
+  height: calc(100 * var(--vh));
+  transform: translateX(100vw);
+}
+.content--to-right-transition-enter-active .to-right-no-back {
+  transform: translateX(0vw);
+  transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
 .content--fade-transition-enter .fade {
