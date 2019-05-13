@@ -29,7 +29,7 @@ const CardWithPicture: FunctionComponent<Props> = ({
         display: 'flex',
         width: '100%',
         height: '10rem',
-        borderRadius: '4px',
+        borderRadius: '8px',
         textAlign: 'center',
         boxShadow: shadowText({
           depth,
@@ -38,22 +38,32 @@ const CardWithPicture: FunctionComponent<Props> = ({
         }),
       }}
     >
-      <img
-        src={imgSrc}
+      <div
         style={{
           width: '10rem',
-          height: '100%',
-          borderRadius: '4px',
+          height: '10rem',
+          overflow: 'hidden',
+          display: 'flex',
+          justifyContent: 'center',
+          borderRadius: '8px',
         }}
-        alt={alt}
-      />
+      >
+        <img
+          src={imgSrc}
+          style={{
+            height: '10rem',
+            borderRadius: '8px',
+          }}
+          alt={alt}
+        />
+      </div>
       <div
         style={{
           width: 'calc(100% - 10rem)',
           height: '100%',
           right: '0',
           position: 'relative',
-          borderRadius: '4px',
+          borderRadius: '8px',
           textAlign: 'center',
           display: 'flex',
           justifyContent: 'center',
@@ -75,7 +85,7 @@ const CardWithPicture: FunctionComponent<Props> = ({
       <ButtonBase
         style={{
           width: '100%',
-          borderRadius: '4px',
+          borderRadius: '8px',
         }}
       >
         {link ? <Link to={link}>{content}</Link> : content}

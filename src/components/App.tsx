@@ -45,14 +45,17 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
   }
 
   useEffect(() => {
-    // history.push(untilNthIndex(location.pathname, '/', 2));
-    toggleLoading(LoadingData.App);
-    document.getElementById('loader')!.className = 'hidden';
+    history.push(untilNthIndex(location.pathname, '/', 2));
     const timeout = setTimeout(() => {
+      toggleLoading(LoadingData.App);
+      document.getElementById('loader')!.className = 'hidden';
+    }, 1030);
+    const timeout2 = setTimeout(() => {
       document.getElementById('loader')!.style.display = 'none';
-    }, 330);
+    }, 1330);
     return () => {
       clearTimeout(timeout);
+      clearTimeout(timeout2);
     };
   }, []);
 
