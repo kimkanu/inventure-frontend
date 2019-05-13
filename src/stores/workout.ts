@@ -256,6 +256,7 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
       return {
         ...state,
         type: action.payload,
+      };
     case 'TOGGLE_MUTE':
       return {
         ...state,
