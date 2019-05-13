@@ -9,6 +9,10 @@ import Firebase, { FirebaseContext } from '../Firebase';
 import StartWorkout from '../StartWorkout';
 import RestTime from '../StartWorkout/RestTime';
 import PainSelection from './PainSelection';
+import CardWithPicture from '../CardWithPicture';
+import { useGlobalState } from '../../stores';
+import WorkoutType from './WorkoutType';
+import WorkoutOption from './WorkoutOption';
 
 interface Props extends RouteComponentProps {}
 
@@ -21,21 +25,39 @@ const Workout: FunctionComponent<Props> = ({ location, history }) => {
           style={{ height: 'calc(100 * var(--vh))', position: 'absolute' }}
         >
           <div>
-            <Route
-              path="/workout"
-              render={() => (
-                /* TODO: temporary page */
-                <div className="fade">
-                  <div className="content">
-                    <h1 className="heading">Workout</h1>
-                    <Link to="/workout/pain">Go to /workout/pain</Link>
-                  </div>
-                </div>
-              )}
-            />
+            <Route path="/workout" render={() => <WorkoutType />} />
             <Route
               render={({ location }) => (
                 <div>
+                  <TransitionGroup>
+                    <CSSTransition
+                      key={
+                        [
+                          '/workout/option',
+                          '/workout/pain',
+                          '/workout/view',
+                          '/workout/edit',
+                        ].includes(untilNthIndex(location.pathname, '/', 3))
+                          ? 1
+                          : 0
+                      }
+                      timeout={{ enter: 300, exit: 300 }}
+                      classNames={'content--to-right-transition'}
+                    >
+                      <div>
+                        <Route
+                          path={[
+                            '/workout/option',
+                            '/workout/pain',
+                            '/workout/view',
+                            '/workout/edit',
+                          ]}
+                          location={location}
+                          render={() => <WorkoutOption />}
+                        />
+                      </div>
+                    </CSSTransition>
+                  </TransitionGroup>
                   <TransitionGroup>
                     <CSSTransition
                       key={

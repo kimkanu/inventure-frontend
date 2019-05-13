@@ -50,7 +50,6 @@ const PainSelector: FunctionComponent<PainSelectorProps> = ({ bodyPart }) => {
               <Checkbox
                 defaultChecked={pain.checked}
                 onChange={(e) => {
-                  console.log(e.currentTarget.checked);
                   handleChange(bodyPart, { ...pain, checked: e.currentTarget.checked });
                 }}
                 value={pain.name}
@@ -346,7 +345,6 @@ const PainSelectionAnatomy: FunctionComponent<AnatomyProps> = ({ setDialog }) =>
 
 const BannedTrainingList: FunctionComponent = () => {
   const [workout] = useGlobalState('workout');
-  console.log(workout.unbannedWorkouts);
   return (
     <FormControl
       style={{
@@ -421,7 +419,6 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
               bold
               onClick={() => {
                 setDialog({ show: false });
-                history.goBack();
               }}
             />
           </div>
@@ -464,7 +461,7 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
             </h1>
             <PainSelectionAnatomy setDialog={setDialog} />
 
-            <BottomToolbar position={'absolute'} bottom={'80px'}>
+            <BottomToolbar position="absolute" bottom="80px">
               {pain ? (
                 <ButtonLarge
                   shadowColor={COLORS.red!.dark}
