@@ -23,6 +23,6 @@
     "noEmit": true,
     "downlevelIteration": true
   },
-  "exclude": ["build", "node_modules"],
+  "exclude": ["build", "node_modules", "src/**/*.js"],
   "include": ["src/**/*", "types/**/*"]
 }

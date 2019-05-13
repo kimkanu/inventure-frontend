@@ -12,6 +12,7 @@ import { GlobalStateProvider, useGlobalState } from '../stores';
 
 import './App.css';
 import { untilNthIndex } from '../utils';
+import Profile from './Profile';
 import { sansSerifFont, useStyles } from '../styles';
 import FirebaseDataPreloader from './FirebaseDataPreloader';
 import { toggleLoading, LoadingData } from '../stores/loading';
@@ -71,8 +72,8 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
           <div style={useStyles(sansSerifFont)}>
             <Switch location={location}>
               <Route path="/workout" component={Workout} />
+              <Route path="/profile" component={Profile} />
               <Route path="/settings" component={NotImplemented} />
-              <Route path="/test/slider" component={SliderContainer} />
               <Route path="/" component={NotFound} />
             </Switch>
           </div>
