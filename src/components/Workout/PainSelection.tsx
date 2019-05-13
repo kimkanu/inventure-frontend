@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { withRouter, Route, RouteComponentProps } from 'react-router-dom';
+import { withRouter, Route, RouteComponentProps, Prompt } from 'react-router-dom';
 import { useGlobalState } from '../../stores';
 import BackButton from '../Buttons/BackButton';
 import BottomToolbar from '../BottomToolbar';
@@ -27,7 +27,7 @@ interface PainSelectorProps {
   bodyPart: BodyPart;
 }
 const PainSelector: FunctionComponent<PainSelectorProps> = ({ bodyPart }) => {
-  const [workout, setWorkout] = useGlobalState('workout');
+  const [workout] = useGlobalState('workout');
 
   const handleChange = (
     bodyPart: BodyPart,
@@ -344,6 +344,45 @@ const PainSelectionAnatomy: FunctionComponent<AnatomyProps> = ({ setDialog }) =>
   );
 };
 
+const BannedTrainingList: FunctionComponent = () => {
+  const [workout] = useGlobalState('workout');
+
+  return (
+    <FormControl
+      style={{
+        marginBottom: '1rem',
+      }}
+    >
+      <FormGroup>
+        {Object.values(workout.painInfo)
+          .reduce((a, b) => [...a, ...b], [])
+          .filter((pain) => pain.checked)
+          .map((pain) => pain.ban)
+          .reduce((a, b) => [...a, ...b], [])
+          .map((bannedWorkout, i) => (
+            <FormControlLabel
+              key={i}
+              control={
+                <Checkbox
+                  defaultChecked={false}
+                  onChange={(e) => {
+                    console.log(e.currentTarget.checked);
+                  }}
+                  value={bannedWorkout}
+                />
+              }
+              label={
+                <span style={useStyles(sansSerifFont, { fontSize: '1rem' })}>
+                  {capitalizeFirst(bannedWorkout)}
+                </span>
+              }
+            />
+          ))}
+      </FormGroup>
+    </FormControl>
+  );
+};
+
 interface DialogProps {
   show: boolean;
   title: string;
@@ -402,6 +441,18 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
       path={['/workout/pain', '/workout/view', '/workout/edit']}
       render={({ history }) => (
         <div className="to-right">
+          <Prompt
+            when={dialog.show}
+            message={(location) => {
+              if (location.pathname === '/workout') {
+                setDialog({
+                  show: false,
+                });
+                return false;
+              }
+              return true;
+            }}
+          />
           <div className="content">
             <h1 className="heading">
               <BackButton
@@ -416,10 +467,45 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
             <BottomToolbar position={'absolute'} bottom={'80px'}>
               {pain ? (
                 <ButtonLarge
-                  link="/workout/view"
                   shadowColor={COLORS.red!.dark}
                   backgroundColor={COLORS.red!.light}
                   labelInside="Continue with pain"
+                  onClick={() => {
+                    setDialog({
+                      show: true,
+                      title: '',
+                      children: (
+                        <div>
+                          <p style={{ marginTop: 0 }}>
+                            These workouts can cause you pain. You may select them to include in
+                            today's training.
+                          </p>
+                          <BannedTrainingList />
+
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'flex-end',
+                              width: 'calc(100% + 1.6rem)',
+                              marginLeft: '-0.8rem',
+                              marginBottom: '-0.7rem',
+                            }}
+                          >
+                            <div>
+                              <DialogTextButton
+                                text="proceed"
+                                bold
+                                onClick={() => {
+                                  setDialog({ show: false });
+                                  history.push('/workout/view');
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ),
+                    });
+                  }}
                 />
               ) : (
                 <ButtonLarge

@@ -21,7 +21,7 @@ export type BodyPart =
   | 'knee'
   | 'calf'
   | 'ankle';
-export type PainInfo = { [part in BodyPart]: { name: string; checked: boolean }[] };
+export type PainInfo = { [part in BodyPart]: { name: string; ban: string[]; checked: boolean }[] };
 
 // interface for selected workout
 export interface Workout {
@@ -70,13 +70,20 @@ const initialPainInfo = {
   neck: [
     {
       name: '목아파',
+      ban: [],
       checked: false,
     },
   ],
   'chest-n-back': [],
   'stomach-n-waist': [],
   shoulder: [],
-  arm: [],
+  arm: [
+    {
+      name: '팔아파',
+      ban: ['deadlift'],
+      checked: false,
+    },
+  ],
   wrist: [],
   thigh: [],
   knee: [],
@@ -191,18 +198,16 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
       };
     case 'TOGGLE_PAIN':
       console.log(action.payload.checked);
-      const newBodyState = (origState: { name: string; checked: boolean }[]) => {
+      const newBodyState = (origState: { name: string; ban: string[]; checked: boolean }[]) => {
         const index = origState.map((pain) => pain.name).indexOf(action.payload.name);
         if (index < 0) {
-          return [
-            ...origState,
-            { name: action.payload.name, checked: action.payload.checked || false },
-          ];
+          return state;
         }
         return [
           ...origState.slice(0, index),
           {
             name: action.payload.name,
+            ban: origState[index].ban,
             checked:
               action.payload.checked !== undefined
                 ? action.payload.checked
