@@ -17,6 +17,7 @@ interface Workout {
   type: string;
   plan: Plan[];
   muted: boolean;
+  current: number;
 }
 
 // interface for entire data -- store
@@ -56,6 +57,8 @@ const initialState: StoreState = {
         time: '0:45',
       },
     ],
+    muted: false,
+    current: -1,
   } as Workout,
 };
 
