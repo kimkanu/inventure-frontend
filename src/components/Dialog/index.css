@@ -1,0 +1,5 @@
+.dialog--fullscreen {
+  max-width: calc(100% - 2rem) !important;
+  width: 80% !important;
+  margin: 0 !important;
+}

@@ -3,7 +3,7 @@ export const centeredText: React.CSSProperties = {
 };
 
 export const headingFont: React.CSSProperties = {
-  fontFamily: 'CircularStd, Nanum Square',
+  fontFamily: 'CircularStd, NotoSans',
   fontWeight: 600,
 };
 

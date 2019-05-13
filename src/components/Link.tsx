@@ -1,11 +1,12 @@
 import React, { FunctionComponent } from 'react';
 import { LinkProps, Link as Lnk } from 'react-router-dom';
-import { useGlobalState, navigateTab, Tabs, TABS } from '../stores';
+import { useGlobalState } from '../stores';
+import { TABS, navigateTab, Tab } from '../stores/tab';
 
 interface Props extends LinkProps {}
 
 const Link: FunctionComponent<Props> = (props) => {
-  const [tabs] = useGlobalState('tabs');
+  const [tab] = useGlobalState('tab');
   const to = typeof props.to === 'string' ? props.to : props.to.pathname || '.';
   let [willChangeTab, name] = (() => {
     switch (true) {
@@ -18,11 +19,11 @@ const Link: FunctionComponent<Props> = (props) => {
     }
   })() as [boolean, string];
 
-  if (!TABS.includes(name) || tabs.current === name) {
+  if (!TABS.includes(name) || tab === name) {
     [willChangeTab, name] = [false, ''];
   }
 
-  return <Lnk {...props} onClick={() => willChangeTab && navigateTab(name as Tabs)} />;
+  return <Lnk {...props} onClick={() => willChangeTab && navigateTab(name as Tab)} />;
 };
 
 export default Link;
