@@ -3,45 +3,214 @@
   <head>
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/NotoSans-Regular.woff" as="font" crossorigin />
+    <link rel="prefetch" href="%PUBLIC_URL%/fonts/edge-icons-Regular.ttf" as="font" />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/CircularStd-Book.woff2" as="font" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/CircularStd-Black.woff2" as="font" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="theme-color" content="#000000" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <style>
       @font-face {
         font-family: NotoSans;
+        font-display: fallback;
         src: local('Noto Sans CJK KR Regular'), url(/fonts/NotoSans-Regular.woff) format('woff');
       }
       @font-face {
         font-family: NotoSans;
+        font-display: fallback;
         font-weight: 300;
         src: local('Noto Sans CJK KR Light'), url(/fonts/notokr-light.woff) format('woff');
       }
       @font-face {
         font-family: NotoSans;
+        font-display: fallback;
         font-weight: 600;
         src: local('Noto Sans CJK KR Bold'), url(/fonts/notokr-bold.woff) format('woff');
       }
       @font-face {
         font-family: EdgeIcons;
+        font-display: fallback;
         src: url(/fonts/edge-icons-Regular.ttf),
           url(https://github.com/twitter/twitter.github.io/raw/master/fonts/edge-icons-Regular.ttf);
         font-weight: normal;
+      }
+      @font-face {
+        font-family: CircularStd;
+        font-display: fallback;
+        src: url(/fonts/CircularStd-Book.woff2) format('woff2'),
+          url(/fonts/CircularStd-Book.woff) format('woff');
+        font-weight: normal;
+      }
+      @font-face {
+        font-family: CircularStd;
+        font-display: fallback;
+        src: url(/fonts/CircularStd-Black.woff2) format('woff2'),
+          url(/fonts/CircularStd-Black.woff) format('woff');
+        font-weight: bold;
+      }
+      html,
+      body,
+      #root {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #eff1f2;
+        overflow: hidden;
+      }
+      /* https://stackoverflow.com/questions/18061308/prevent-address-bar-hiding-in-mobile-browsers */
+      html {
+        background-color: #eff1f2;
+        overflow: hidden;
+        width: 100%;
+        text-rendering: optimizeLegibility;
+      }
+      body {
+        height: calc(100% + 56px);
+        position: fixed; /* prevent overscroll bounce*/
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch; /* iOS velocity scrolling */
+      }
+      body.desktop {
+        height: calc(100%);
+        overflow-y: auto;
+      }
+      #noscript {
+        position: absolute;
+        top: 0;
+        z-index: 999999;
+        background-color: #eff1f2;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      #loader {
+        position: absolute;
+        top: 0;
+        z-index: 999998;
+        background-color: #eff1f2;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        opacity: 1;
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      #loader.hidden {
+        opacity: 0;
+      }
+      .loader-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .ipl-progress-indicator-head {
+        background-color: #cbd5fc;
+        height: 6px;
+        overflow: hidden;
+        position: relative;
+      }
+      #loader .first-indicator,
+      #loader .second-indicator {
+        background-color: #4266f1;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        position: absolute;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        transform-origin: left center;
+        -webkit-transform: scaleX(0);
+        -moz-transform: scaleX(0);
+        transform: scaleX(0);
+      }
+      #loader .first-indicator {
+        -webkit-animation: first-indicator 2000ms linear infinite;
+        -moz-animation: first-indicator 2000ms linear infinite;
+        animation: first-indicator 2000ms linear infinite;
+      }
+      #loader .second-indicator {
+        -webkit-animation: second-indicator 2000ms linear infinite;
+        -moz-animation: second-indicator 2000ms linear infinite;
+        animation: second-indicator 2000ms linear infinite;
+      }
+      #loader .insp-logo {
+        animation: App-logo-spin infinite 20s linear;
+        border-radius: 50%;
+        -webkit-align-self: center;
+        -moz-align-self: center;
+        align-self: center;
+      }
+      @keyframes first-indicator {
+        0% {
+          transform: translate(0%) scaleX(0);
+        }
+        25% {
+          transform: translate(0%) scaleX(0.5);
+        }
+        50% {
+          transform: translate(25%) scaleX(0.75);
+        }
+        75% {
+          transform: translate(100%) scaleX(0);
+        }
+        100% {
+          transform: translate(100%) scaleX(0);
+        }
+      }
+      @keyframes second-indicator {
+        0% {
+          transform: translate(0%) scaleX(0);
+        }
+        60% {
+          transform: translate(0%) scaleX(0);
+        }
+        80% {
+          transform: translate(0%) scaleX(0.6);
+        }
+        100% {
+          transform: translate(100%) scaleX(0.1);
+        }
       }
     </style>
     <title>React App</title>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    <div id="loader">
+      <div class="ipl-progress-indicator-head">
+        <div class="first-indicator"></div>
+        <div class="second-indicator"></div>
+      </div>
+      <div class="loader-image">
+        Loading...
+      </div>
+    </div>
+    <noscript>
+      <div id="noscript">
+        <div style="width: 240px; max-width: 50%;margin-bottom: 1rem;">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 630 630"
+            data-inboxsdk-session-id="1557541465151-0.22482470304324975"
+          >
+            <rect width="630" height="630" fill="#f7df1e" />
+            <path
+              d="m423.2 492.19c12.69 20.72 29.2 35.95 58.4 35.95 24.53 0 40.2-12.26 40.2-29.2 0-20.3-16.1-27.49-43.1-39.3l-14.8-6.35c-42.72-18.2-71.1-41-71.1-89.2 0-44.4 33.83-78.2 86.7-78.2 37.64 0 64.7 13.1 84.2 47.4l-46.1 29.6c-10.15-18.2-21.1-25.37-38.1-25.37-17.34 0-28.33 11-28.33 25.37 0 17.76 11 24.95 36.4 35.95l14.8 6.34c50.3 21.57 78.7 43.56 78.7 93 0 53.3-41.87 82.5-98.1 82.5-54.98 0-90.5-26.2-107.88-60.54zm-209.13 5.13c9.3 16.5 17.76 30.45 38.1 30.45 19.45 0 31.72-7.61 31.72-37.2v-201.3h59.2v202.1c0 61.3-35.94 89.2-88.4 89.2-47.4 0-74.85-24.53-88.81-54.075z"
+            />
+          </svg>
+        </div>
+        <span>You need to enable JavaScript to run this app.</span>
+      </div>
+    </noscript>
   </body>
 </html>
