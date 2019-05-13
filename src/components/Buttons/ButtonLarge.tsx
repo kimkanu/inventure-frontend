@@ -3,6 +3,7 @@ import { shadowText, useStyles, sansSerifFont } from '../../styles';
 import { Color } from '../../colors';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Link from '../Link';
+import EdgeIcon from '../Icons/EdgeIcon';
 
 interface Props {
   backgroundColor: string | Color;
@@ -52,13 +53,14 @@ const ButtonLarge: FunctionComponent<Props> = ({
       }}
     >
       <div style={labelInside ? { margin: '0 15px' } : {}}>
-        {children}
+        {children ? children : <EdgeIcon buttonSize={48} />}
         {labelInside ? (
           <span
             style={useStyles(sansSerifFont, {
               display: 'inline-block',
               fontSize: '1rem',
               marginLeft: '0.3em',
+              marginRight: children ? '0' : '0.3em',
               lineHeight: '31px',
               verticalAlign: 'text-bottom',
             })}

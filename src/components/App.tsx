@@ -45,7 +45,7 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
   }
 
   useEffect(() => {
-    history.push('/');
+    // history.push(untilNthIndex(location.pathname, '/', 2));
     toggleLoading(LoadingData.App);
     document.getElementById('loader')!.className = 'hidden';
     const timeout = setTimeout(() => {

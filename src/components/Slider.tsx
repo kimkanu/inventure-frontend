@@ -36,17 +36,6 @@ const Slider: FunctionComponent<Props> = ({
   const [active, setActive] = useState(false);
   const [value, setValue] = useState(defaultValue);
   const [inputString, setInputString] = useState(value.toString());
-  let sliderBar: HTMLDivElement;
-  let sliderThumb: HTMLDivElement;
-  let sliderThumbContainer: HTMLDivElement;
-
-  useEffect(() => {
-    sliderBar = document.getElementById(`slider-bar-${id}`) as HTMLDivElement;
-    sliderThumb = document.getElementById(`slider-thumb-${id}`) as HTMLDivElement;
-    sliderThumbContainer = document.getElementById(
-      `slider-thumb-container-${id}`,
-    ) as HTMLDivElement;
-  });
 
   const uptoSecond = (s: string) => {
     const i = s.indexOf('.');
@@ -56,6 +45,10 @@ const Slider: FunctionComponent<Props> = ({
   };
 
   const mouseMoveHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const sliderBar = document.getElementById(`slider-bar-${id}`) as HTMLDivElement;
+    const sliderThumbContainer = document.getElementById(
+      `slider-thumb-container-${id}`,
+    ) as HTMLDivElement;
     const { left, right } = sliderBar.getClientRects()[0];
     const thumbPosition = Math.max(left, Math.min(e.clientX, right));
     const ratio = (thumbPosition - left) / (right - left);
@@ -70,6 +63,10 @@ const Slider: FunctionComponent<Props> = ({
     if (value !== nextValue) onChange(nextValue);
   };
   const touchMoveHandler = (e: React.TouchEvent<HTMLDivElement>) => {
+    const sliderBar = document.getElementById(`slider-bar-${id}`) as HTMLDivElement;
+    const sliderThumbContainer = document.getElementById(
+      `slider-thumb-container-${id}`,
+    ) as HTMLDivElement;
     const { left, right } = sliderBar.getClientRects()[0];
     const thumbPosition = Math.max(Math.min(e.touches[0].clientX, right), left);
     const ratio = (thumbPosition - left) / (right - left);
@@ -107,9 +104,13 @@ const Slider: FunctionComponent<Props> = ({
           ...style,
         }}
         onMouseMove={(e) => {
+          const sliderBar = document.getElementById(`slider-bar-${id}`) as HTMLDivElement;
+          const sliderThumb = document.getElementById(`slider-thumb-${id}`) as HTMLDivElement;
           if (active && sliderBar && sliderThumb) mouseMoveHandler(e);
         }}
         onTouchMove={(e) => {
+          const sliderBar = document.getElementById(`slider-bar-${id}`) as HTMLDivElement;
+          const sliderThumb = document.getElementById(`slider-thumb-${id}`) as HTMLDivElement;
           if (active && sliderBar && sliderThumb) touchMoveHandler(e);
         }}
         onMouseUp={() => {

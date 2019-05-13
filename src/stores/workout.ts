@@ -10,12 +10,26 @@ export interface WorkoutPlan {
   hidden: boolean;
 }
 
+export type BodyPart =
+  | 'neck'
+  | 'chest-n-back'
+  | 'stomach-n-waist'
+  | 'shoulder'
+  | 'arm'
+  | 'wrist'
+  | 'thigh'
+  | 'knee'
+  | 'calf'
+  | 'ankle';
+export type PainInfo = { [part in BodyPart]: { name: string; checked: boolean }[] };
+
 // interface for selected workout
 export interface Workout {
   type: string;
   plan: WorkoutPlan[];
   tempPlan: WorkoutPlan[];
   actionRecords: ActionRecord[];
+  painInfo: PainInfo;
 }
 export interface CreateRecord {
   type: 'create';
@@ -52,12 +66,30 @@ const initialPlan = [
     hidden: false,
   },
 ];
+const initialPainInfo = {
+  neck: [
+    {
+      name: '목아파',
+      checked: false,
+    },
+  ],
+  'chest-n-back': [],
+  'stomach-n-waist': [],
+  shoulder: [],
+  arm: [],
+  wrist: [],
+  thigh: [],
+  knee: [],
+  calf: [],
+  ankle: [],
+};
 
 export const initialWorkoutState: WorkoutState = {
   type: '' as string,
   plan: initialPlan,
   tempPlan: initialPlan,
   actionRecords: [],
+  painInfo: initialPainInfo,
 };
 
 export interface DeleteWorkoutAction {
@@ -77,19 +109,25 @@ export interface AddWorkoutAction {
   type: 'ADD_WORKOUT';
   payload: WorkoutPlan;
 }
+export interface TogglePainAction {
+  type: 'TOGGLE_PAIN';
+  payload: { bodyPart: BodyPart; name: string; checked?: boolean };
+}
 
 export type WorkoutAction =
   | DeleteWorkoutAction
   | UndoEditWorkoutPlanAction
   | SaveEditWorkoutPlanAction
   | DiscardEditWorkoutPlanAction
-  | AddWorkoutAction;
+  | AddWorkoutAction
+  | TogglePainAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
   'UNDO_EDIT_WORKOUT_PLAN',
   'SAVE_EDIT_WORKOUT_PLAN',
   'DISCARD_EDIT_WORKOUT_PLAN',
   'ADD_WORKOUT',
+  'TOGGLE_PAIN',
 ];
 
 const toggledPlan = (plan: WorkoutPlan[], i: number) => {
@@ -151,6 +189,36 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         tempPlan: [...state.tempPlan, action.payload],
         actionRecords: [...state.actionRecords, { type: 'create' } as CreateRecord],
       };
+    case 'TOGGLE_PAIN':
+      console.log(action.payload.checked);
+      const newBodyState = (origState: { name: string; checked: boolean }[]) => {
+        const index = origState.map((pain) => pain.name).indexOf(action.payload.name);
+        if (index < 0) {
+          return [
+            ...origState,
+            { name: action.payload.name, checked: action.payload.checked || false },
+          ];
+        }
+        return [
+          ...origState.slice(0, index),
+          {
+            name: action.payload.name,
+            checked:
+              action.payload.checked !== undefined
+                ? action.payload.checked
+                : !origState[index].checked,
+          },
+          ...origState.slice(index + 1),
+        ];
+      };
+      console.log(newBodyState(state.painInfo[action.payload.bodyPart]));
+      return {
+        ...state,
+        painInfo: {
+          ...state.painInfo,
+          [action.payload.bodyPart]: newBodyState(state.painInfo[action.payload.bodyPart]),
+        },
+      };
     default:
       return state;
   }
@@ -170,6 +238,9 @@ export const discardEditWorkoutPlan = () => {
 };
 export const addWorkout = (payload: WorkoutPlan) => {
   dispatch({ payload, type: 'ADD_WORKOUT' });
+};
+export const togglePain = (payload: { bodyPart: BodyPart; name: string; checked?: boolean }) => {
+  dispatch({ payload, type: 'TOGGLE_PAIN' });
 };
 /*
 export const addWorkout = (i: number) => {
