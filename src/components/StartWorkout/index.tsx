@@ -5,7 +5,8 @@ import EdgeIcon from '../Icons/EdgeIcon';
 import { COLORS } from '../../colors';
 import { useStyles, sansSerifFont } from '../../styles';
 import { Redirect } from 'react-router-dom';
-import { toggleMute, useGlobalState } from '../../stores';
+import { useGlobalState } from '../../stores';
+import { toggleMute } from '../../stores/workout';
 
 interface Props {
   nextStep: String;
@@ -60,7 +61,7 @@ const NextSection: FunctionComponent<Props> = ({ nextStep }) => {
 const MuteButton: FunctionComponent = () => {
   return (
     <ButtonLarge
-      clickHandler={toggleMute}
+      onClick={toggleMute}
       backgroundColor={'#fff'}
       shadowColor={COLORS.gray!.darker}
       color={COLORS.gray!.dark}
@@ -146,7 +147,7 @@ class StartWorkout extends Component<{}, State> {
 
             <ButtonLarge
               link="/workout/rest"
-              clickHandler={this.componentWillUnmount.bind(this)}
+              onClick={this.componentWillUnmount.bind(this)}
               backgroundColor={COLORS.blue!.light}
               shadowColor={COLORS.blue!.dark}
             >

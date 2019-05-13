@@ -7,6 +7,10 @@ import BottomToolbar from '../BottomToolbar';
 import { convertRemToPixels, randomString, untilNthIndex } from '../../utils';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import EditWorkout from './EditWorkout';
+import ButtonLarge from '../Buttons/ButtonLarge';
+import { COLORS } from '../../colors';
+import { undoEditWorkoutPlan, toggleMute } from '../../stores/workout';
+import EdgeIcon from '../Icons/EdgeIcon';
 
 interface Props {}
 
@@ -57,7 +61,26 @@ const ViewWorkout: FunctionComponent<Props> = ({}) => {
               position={position ? 'relative' : 'absolute'}
               bottom={position ? undefined : '80px'}
             >
-              ㅇㅅ
+              <ButtonLarge
+                backgroundColor={'#fff'}
+                shadowColor={COLORS.gray!.darker}
+                color={COLORS.gray!.dark}
+                label={workout.muted ? 'unmute' : 'mute'}
+                margin="1.5rem"
+                onClick={() => toggleMute()}
+              >
+                <EdgeIcon buttonSize={48}>{workout.muted ? '' : ''}</EdgeIcon>
+              </ButtonLarge>
+              <ButtonLarge
+                backgroundColor={COLORS.green!.lighter}
+                shadowColor={COLORS.green!.darker}
+                labelInside="start"
+                label="&nbsp;"
+                margin="1.5rem"
+                link="/workout/start"
+              >
+                <EdgeIcon buttonSize={48}></EdgeIcon>
+              </ButtonLarge>
             </BottomToolbar>
           </div>
         </div>

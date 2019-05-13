@@ -248,6 +248,7 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
       };
     case 'TOGGLE_MUTE':
       return {
+        ...state,
         muted: !state.muted,
       };
     default:
