@@ -44,6 +44,8 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
   if (language) {
     i18n.changeLanguage(language);
   }
+  toggleLoading(LoadingData.App);
+  document.getElementById('loader')!.className = 'hidden';
 
   useEffect(() => {
     history.push(untilNthIndex(location.pathname, '/', 2));

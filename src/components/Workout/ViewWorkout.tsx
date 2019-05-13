@@ -72,9 +72,9 @@ const ViewWorkout: FunctionComponent<Props> = ({}) => {
                 <EdgeIcon buttonSize={48}>{workout.muted ? '' : ''}</EdgeIcon>
               </ButtonLarge>
               <ButtonLarge
-                backgroundColor={COLORS.green!.lighter}
+                backgroundColor={COLORS.green!.light}
                 shadowColor={COLORS.green!.darker}
-                labelInside="start"
+                labelInside="Start"
                 label="&nbsp;"
                 margin="1.5rem"
                 link="/workout/start"

@@ -3,6 +3,8 @@ import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from './Link';
 import { untilNthIndex } from '../utils';
+import CardWithPicture from './CardWithPicture';
+import ProfileCard from './ProfileCard';
 
 interface Props extends RouteComponentProps {}
 
@@ -17,19 +19,26 @@ const Profile: FunctionComponent<Props> = ({ location }) => {
             classNames={'content--fade-transition'}
           >
             <div>
-              <Switch location={location}>
-                <Route
-                  path="/profile"
-                  render={() => (
-                    <div className="fade">
-                      <div className="content">
-                        <h1 className="heading">Profile</h1>
-                        <Link to="/workout/view">Go to /workout/view</Link>
-                      </div>
+              <Route
+                path="/profile"
+                render={() => (
+                  <div className="fade">
+                    <div className="content">
+                      <h1 className="heading">Profile</h1>
+                      <ProfileCard
+                        imgSrc="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y"
+                        name="Chad"
+                        id="chad0314"
+                        gym="Silloe Gym"
+                        level={16}
+                        points={300}
+                        maxPoints={2050}
+                        message="Aksdalsdk"
+                      />
                     </div>
-                  )}
-                />
-              </Switch>
+                  </div>
+                )}
+              />
             </div>
           </CSSTransition>
         </TransitionGroup>

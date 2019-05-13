@@ -82,7 +82,12 @@ const initialPainInfo = {
   shoulder: [],
   arm: [
     {
-      name: '팔아파',
+      name: 'Stretched muscle',
+      ban: ['deadlift'],
+      checked: false,
+    },
+    {
+      name: 'Burning feeling',
       ban: ['deadlift'],
       checked: false,
     },

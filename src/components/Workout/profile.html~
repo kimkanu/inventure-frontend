@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 
 <html>
-<link rel="stylesheet" href="./profile.css">
 <div style="width:900px; margin:0 auto; text-align:center;">
     <canvas id="myCanvas" width="800" height="300"></canvas>
-    <button class="button" onclick="editprof();">&#128393; Edit Profile</button>
+    <button class="button" onlcick()=editprof()>&#128393; Edit Profile</button>
 
 </div>
 <div style="width:900px; margin:0 auto; text-align: center;">
-    <button class="toggle" id="overview" value="view" onclick="toggle();">Overview</button>
-    <button class="toggle" id="stats" value="hide" onclick="toggle();">Stats</button>
+    <button class="toggle" id="overview" value="view" onclick="toggle()">Overview</button>
+    <button class="toggle" id="stats" value="hide" onclick="toggle()">Stats</button>
 
 </div>
 <div id="summary" style="width:900px; margin:0 auto;text-align: center;">
@@ -24,6 +23,5 @@
 
 </div>
 
-<script src="./profile.js"></script>
 
 </html>

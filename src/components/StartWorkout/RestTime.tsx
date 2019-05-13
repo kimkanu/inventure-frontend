@@ -11,7 +11,7 @@ interface State {
 }
 
 class RemainingTime extends Component<{}, State> {
-  timeTotal = 120;
+  timeTotal = 60;
 
   state = {
     show: true,
@@ -86,7 +86,6 @@ const RestTime: FunctionComponent = () => {
             textAlign: 'center',
           }}
         >
-          {/* <span style={useStyles(sansSerifFont)}>{"- What's Next -".toLocaleUpperCase()}</span> */}
           <div
             style={{
               display: 'flex',
@@ -124,7 +123,6 @@ const RestTime: FunctionComponent = () => {
             </span>
           </div>
           <div style={{ width: 'fit-content' }}>
-            {/* <img src="/next.jpg" width="150px" height="200px" /> */}
             {
               <iframe
                 width="300"

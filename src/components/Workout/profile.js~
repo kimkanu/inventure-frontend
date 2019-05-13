@@ -4,7 +4,7 @@ var dude = {
     bio: "Love my Gainzz"
 };
 function makeround(x, y, w, h, radius, ctx) {
-    var canvas = document.getElementById("pro1");
+    var canvas = document.getElementById("myCanvas");
     var context = canvas.getContext("2d");
     var r = x + w;
     var b = y + h;
@@ -24,8 +24,8 @@ function makeround(x, y, w, h, radius, ctx) {
 }
 
 //make profile lul
-var canvas = document.getElementById("pro1");
-var ctx =document.getElementById("pro1").getContext("2d");
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
 makeround(0, 0, canvas.width, canvas.height, 30, ctx);
 ctx.fillStyle = "white";
 ctx.fillRect(0, 0, canvas.width, canvas.height, 30);

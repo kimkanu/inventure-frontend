@@ -125,7 +125,7 @@ class StartWorkout extends Component<{}, State> {
               time={{ current: this.state.time, total: this.timeTotal }}
             />
           </div>
-          <NextSection nextStep="2 Minutes rest" />
+          <NextSection nextStep="1 Minute Rest" />
           <div
             style={{
               position: 'relative',
