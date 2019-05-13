@@ -25,7 +25,7 @@ const Workout: FunctionComponent<Props> = ({ location, history }) => {
                 /* TODO: temporary page */
                 <div className="fade">
                   <div className="content">
-                    <h1 className="heading">Workout</h1>
+                    <h1 className="heading">Start Workout</h1>
                     <Link to="/workout/pain">Go to /workout/pain</Link>
                   </div>
                 </div>
@@ -48,26 +48,20 @@ const Workout: FunctionComponent<Props> = ({ location, history }) => {
                     >
                       <div>
                         <Route
+                          path={[
+                            '/workout/body',
+                            '/workout/pain',
+                            '/workout/view',
+                            '/workout/edit',
+                          ]}
+                          location={location}
+                          render={() => <PainSelection />}
+                        />
+                        <Route
                           path={['/workout/pain', '/workout/view', '/workout/edit']}
                           location={location}
                           render={() => <PainSelection />}
                         />
-                      </div>
-                    </CSSTransition>
-                  </TransitionGroup>
-                  <TransitionGroup>
-                    <CSSTransition
-                      key={
-                        ['/workout/view', '/workout/edit'].includes(
-                          untilNthIndex(location.pathname, '/', 3),
-                        )
-                          ? 1
-                          : 0
-                      }
-                      timeout={{ enter: 300, exit: 300 }}
-                      classNames={'content--to-right-transition'}
-                    >
-                      <div>
                         <Route
                           path={['/workout/view', '/workout/edit']}
                           location={location}
