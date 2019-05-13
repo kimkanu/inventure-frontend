@@ -1,0 +1,38 @@
+.pic {
+  width: 250px;
+  height: 250px;
+}
+span {
+  position: relative;
+  bottom: -35%;
+}
+
+#arrow {
+  position: relative;
+  left: -1790px;
+}
+.description {
+  /*display:flex;
+ 	flex-direction: row;*/
+  height: 250px;
+  background-color: lightgreen;
+  border-radius: 0px 15px 15px 0px;
+  text-indent: 50px;
+  font-size: 55px;
+  width: calc(100% - 100px);
+}
+.earned {
+  position: relative;
+  font-size: 20px;
+  left: 305px;
+  top: -90px;
+  color: blue;
+}
+.arrow {
+  height: 30px;
+  position: relative;
+
+  z-index: 10;
+  left: -70px;
+  bottom: -45%;
+}

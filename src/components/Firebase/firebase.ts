@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
+import 'firebase/storage';
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -12,10 +13,12 @@ const config = {
 };
 class Firebase {
   database: firebase.database.Database;
+  storage: firebase.storage.Storage;
 
   constructor() {
     firebase.initializeApp(config);
     this.database = firebase.database();
+    this.storage = firebase.storage();
   }
 }
 

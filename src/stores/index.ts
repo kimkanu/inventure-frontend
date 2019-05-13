@@ -1,102 +1,57 @@
 import { createStore, Reducer } from 'react-hooks-global-state';
-
-// a type and an array for tabs
-export type Tabs = 'workout' | 'profile' | 'friends' | 'settings' | ''; // '' for initial state
-export const TABS = ['workout', 'profile', 'friends', 'settings'];
-
-// interface for a workout plan
-interface Plan {
-  name: string;
-  reps: number;
-  sets: number;
-  time: string;
-}
-
-// interface for selected workout
-interface Workout {
-  type: string;
-  plan: Plan[];
-}
+import { TAB_ACTION_TYPES, tabReducer, TabState, TabAction, initialTabState } from './tab';
+import {
+  WorkoutState,
+  workoutReducer,
+  WorkoutAction,
+  WORKOUT_ACTION_TYPES,
+  initialWorkoutState,
+} from './workout';
+import {
+  StaticState,
+  initialStaticState,
+  StaticAction,
+  STATIC_ACTION_TYPES,
+  staticReducer,
+} from './static';
+import {
+  LoadingAction,
+  initialLoadingState,
+  LoadingState,
+  LOADING_ACTION_TYPES,
+  loadingReducer,
+} from './loading';
 
 // interface for entire data -- store
 interface StoreState {
-  tabs: {
-    current: Tabs;
-    previous: Tabs;
-  };
-  workout: Workout;
+  tab: TabState;
+  workout: WorkoutState;
+  static: StaticState;
+  loading: LoadingState;
 }
 
 const initialState: StoreState = {
-  tabs: {
-    current: '' as Tabs,
-    previous: '' as Tabs,
-  },
-  workout: {
-    type: '' as string,
-    plan: [
-      // FIXME: temporary value
-      {
-        name: 'incline dumbbell bench press',
-        reps: 12,
-        sets: 2,
-        time: '1:00',
-      },
-      {
-        name: 'diamond pushups',
-        reps: 20,
-        sets: 3,
-        time: '0:45',
-      },
-      {
-        name: 'dumbbell shrugs',
-        reps: 12,
-        sets: 1,
-        time: '0:45',
-      },
-    ],
-  } as Workout,
+  tab: initialTabState,
+  workout: initialWorkoutState,
+  static: initialStaticState,
+  loading: initialLoadingState,
 };
 
-type NavigateTabAction = {
-  type: 'NAVIGATE_TAB';
-  payload: Tabs;
-};
-type DeleteWorkoutAction = {
-  type: 'DELETE_WORKOUT';
-  payload: number;
-};
-type StoreAction = NavigateTabAction | DeleteWorkoutAction;
+type StoreAction = TabAction | WorkoutAction | StaticAction | LoadingAction;
 
 const reducer: Reducer<StoreState, StoreAction> = (state, action) => {
-  switch (action.type) {
-    case 'NAVIGATE_TAB':
-      if (state.tabs.current === action.payload) {
-        return state;
-      }
-      return { ...state, tabs: { previous: state.tabs.current, current: action.payload } };
-    case 'DELETE_WORKOUT':
-      return {
-        ...state,
-        workout: {
-          ...state.workout,
-          plan: state.workout.plan
-            .slice(0, action.payload)
-            .concat(state.workout.plan.slice(action.payload + 1)),
-        },
-      };
+  switch (true) {
+    case TAB_ACTION_TYPES.includes(action.type):
+      return { ...state, tab: tabReducer(state.tab, action as TabAction) };
+    case WORKOUT_ACTION_TYPES.includes(action.type):
+      return { ...state, workout: workoutReducer(state.workout, action as WorkoutAction) };
+    case STATIC_ACTION_TYPES.includes(action.type):
+      return { ...state, static: staticReducer(state.static, action as StaticAction) };
+    case LOADING_ACTION_TYPES.includes(action.type):
+      return { ...state, loading: loadingReducer(state.loading, action as LoadingAction) };
     default:
       return state;
   }
 };
 
-const { GlobalStateProvider, dispatch, useGlobalState } = createStore(reducer, initialState);
-
-export const navigateTab = (c: Tabs) => {
-  dispatch({ type: 'NAVIGATE_TAB', payload: c });
-};
-export const deleteWorkout = (i: number) => {
-  dispatch({ type: 'DELETE_WORKOUT', payload: i });
-};
-
-export { GlobalStateProvider, dispatch, useGlobalState };
+export const { GlobalStateProvider, dispatch, useGlobalState } = createStore(reducer, initialState);

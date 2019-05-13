@@ -1,0 +1,44 @@
+.slider .slider-bar {
+  height: 4px;
+  padding: 22px 0;
+  position: absolute;
+  width: 100%;
+  cursor: pointer;
+}
+.slider .slider-bar > div {
+  height: 4px;
+  background-color: #c5c8cc;
+}
+.slider .slider-thumb {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+.slider .slider-thumb > div {
+  width: 20px;
+  height: 20px;
+  background-color: #4266f1;
+  transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.slider.active .slider-thumb > div {
+  width: 28px;
+  background-color: #88a1ff;
+  height: 28px;
+}
+
+.slider-input {
+  min-width: 48px;
+  padding: 0 0.5rem;
+  border: 1px solid #c5c8cc;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-right: 4px;
+}
