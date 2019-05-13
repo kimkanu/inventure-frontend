@@ -12,6 +12,7 @@ import { GlobalStateProvider } from '../stores';
 
 import './App.css';
 import { untilNthIndex } from '../utils';
+import Profile from './Profile';
 
 const NotFound: FunctionComponent = () => (
   <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
@@ -43,6 +44,7 @@ const App: FunctionComponent<Props> = ({ location }) => {
           <div>
             <Switch location={location}>
               <Route path="/workout" component={Workout} />
+              <Route path="/profile" component={Profile} />
               <Route path="/" component={NotFound} />
             </Switch>
           </div>
