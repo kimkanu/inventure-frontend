@@ -30,6 +30,7 @@ export interface Workout {
   tempPlan: WorkoutPlan[];
   actionRecords: ActionRecord[];
   painInfo: PainInfo;
+  unbannedWorkouts: string[];
 }
 export interface CreateRecord {
   type: 'create';
@@ -97,6 +98,7 @@ export const initialWorkoutState: WorkoutState = {
   tempPlan: initialPlan,
   actionRecords: [],
   painInfo: initialPainInfo,
+  unbannedWorkouts: [],
 };
 
 export interface DeleteWorkoutAction {
@@ -120,6 +122,10 @@ export interface TogglePainAction {
   type: 'TOGGLE_PAIN';
   payload: { bodyPart: BodyPart; name: string; checked?: boolean };
 }
+export interface UnbanWorkoutAction {
+  type: 'UNBAN_WORKOUT';
+  payload: string;
+}
 
 export type WorkoutAction =
   | DeleteWorkoutAction
@@ -127,7 +133,8 @@ export type WorkoutAction =
   | SaveEditWorkoutPlanAction
   | DiscardEditWorkoutPlanAction
   | AddWorkoutAction
-  | TogglePainAction;
+  | TogglePainAction
+  | UnbanWorkoutAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
   'UNDO_EDIT_WORKOUT_PLAN',
@@ -135,6 +142,7 @@ export const WORKOUT_ACTION_TYPES = [
   'DISCARD_EDIT_WORKOUT_PLAN',
   'ADD_WORKOUT',
   'TOGGLE_PAIN',
+  'UNBAN_WORKOUT',
 ];
 
 const toggledPlan = (plan: WorkoutPlan[], i: number) => {
@@ -197,7 +205,6 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         actionRecords: [...state.actionRecords, { type: 'create' } as CreateRecord],
       };
     case 'TOGGLE_PAIN':
-      console.log(action.payload.checked);
       const newBodyState = (origState: { name: string; ban: string[]; checked: boolean }[]) => {
         const index = origState.map((pain) => pain.name).indexOf(action.payload.name);
         if (index < 0) {
@@ -216,13 +223,19 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
           ...origState.slice(index + 1),
         ];
       };
-      console.log(newBodyState(state.painInfo[action.payload.bodyPart]));
       return {
         ...state,
         painInfo: {
           ...state.painInfo,
           [action.payload.bodyPart]: newBodyState(state.painInfo[action.payload.bodyPart]),
         },
+      };
+    case 'UNBAN_WORKOUT':
+      return {
+        ...state,
+        unbannedWorkouts: state.unbannedWorkouts.includes(action.payload)
+          ? state.unbannedWorkouts.filter((x) => x !== action.payload)
+          : [...state.unbannedWorkouts, action.payload],
       };
     default:
       return state;
@@ -246,6 +259,10 @@ export const addWorkout = (payload: WorkoutPlan) => {
 };
 export const togglePain = (payload: { bodyPart: BodyPart; name: string; checked?: boolean }) => {
   dispatch({ payload, type: 'TOGGLE_PAIN' });
+};
+export const unbanWorkout = (payload: string) => {
+  console.log(payload);
+  dispatch({ payload, type: 'UNBAN_WORKOUT' });
 };
 /*
 export const addWorkout = (i: number) => {

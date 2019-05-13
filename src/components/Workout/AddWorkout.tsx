@@ -110,10 +110,22 @@ const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog, setSe
   const [active, setActive] = useState(false);
   const [s, setS] = useState('');
   const [staticInfo] = useGlobalState('static');
-  const workouts = Object.keys(staticInfo.workoutInfo).map((name) => ({
-    name,
-    ...staticInfo.workoutInfo[name],
-  }));
+  const [workout] = useGlobalState('workout');
+  const workouts = Object.keys(staticInfo.workoutInfo)
+    .filter(
+      (name) =>
+        !Object.values(workout.painInfo)
+          .reduce((a, b) => [...a, ...b], [])
+          .filter((pain) => pain.checked)
+          .map((pain) => pain.ban)
+          .reduce((a, b) => [...a, ...b], [])
+          .filter((name) => !workout.unbannedWorkouts.includes(name))
+          .includes(name),
+    )
+    .map((name) => ({
+      name,
+      ...staticInfo.workoutInfo[name],
+    }));
   const fuse = new Fuse(workouts, { keys: ['name'], threshold: 0.5 });
   const filteredWorkouts = s ? fuse.search(s) : workouts;
   return (

@@ -8,7 +8,7 @@ import { COLORS } from '../../colors';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import EdgeIcon from '../Icons/EdgeIcon';
 import DialogTextButton from '../Dialog/DialogTextButton';
-import { WorkoutPlan, addWorkout, BodyPart, togglePain } from '../../stores/workout';
+import { WorkoutPlan, addWorkout, BodyPart, togglePain, unbanWorkout } from '../../stores/workout';
 import Dialog from '../Dialog';
 import { capitalizeFirst } from '../../utils';
 import { History } from 'history';
@@ -346,7 +346,7 @@ const PainSelectionAnatomy: FunctionComponent<AnatomyProps> = ({ setDialog }) =>
 
 const BannedTrainingList: FunctionComponent = () => {
   const [workout] = useGlobalState('workout');
-
+  console.log(workout.unbannedWorkouts);
   return (
     <FormControl
       style={{
@@ -364,9 +364,9 @@ const BannedTrainingList: FunctionComponent = () => {
               key={i}
               control={
                 <Checkbox
-                  defaultChecked={false}
+                  defaultChecked={workout.unbannedWorkouts.includes(bannedWorkout)}
                   onChange={(e) => {
-                    console.log(e.currentTarget.checked);
+                    unbanWorkout(bannedWorkout);
                   }}
                   value={bannedWorkout}
                 />
@@ -481,7 +481,6 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
                             today's training.
                           </p>
                           <BannedTrainingList />
-
                           <div
                             style={{
                               display: 'flex',
