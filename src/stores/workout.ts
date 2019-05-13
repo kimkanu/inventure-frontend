@@ -31,6 +31,8 @@ export interface Workout {
   actionRecords: ActionRecord[];
   painInfo: PainInfo;
   unbannedWorkouts: string[];
+  muted: boolean;
+  current: number;
 }
 export interface CreateRecord {
   type: 'create';
@@ -99,6 +101,8 @@ export const initialWorkoutState: WorkoutState = {
   actionRecords: [],
   painInfo: initialPainInfo,
   unbannedWorkouts: [],
+  muted: false,
+  current: -1,
 };
 
 export interface DeleteWorkoutAction {
@@ -130,6 +134,9 @@ export interface ChangeWorkoutTypeAction {
   type: 'CHANGE_WORKOUT_TYPE';
   payload: string;
 }
+type ToggleMuteAction = {
+  type: 'TOGGLE_MUTE';
+};
 
 export type WorkoutAction =
   | DeleteWorkoutAction
@@ -139,7 +146,8 @@ export type WorkoutAction =
   | AddWorkoutAction
   | TogglePainAction
   | UnbanWorkoutAction
-  | ChangeWorkoutTypeAction;
+  | ChangeWorkoutTypeAction
+  | ToggleMuteAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
   'UNDO_EDIT_WORKOUT_PLAN',
@@ -149,6 +157,7 @@ export const WORKOUT_ACTION_TYPES = [
   'TOGGLE_PAIN',
   'UNBAN_WORKOUT',
   'CHANGE_WORKOUT_TYPE',
+  'TOGGLE_MUTE',
 ];
 
 const toggledPlan = (plan: WorkoutPlan[], i: number) => {
@@ -247,6 +256,10 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
       return {
         ...state,
         type: action.payload,
+    case 'TOGGLE_MUTE':
+      return {
+        ...state,
+        muted: !state.muted,
       };
     default:
       return state;
@@ -277,8 +290,6 @@ export const unbanWorkout = (payload: string) => {
 export const changeWorkoutType = (payload: string) => {
   dispatch({ payload, type: 'CHANGE_WORKOUT_TYPE' });
 };
-/*
-export const addWorkout = (i: number) => {
-  dispatch({ type: 'DELETE_WORKOUT', payload: i });
+export const toggleMute = () => {
+  dispatch({ type: 'TOGGLE_MUTE' });
 };
-*/

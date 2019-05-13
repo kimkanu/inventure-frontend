@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useState, useMemo, useEffect, Component } from 'react';
 import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from '../Link';
@@ -6,6 +6,8 @@ import EditWorkout from './EditWorkout';
 import { untilNthIndex } from '../../utils';
 import ViewWorkout from './ViewWorkout';
 import Firebase, { FirebaseContext } from '../Firebase';
+import StartWorkout from '../StartWorkout';
+import RestTime from '../StartWorkout/RestTime';
 import PainSelection from './PainSelection';
 import CardWithPicture from '../CardWithPicture';
 import { useGlobalState } from '../../stores';
@@ -75,6 +77,7 @@ const Workout: FunctionComponent<Props> = ({ location, history }) => {
                           render={() => <PainSelection />}
                         />
                       </div>
+
                     </CSSTransition>
                   </TransitionGroup>
                   <TransitionGroup>
@@ -113,6 +116,8 @@ const Workout: FunctionComponent<Props> = ({ location, history }) => {
                       </div>
                     </CSSTransition>
                   </TransitionGroup>
+                <Route path="/workout/start" component={() => <StartWorkout />} />
+                <Route path="/workout/rest" component={() => <RestTime />} />
                 </div>
               )}
             />
