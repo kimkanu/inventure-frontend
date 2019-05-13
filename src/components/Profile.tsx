@@ -35,6 +35,15 @@ const Profile: FunctionComponent<Props> = ({ location }) => {
                         maxPoints={2050}
                         message="Aksdalsdk"
                       />
+                      <h2
+                        className="heading"
+                        style={{
+                          marginTop: '3rem',
+                        }}
+                      >
+                        Not Implemented
+                      </h2>
+                      <p>We didn't have enough time to do it.</p>
                     </div>
                   </div>
                 )}
