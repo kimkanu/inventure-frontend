@@ -83,7 +83,7 @@ interface DialogProps {
 }
 interface Props extends RouteComponentProps {}
 
-const EditWorkout: FunctionComponent<Props> = ({ location, history }) => {
+const EditWorkout: FunctionComponent<Props> = ({ history }) => {
   const [position, setPosition] = useState(true); // true for relative, false for absolute
   const workout = useGlobalState('workout')[0];
   const [saved, setSaved] = useState(true);

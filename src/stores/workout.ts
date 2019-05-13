@@ -126,6 +126,10 @@ export interface UnbanWorkoutAction {
   type: 'UNBAN_WORKOUT';
   payload: string;
 }
+export interface ChangeWorkoutTypeAction {
+  type: 'CHANGE_WORKOUT_TYPE';
+  payload: string;
+}
 
 export type WorkoutAction =
   | DeleteWorkoutAction
@@ -134,7 +138,8 @@ export type WorkoutAction =
   | DiscardEditWorkoutPlanAction
   | AddWorkoutAction
   | TogglePainAction
-  | UnbanWorkoutAction;
+  | UnbanWorkoutAction
+  | ChangeWorkoutTypeAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
   'UNDO_EDIT_WORKOUT_PLAN',
@@ -143,6 +148,7 @@ export const WORKOUT_ACTION_TYPES = [
   'ADD_WORKOUT',
   'TOGGLE_PAIN',
   'UNBAN_WORKOUT',
+  'CHANGE_WORKOUT_TYPE',
 ];
 
 const toggledPlan = (plan: WorkoutPlan[], i: number) => {
@@ -237,6 +243,11 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
           ? state.unbannedWorkouts.filter((x) => x !== action.payload)
           : [...state.unbannedWorkouts, action.payload],
       };
+    case 'CHANGE_WORKOUT_TYPE':
+      return {
+        ...state,
+        type: action.payload,
+      };
     default:
       return state;
   }
@@ -261,8 +272,10 @@ export const togglePain = (payload: { bodyPart: BodyPart; name: string; checked?
   dispatch({ payload, type: 'TOGGLE_PAIN' });
 };
 export const unbanWorkout = (payload: string) => {
-  console.log(payload);
   dispatch({ payload, type: 'UNBAN_WORKOUT' });
+};
+export const changeWorkoutType = (payload: string) => {
+  dispatch({ payload, type: 'CHANGE_WORKOUT_TYPE' });
 };
 /*
 export const addWorkout = (i: number) => {
