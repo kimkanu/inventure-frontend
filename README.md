@@ -12,6 +12,36 @@ npm config set @bit:registry https://node.bitsrc.io
 npm install  # or `yarn`
 ```
 
+## Dependencies
+We used the following libraries:
+
+* React
+  + react
+  + react-dom
+  + react-router-dom
+  + react-transition-group
+* typescript
+* Material UI
+  + @bit/mui-org.material-ui.bottom-navigation
+  + @bit/mui-org.material-ui.bottom-navigation-action
+  + @bit/mui-org.material-ui.icon
+  + @material-ui/core
+  + @material-ui/icons
+  + @material-ui/styles
+* Fontawesome
+  + @fortawesome/fontawesome-svg-core
+  + @fortawesome/free-solid-svg-icons
+  + @fortawesome/react-fontawesome
+* firebase
+* fuse.js
+* i18next
+* detect-browser-language
+* query-string
+* react-iframe
+* react-hooks-global-state
+* react-circular-progressbar
+* victory
+* lorem-ipsum
 
 ## Directory Structure
 
