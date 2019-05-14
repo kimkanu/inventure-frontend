@@ -78,7 +78,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        margin: `.4rem ${typeof margin === 'number' ? `${margin}px` : margin}`,
+        margin: `.4rem 0`,
         opacity: hidden ? 0 : 1,
       }}
       hidden={hidden}
@@ -89,6 +89,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
           style={{
             borderRadius: '24px',
             cursor: hidden ? 'default' : 'pointer',
+            margin: `0 ${typeof margin === 'number' ? `${margin}px` : margin}`,
           }}
           hidden={hidden}
           aria-hidden={hidden}
