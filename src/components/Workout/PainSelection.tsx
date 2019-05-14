@@ -10,7 +10,7 @@ import EdgeIcon from '../Icons/EdgeIcon';
 import DialogTextButton from '../Dialog/DialogTextButton';
 import { WorkoutPlan, addWorkout, BodyPart, togglePain, unbanWorkout } from '../../stores/workout';
 import Dialog from '../Dialog';
-import { capitalizeFirst } from '../../utils';
+import { capitalizeFirst, unique } from '../../utils';
 import { History } from 'history';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -359,30 +359,30 @@ const BannedTrainingList: FunctionComponent = () => {
       }}
     >
       <FormGroup>
-        {Object.keys(staticInfo.painInfo)
-          .filter((bodyPart) => (workout.pain as any)[bodyPart] as boolean)
-          .map((bodyPart) => staticInfo.painInfo[bodyPart])
-          .reduce((a, b) => [...a, ...b], [])
-          .filter((name) => !workout.unbannedWorkouts.includes(name))
-          .map((bannedWorkout, i) => (
-            <FormControlLabel
-              key={i}
-              control={
-                <Checkbox
-                  defaultChecked={workout.unbannedWorkouts.includes(bannedWorkout)}
-                  onChange={(e) => {
-                    unbanWorkout(bannedWorkout);
-                  }}
-                  value={bannedWorkout}
-                />
-              }
-              label={
-                <span style={useStyles(sansSerifFont, { fontSize: '1rem' })}>
-                  {capitalizeFirst(bannedWorkout)}
-                </span>
-              }
-            />
-          ))}
+        {unique(
+          Object.keys(staticInfo.painInfo)
+            .filter((bodyPart) => (workout.pain as any)[bodyPart] as boolean)
+            .map((bodyPart) => staticInfo.painInfo[bodyPart])
+            .reduce((a, b) => [...a, ...b], []),
+        ).map((bannedWorkout, i) => (
+          <FormControlLabel
+            key={i}
+            control={
+              <Checkbox
+                defaultChecked={workout.unbannedWorkouts.includes(bannedWorkout)}
+                onChange={(e) => {
+                  unbanWorkout(bannedWorkout);
+                }}
+                value={bannedWorkout}
+              />
+            }
+            label={
+              <span style={useStyles(sansSerifFont, { fontSize: '1rem' })}>
+                {capitalizeFirst(bannedWorkout)}
+              </span>
+            }
+          />
+        ))}
       </FormGroup>
     </FormControl>
   );
