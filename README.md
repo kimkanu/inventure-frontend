@@ -33,6 +33,9 @@ npm install  # or `yarn`
      |- /StartWorkout       # index (/workout/start), Timer, and RestTime(/workout/rest)
      |- /test               # test folder
      |- /Workout            # Workout related pages and components except Lixia's work
+        |- AddWorkout, EditWorkout, index, PainSelection, ViewWorkout, WorkoutTable.tsx # Keonwoo's work
+        |- profile.css, html, js # Waleed's work in HTML and CSS
+        |- WorkoutType and WorkoutOption.tsx # Qilman's work transported into React
      |- App.[tsx|css]       # main app file
      |- BottomNavigator.[tsx|css] # Navigator at the bottom of the page
      |- BottomToolbar.tsx   # wrapper for buttons just above the bottom navigator, like mute and start buttons in view workout page
