@@ -2,7 +2,7 @@
   position: absolute;
   width: 100vw;
   top: 0px;
-  height: 100%;
+  height: calc(100 * var(--vh));
   padding: 0 0.67rem calc(56px + 1.67rem);
   box-sizing: border-box;
   overflow: auto;

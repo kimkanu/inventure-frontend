@@ -4,7 +4,7 @@ import { COLORS } from '../colors';
 import { ButtonBase } from '@material-ui/core';
 
 interface Props {
-  onChange: (value: string, index?: number) => void;
+  onChange: (value: string, index: number) => void;
   defaultVal?: number;
   labels: string[];
 }

@@ -10,7 +10,7 @@ import BackButton from '../Buttons/BackButton';
 import { COLOR_BACKGROUND } from '../../colors';
 import { useGlobalState } from '../../stores';
 import { Route, RouteComponentProps, withRouter, Prompt } from 'react-router-dom';
-import { untilNthIndex, randomString } from '../../utils';
+import { untilNthIndex, randomString, capitalizeFirst } from '../../utils';
 import { ButtonBase } from '@material-ui/core';
 import Dialog from '../Dialog';
 import DialogTextButton from '../Dialog/DialogTextButton';
@@ -49,7 +49,7 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setS
               ...ss,
               name: x.name,
             }));
-            setDialog({ show: true, title: x.name });
+            setDialog({ show: true, title: capitalizeFirst(x.name) });
           }}
           key={i}
         >
@@ -70,18 +70,28 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setS
               style={{
                 maxWidth: '156px',
                 height: '124px',
+                display: 'flex',
               }}
             >
-              <img
-                src={x.image}
+              <div
                 style={{
                   maxWidth: '140px',
-                  maxHeight: '116px',
                   margin: '8px 8px 0',
                   borderRadius: '8px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
                 }}
-                alt={`An image of the workout '${x.name}'`}
-              />
+              >
+                <img
+                  src={x.image}
+                  style={{
+                    height: '116px',
+                    borderRadius: '8px',
+                  }}
+                  alt={`An image of the workout '${x.name}'`}
+                />
+              </div>
             </div>
             <div
               style={useStyles(sansSerifFont, {
@@ -89,6 +99,9 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setS
                 height: '32px',
                 lineHeight: '32px',
                 fontSize: '0.9rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
               })}
             >
               {x.name.toLocaleUpperCase()}
@@ -114,10 +127,9 @@ const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog, setSe
   const workouts = Object.keys(staticInfo.workoutInfo)
     .filter(
       (name) =>
-        !Object.values(workout.painInfo)
-          .reduce((a, b) => [...a, ...b], [])
-          .filter((pain) => pain.checked)
-          .map((pain) => pain.ban)
+        !Object.keys(staticInfo.painInfo)
+          .filter((bodyPart) => (workout.pain as any)[bodyPart] as boolean)
+          .map((bodyPart) => staticInfo.painInfo[bodyPart])
           .reduce((a, b) => [...a, ...b], [])
           .filter((name) => !workout.unbannedWorkouts.includes(name))
           .includes(name),

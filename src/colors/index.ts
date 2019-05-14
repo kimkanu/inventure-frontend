@@ -10,7 +10,7 @@ type ColorName =
   | 'pink'
   | 'gray';
 type ColorBrightness = 'lightest' | 'lighter' | 'light' | 'normal' | 'dark' | 'darker' | 'darkest';
-type ColorGradient = { [brightness in ColorBrightness]: ColorHex };
+export type ColorGradient = { [brightness in ColorBrightness]: ColorHex };
 export type ColorSystem = Partial<{ [color in ColorName]: ColorGradient }>;
 type ColorHex = string;
 export const COLOR_UNKNOWN = '#149858';

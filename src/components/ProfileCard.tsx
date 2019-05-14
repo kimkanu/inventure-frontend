@@ -40,7 +40,7 @@ const ProfileCard: FunctionComponent<Props> = ({
         backgroundColor: 'white',
         display: 'flex',
         width: '100%',
-        height: '9rem',
+        height: '8rem',
         borderRadius: '8px',
         boxShadow: shadowText({
           depth,
@@ -51,8 +51,8 @@ const ProfileCard: FunctionComponent<Props> = ({
     >
       <ButtonBase
         style={{
-          width: '7rem',
-          height: '7rem',
+          width: '6rem',
+          height: '6rem',
           overflow: 'hidden',
           display: 'flex',
           justifyContent: 'center',
@@ -63,7 +63,7 @@ const ProfileCard: FunctionComponent<Props> = ({
         <img
           src={imgSrc}
           style={{
-            height: '7rem',
+            height: '6rem',
             borderRadius: '8px',
           }}
           alt={alt}
@@ -71,7 +71,7 @@ const ProfileCard: FunctionComponent<Props> = ({
       </ButtonBase>
       <div
         style={{
-          width: 'calc(100% - 9rem)',
+          width: 'calc(100% - 8rem)',
           height: '100%',
         }}
       >
@@ -88,20 +88,29 @@ const ProfileCard: FunctionComponent<Props> = ({
         >
           <div
             style={{
-              margin: '1.2rem 0',
+              margin: '1rem 0 0.5rem',
+              width: '100%',
             }}
           >
             <div
               style={useStyles(headingFont, {
                 display: 'flex',
                 flexDirection: 'column',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                marginBottom: '-.1rem',
               })}
             >
-              <h2 style={{ margin: '0 0 .4rem' }}>{name}</h2>
+              <h2 style={{ margin: '0' }}>{name}</h2>
             </div>
             <div
               style={{
-                marginBottom: '-.2rem',
+                marginBottom: '-.3rem',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                position: 'relative',
+                maxWidth: 'calc(100% - 7rem)',
               }}
             >
               <span
@@ -127,7 +136,7 @@ const ProfileCard: FunctionComponent<Props> = ({
             </div>
             <div
               style={{
-                marginBottom: '.2rem',
+                marginBottom: '.1rem',
               }}
             >
               <span
@@ -151,6 +160,26 @@ const ProfileCard: FunctionComponent<Props> = ({
                 {gym}
               </span>
             </div>
+            <div
+              style={{
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+              }}
+            >
+              <span>
+                <span
+                  style={{
+                    fontFamily: 'EdgeIcons',
+                    display: 'inline-block',
+                    transform: 'translateY(1pt)',
+                    marginRight: '3px',
+                  }}
+                >
+                  
+                </span>
+                {message}
+              </span>
+            </div>
           </div>
           <div
             style={{
@@ -158,6 +187,9 @@ const ProfileCard: FunctionComponent<Props> = ({
               display: 'flex',
               flexDirection: 'column',
               textAlign: 'right',
+              position: 'absolute',
+              top: 0,
+              right: 0,
             }}
           >
             <div>
@@ -220,15 +252,6 @@ const ProfileCard: FunctionComponent<Props> = ({
               </span>
             </div>
           </div>
-        </div>
-        <div
-          style={{
-            marginRight: '1rem',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-          }}
-        >
-          <span>{message}</span>
         </div>
       </div>
     </div>
