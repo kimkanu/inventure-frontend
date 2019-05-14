@@ -17,6 +17,7 @@ import { sansSerifFont, useStyles } from '../styles';
 import FirebaseDataPreloader from './FirebaseDataPreloader';
 import { toggleLoading, LoadingData } from '../stores/loading';
 import SliderContainer from './test/SliderContainer';
+import Friends from './Friends';
 
 const NotFound: FunctionComponent = () => (
   <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
@@ -48,7 +49,7 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
   document.getElementById('loader')!.className = 'hidden';
 
   useEffect(() => {
-    history.push(untilNthIndex(location.pathname, '/', 2));
+    // history.push(untilNthIndex(location.pathname, '/', 2));
     const timeout = setTimeout(() => {
       toggleLoading(LoadingData.App);
       document.getElementById('loader')!.className = 'hidden';
@@ -75,6 +76,7 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
             <Switch location={location}>
               <Route path="/workout" component={Workout} />
               <Route path="/profile" component={Profile} />
+              <Route path="/friends" component={Friends} />
               <Route path="/settings" component={NotImplemented} />
               <Route path="/" component={NotFound} />
             </Switch>
