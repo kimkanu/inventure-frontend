@@ -30,7 +30,7 @@ const WorkoutType: FunctionComponent<Props> = ({ history }) => {
               <CardWithPicture
                 key={i}
                 imgSrc={(staticInfo.images[name] || {}).image || transparentImage}
-                alt={`${capitalizeFirst(name)} image`}
+                alt={`The icon for ${name} workout`}
                 onClick={() => {
                   changeWorkoutType(name);
                   if (options.length) {
@@ -41,9 +41,18 @@ const WorkoutType: FunctionComponent<Props> = ({ history }) => {
                   } else history.push('/workout/pain');
                 }}
               >
-                <span style={useStyles(sansSerifFont, { fontSize: '1.5rem' })}>
-                  {capitalizeFirst(name)}
-                </span>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    width: '100%',
+                  }}
+                >
+                  <span style={useStyles(sansSerifFont, { fontSize: '1.5rem' })}>
+                    {capitalizeFirst(name)}
+                  </span>
+                </div>
               </CardWithPicture>
             ))}
           </div>

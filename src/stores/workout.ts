@@ -12,8 +12,10 @@ export interface WorkoutPlan {
 
 export type BodyPart =
   | 'neck'
-  | 'chest-n-back'
-  | 'stomach-n-waist'
+  | 'chest'
+  | 'back'
+  | 'stomach'
+  | 'waist'
   | 'shoulder'
   | 'arm'
   | 'wrist'
@@ -21,7 +23,7 @@ export type BodyPart =
   | 'knee'
   | 'calf'
   | 'ankle';
-export type PainInfo = { [part in BodyPart]: { name: string; ban: string[]; checked: boolean }[] };
+export type Pain = { [part in BodyPart]: boolean };
 
 // interface for selected workout
 export interface Workout {
@@ -29,7 +31,7 @@ export interface Workout {
   plan: WorkoutPlan[];
   tempPlan: WorkoutPlan[];
   actionRecords: ActionRecord[];
-  painInfo: PainInfo;
+  pain: Pain;
   unbannedWorkouts: string[];
   muted: boolean;
   current: number;
@@ -69,34 +71,19 @@ const initialPlan = [
     hidden: false,
   },
 ];
-const initialPainInfo = {
-  neck: [
-    {
-      name: '목아파',
-      ban: [],
-      checked: false,
-    },
-  ],
-  'chest-n-back': [],
-  'stomach-n-waist': [],
-  shoulder: [],
-  arm: [
-    {
-      name: 'Stretched muscle',
-      ban: ['deadlift'],
-      checked: false,
-    },
-    {
-      name: 'Burning feeling',
-      ban: ['deadlift'],
-      checked: false,
-    },
-  ],
-  wrist: [],
-  thigh: [],
-  knee: [],
-  calf: [],
-  ankle: [],
+const initialPain = {
+  neck: false,
+  chest: false,
+  back: false,
+  stomach: false,
+  waist: false,
+  shoulder: false,
+  arm: false,
+  wrist: false,
+  thigh: false,
+  knee: false,
+  calf: false,
+  ankle: false,
 };
 
 export const initialWorkoutState: WorkoutState = {
@@ -104,7 +91,7 @@ export const initialWorkoutState: WorkoutState = {
   plan: initialPlan,
   tempPlan: initialPlan,
   actionRecords: [],
-  painInfo: initialPainInfo,
+  pain: initialPain,
   unbannedWorkouts: [],
   muted: false,
   current: -1,
@@ -129,7 +116,7 @@ export interface AddWorkoutAction {
 }
 export interface TogglePainAction {
   type: 'TOGGLE_PAIN';
-  payload: { bodyPart: BodyPart; name: string; checked?: boolean };
+  payload: { bodyPart: BodyPart; checked?: boolean };
 }
 export interface UnbanWorkoutAction {
   type: 'UNBAN_WORKOUT';
@@ -225,29 +212,11 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         actionRecords: [...state.actionRecords, { type: 'create' } as CreateRecord],
       };
     case 'TOGGLE_PAIN':
-      const newBodyState = (origState: { name: string; ban: string[]; checked: boolean }[]) => {
-        const index = origState.map((pain) => pain.name).indexOf(action.payload.name);
-        if (index < 0) {
-          return state;
-        }
-        return [
-          ...origState.slice(0, index),
-          {
-            name: action.payload.name,
-            ban: origState[index].ban,
-            checked:
-              action.payload.checked !== undefined
-                ? action.payload.checked
-                : !origState[index].checked,
-          },
-          ...origState.slice(index + 1),
-        ];
-      };
       return {
         ...state,
-        painInfo: {
-          ...state.painInfo,
-          [action.payload.bodyPart]: newBodyState(state.painInfo[action.payload.bodyPart]),
+        pain: {
+          ...state.pain,
+          [action.payload.bodyPart]: action.payload.checked || !state.pain[action.payload.bodyPart],
         },
       };
     case 'UNBAN_WORKOUT':
@@ -287,7 +256,7 @@ export const discardEditWorkoutPlan = () => {
 export const addWorkout = (payload: WorkoutPlan) => {
   dispatch({ payload, type: 'ADD_WORKOUT' });
 };
-export const togglePain = (payload: { bodyPart: BodyPart; name: string; checked?: boolean }) => {
+export const togglePain = (payload: { bodyPart: BodyPart; checked?: boolean }) => {
   dispatch({ payload, type: 'TOGGLE_PAIN' });
 };
 export const unbanWorkout = (payload: string) => {

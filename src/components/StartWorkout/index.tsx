@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState, useMemo, useEffect, Component } fro
 import Timer from './Timer';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import EdgeIcon from '../Icons/EdgeIcon';
-import { COLORS } from '../../colors';
+import { COLORS, COLOR_BACKGROUND } from '../../colors';
 import { useStyles, sansSerifFont } from '../../styles';
 import { Redirect } from 'react-router-dom';
 import { useGlobalState } from '../../stores';
@@ -35,7 +35,7 @@ const NextSection: FunctionComponent<Props> = ({ nextStep }) => {
           <span
             style={useStyles(sansSerifFont, {
               fontSize: '.9rem',
-              backgroundColor: '#f7f7f7',
+              backgroundColor: COLOR_BACKGROUND,
               display: 'inline-block',
               transform: 'translateY(-.8em)',
               padding: '0 .8em',

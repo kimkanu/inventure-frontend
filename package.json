@@ -36,7 +36,8 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "react-transition-group": "^4.0.0",
-    "typescript": "^3.4.3"
+    "typescript": "^3.4.3",
+    "victory": "^32.2.3"
   },
   "scripts": {
     "start": "react-scripts start",
