@@ -28,9 +28,9 @@ const CardWithPicture: FunctionComponent<Props> = ({
         backgroundColor: 'white',
         display: 'flex',
         width: '100%',
-        height: '10rem',
+        height: '8rem',
         borderRadius: '8px',
-        textAlign: 'center',
+        textAlign: 'initial',
         boxShadow: shadowText({
           depth,
           opacity,
@@ -40,18 +40,19 @@ const CardWithPicture: FunctionComponent<Props> = ({
     >
       <div
         style={{
-          width: '10rem',
-          height: '10rem',
+          width: '6rem',
+          height: '6rem',
           overflow: 'hidden',
           display: 'flex',
           justifyContent: 'center',
           borderRadius: '8px',
+          margin: '1rem',
         }}
       >
         <img
           src={imgSrc}
           style={{
-            height: '10rem',
+            height: '6rem',
             borderRadius: '8px',
           }}
           alt={alt}
@@ -59,14 +60,12 @@ const CardWithPicture: FunctionComponent<Props> = ({
       </div>
       <div
         style={{
-          width: 'calc(100% - 10rem)',
+          width: 'calc(100% - 9rem)',
           height: '100%',
-          right: '0',
+          margin: '0 1rem 0 0',
           position: 'relative',
           borderRadius: '8px',
-          textAlign: 'center',
           display: 'flex',
-          justifyContent: 'center',
           alignItems: 'center',
         }}
       >

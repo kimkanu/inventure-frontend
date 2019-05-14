@@ -28,7 +28,7 @@
 }
 .content--top-level-transition-enter .top-level {
   opacity: 0;
-  filter: brightness(500%);
+  filter: brightness(107%);
   transform: scale(0.95);
 }
 .content--top-level-transition-enter-active .top-level {

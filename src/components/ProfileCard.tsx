@@ -40,7 +40,7 @@ const ProfileCard: FunctionComponent<Props> = ({
         backgroundColor: 'white',
         display: 'flex',
         width: '100%',
-        height: '12rem',
+        height: '9rem',
         borderRadius: '8px',
         boxShadow: shadowText({
           depth,
@@ -51,19 +51,19 @@ const ProfileCard: FunctionComponent<Props> = ({
     >
       <ButtonBase
         style={{
-          width: '9rem',
-          height: '9rem',
+          width: '7rem',
+          height: '7rem',
           overflow: 'hidden',
           display: 'flex',
           justifyContent: 'center',
           borderRadius: '8px',
-          margin: '1.5rem',
+          margin: '1rem',
         }}
       >
         <img
           src={imgSrc}
           style={{
-            height: '9rem',
+            height: '7rem',
             borderRadius: '8px',
           }}
           alt={alt}
@@ -71,136 +71,164 @@ const ProfileCard: FunctionComponent<Props> = ({
       </ButtonBase>
       <div
         style={{
-          width: 'calc(100% - 12rem)',
+          width: 'calc(100% - 9rem)',
           height: '100%',
-          right: '0',
-          position: 'relative',
-          justifyContent: 'space-between',
-          borderRadius: '8px',
-          display: 'flex',
         }}
       >
         <div
           style={{
-            margin: '2rem 0',
+            width: '100%',
+            height: 'calc(100% - 2.5rem)',
+            right: '0',
+            position: 'relative',
+            justifyContent: 'space-between',
+            borderRadius: '8px',
+            display: 'flex',
           }}
         >
           <div
-            style={useStyles(headingFont, {
-              display: 'flex',
-              flexDirection: 'column',
-            })}
+            style={{
+              margin: '1.2rem 0',
+            }}
           >
-            <h1 style={{ margin: '0 0 .5rem' }}>{name}</h1>
-          </div>
-          <div>
-            <span
+            <div
+              style={useStyles(headingFont, {
+                display: 'flex',
+                flexDirection: 'column',
+              })}
+            >
+              <h2 style={{ margin: '0 0 .4rem' }}>{name}</h2>
+            </div>
+            <div
               style={{
-                color: COLORS.gray!.dark,
+                marginBottom: '-.2rem',
               }}
             >
               <span
                 style={{
-                  fontFamily: 'EdgeIcons',
-                  display: 'inline-block',
-                  transform: 'translateY(1pt)',
-                  marginRight: '2px',
+                  color: COLORS.gray!.dark,
+                  fontSize: '.9rem',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
                 }}
               >
-                
+                <span
+                  style={{
+                    fontFamily: 'EdgeIcons',
+                    display: 'inline-block',
+                    transform: 'translateY(1pt)',
+                    marginRight: '2px',
+                  }}
+                >
+                  
+                </span>
+                {id}
               </span>
-              {id}
-            </span>
+            </div>
+            <div
+              style={{
+                marginBottom: '.2rem',
+              }}
+            >
+              <span
+                style={{
+                  color: COLORS.gray!.dark,
+                  fontSize: '.9rem',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: 'EdgeIcons',
+                    display: 'inline-block',
+                    transform: 'translateY(1pt)',
+                    marginRight: '1px',
+                  }}
+                >
+                  
+                </span>
+                {gym}
+              </span>
+            </div>
           </div>
           <div
             style={{
-              marginBottom: '.5rem',
+              margin: '.9rem 1rem 1rem 0',
+              display: 'flex',
+              flexDirection: 'column',
+              textAlign: 'right',
             }}
           >
-            <span
+            <div>
+              <span
+                style={{
+                  fontSize: '.9rem',
+                }}
+              >
+                Level
+              </span>{' '}
+              <span
+                style={{
+                  fontSize: '1.1rem',
+                  fontWeight: 'bold',
+                }}
+              >
+                {level}
+              </span>
+            </div>
+            <div
               style={{
-                color: COLORS.gray!.dark,
+                marginTop: '-6px',
               }}
             >
               <span
                 style={{
-                  fontFamily: 'EdgeIcons',
-                  display: 'inline-block',
-                  transform: 'translateY(1pt)',
-                  marginRight: '1px',
+                  color: COLORS.gray!.dark,
+                  fontSize: '.8rem',
                 }}
               >
-                
+                <span
+                  style={{
+                    fontFamily: 'EdgeIcons',
+                    display: 'inline-block',
+                    transform: 'translateY(1pt)',
+                    marginRight: '1px',
+                  }}
+                >
+                  
+                </span>
+                <b>{points}</b>/{maxPoints} pts{' '}
+                <div
+                  style={{
+                    border: `1px solid ${COLORS.gray!.normal}`,
+                    borderRadius: '4px',
+                    height: '10px',
+                    marginTop: '.2rem',
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: COLORS.blue!.lighter,
+                      borderRadius: '4px',
+                      height: '6px',
+                      margin: '2px',
+                      width: `calc(${(points / maxPoints) * 100}% - ${points / maxPoints / 25}px)`,
+                    }}
+                  />
+                </div>
               </span>
-              {gym}
-            </span>
-          </div>
-          <div>
-            <span>{message}</span>
+            </div>
           </div>
         </div>
         <div
           style={{
-            margin: '2rem 2rem 2rem 0',
-            display: 'flex',
-            flexDirection: 'column',
-            textAlign: 'right',
+            marginRight: '1rem',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
           }}
         >
-          <div>
-            <span
-              style={{
-                fontSize: '1.2rem',
-              }}
-            >
-              Level
-            </span>{' '}
-            <span
-              style={{
-                fontSize: '1.4rem',
-                fontWeight: 'bold',
-              }}
-            >
-              {level}
-            </span>
-          </div>
-          <div>
-            <span
-              style={{
-                color: COLORS.gray!.dark,
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: 'EdgeIcons',
-                  display: 'inline-block',
-                  transform: 'translateY(1pt)',
-                  marginRight: '1px',
-                }}
-              >
-                
-              </span>
-              {points}/{maxPoints} pts{' '}
-              <div
-                style={{
-                  border: `2px solid ${COLORS.gray!.light}`,
-                  borderRadius: '4px',
-                  height: '12px',
-                  marginTop: '.5rem',
-                }}
-              >
-                <div
-                  style={{
-                    backgroundColor: COLORS.green!.light,
-                    borderRadius: '4px',
-                    height: '8px',
-                    margin: '2px',
-                    width: `calc(${(points / maxPoints) * 100}% - ${points / maxPoints / 25}px)`,
-                  }}
-                />
-              </div>
-            </span>
-          </div>
+          <span>{message}</span>
         </div>
       </div>
     </div>
