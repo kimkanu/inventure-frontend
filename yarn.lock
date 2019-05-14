@@ -1641,6 +1641,13 @@
     "@types/unist" "*"
     "@types/vfile-message" "*"
 
+"@types/victory@^31.0.17":
+  version "31.0.17"
+  resolved "https://registry.yarnpkg.com/@types/victory/-/victory-31.0.17.tgz#5ae62bdcccc16b43dfeca37726f0b8e745a20a17"
+  integrity sha512-ikslDkwGlKY1PMu1Lc9jgpfwjL9PxV7Wb8IEaRaQ/UHaDAQBmq5moAoFsc7n+wvXpfKL5x/rOeytXnCOkCbGnQ==
+  dependencies:
+    "@types/react" "*"
+
 "@webassemblyjs/ast@1.7.11":
   version "1.7.11"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.7.11.tgz#b988582cafbb2b095e8b556526f30c90d057cace"

@@ -9,6 +9,7 @@ import SectionSelector from './SectionSelector';
 import { useGlobalState } from '../stores';
 import { sansSerifFont, shadowText, shadow } from '../styles';
 import { COLORS, ColorGradient, Color } from '../colors';
+import { VictoryChart, VictoryTheme, VictoryArea } from 'victory';
 
 interface Props extends RouteComponentProps {}
 
@@ -263,12 +264,41 @@ const Profile: FunctionComponent<Props> = ({ location }) => {
                               description: '1000x benched, 60 kg max. record',
                             }}
                           />
-                          <div>
-                            <Link to="/profile/all">dsd</Link>
-                          </div>
                         </>
                       ) : (
-                        <div>trasd</div>
+                        <div
+                          style={{
+                            backgroundColor: 'white',
+                            display: 'flex',
+                            width: '100%',
+                            borderRadius: '8px',
+                            boxShadow: shadowText({
+                              depth: 4,
+                              color: new Color(COLORS.gray!.darker),
+                            }),
+                          }}
+                        >
+                          <svg width="0" height="0">
+                            <defs>
+                              <linearGradient id="myGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#4293fa" />
+                                <stop offset="100%" stopColor="#a9d2ff" />
+                              </linearGradient>
+                            </defs>
+                          </svg>
+                          <VictoryChart theme={VictoryTheme.grayscale} height={300}>
+                            <VictoryArea
+                              style={{ data: { fill: 'url(#myGradient)' } }}
+                              data={[
+                                { x: 1, y: 2 },
+                                { x: 2, y: 3 },
+                                { x: 3, y: 5 },
+                                { x: 4, y: 4 },
+                                { x: 5, y: 6 },
+                              ]}
+                            />
+                          </VictoryChart>
+                        </div>
                       )}
                     </div>
                   </div>
