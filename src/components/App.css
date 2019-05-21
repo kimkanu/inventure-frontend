@@ -10,15 +10,6 @@
   background-color: #eff1f2;
 }
 
-.content--top-level-transition-enter .top-level {
-  opacity: 0;
-  transform: scale(0.95);
-}
-.content--top-level-transition-enter-active .top-level {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0, 0, 0.2, 1);
-}
 .content--top-level-transition-exit .top-level {
   opacity: 1;
 }
@@ -29,12 +20,12 @@
 .content--top-level-transition-enter .top-level {
   opacity: 0;
   filter: brightness(107%);
-  transform: scale(0.95);
+  transform: scale(0.94) translateX(3vw);
 }
 .content--top-level-transition-enter-active .top-level {
   opacity: 1;
   filter: brightness(100%);
-  transform: scale(1);
+  transform: scale(1) translateX(0);
   transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), filter 0.15s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.15s cubic-bezier(0, 0, 0.2, 1);
 }

@@ -1641,10 +1641,10 @@
     "@types/unist" "*"
     "@types/vfile-message" "*"
 
-"@types/victory@^31.0.17":
-  version "31.0.17"
-  resolved "https://registry.yarnpkg.com/@types/victory/-/victory-31.0.17.tgz#5ae62bdcccc16b43dfeca37726f0b8e745a20a17"
-  integrity sha512-ikslDkwGlKY1PMu1Lc9jgpfwjL9PxV7Wb8IEaRaQ/UHaDAQBmq5moAoFsc7n+wvXpfKL5x/rOeytXnCOkCbGnQ==
+"@types/victory@^31.0.18":
+  version "31.0.18"
+  resolved "https://registry.yarnpkg.com/@types/victory/-/victory-31.0.18.tgz#9132ce77120f38e044d38aa5940e68c039bb3699"
+  integrity sha512-tU4mJSiV3QVcOs6FnB4cWoJnPAt5ZLddThafg8U7oMctEZ83TTttgSa9ndsJcDvdOnEJH8XrwgKZdnjIhFWBSw==
   dependencies:
     "@types/react" "*"
 
