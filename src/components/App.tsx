@@ -18,6 +18,7 @@ import FirebaseDataPreloader from './FirebaseDataPreloader';
 import { toggleLoading, LoadingData } from '../stores/loading';
 import SliderContainer from './test/SliderContainer';
 import Friends from './Friends';
+import WorkoutTimeManager from './WorkoutTimeManager';
 
 const NotFound: FunctionComponent = () => (
   <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
@@ -49,7 +50,7 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
   document.getElementById('loader')!.className = 'hidden';
 
   useEffect(() => {
-    // history.push(untilNthIndex(location.pathname, '/', 2));
+    history.push(untilNthIndex(location.pathname, '/', 2));
     const timeout = setTimeout(() => {
       toggleLoading(LoadingData.App);
       document.getElementById('loader')!.className = 'hidden';
@@ -85,6 +86,7 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
       </TransitionGroup>
       <BottomNavigator />
       <FirebaseDataPreloader />
+      <WorkoutTimeManager />
     </GlobalStateProvider>
   );
 };

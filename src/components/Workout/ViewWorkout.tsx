@@ -9,7 +9,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import EditWorkout from './EditWorkout';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import { COLORS } from '../../colors';
-import { undoEditWorkoutPlan, toggleMute } from '../../stores/workout';
+import { undoEditWorkoutPlan, toggleMute, goNext } from '../../stores/workout';
 import EdgeIcon from '../Icons/EdgeIcon';
 
 interface Props {}
@@ -78,6 +78,7 @@ const ViewWorkout: FunctionComponent<Props> = ({}) => {
                 label="&nbsp;"
                 margin="1.5rem"
                 link="/workout/start"
+                onClick={goNext}
               >
                 <EdgeIcon buttonSize={48}></EdgeIcon>
               </ButtonLarge>

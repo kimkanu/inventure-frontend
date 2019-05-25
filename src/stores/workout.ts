@@ -34,7 +34,9 @@ export interface Workout {
   pain: Pain;
   unbannedWorkouts: string[];
   muted: boolean;
-  current: number;
+  paused: boolean;
+  current: [number, number];
+  time: number;
 }
 export interface CreateRecord {
   type: 'create';
@@ -67,7 +69,7 @@ const initialPlan = [
     name: 'dumbbell shrugs',
     reps: 12,
     sets: 1,
-    time: 45,
+    time: 2,
     hidden: false,
   },
 ];
@@ -94,7 +96,9 @@ export const initialWorkoutState: WorkoutState = {
   pain: initialPain,
   unbannedWorkouts: [],
   muted: false,
-  current: -1,
+  paused: false,
+  current: [-1, -1],
+  time: 0,
 };
 
 export interface DeleteWorkoutAction {
@@ -129,6 +133,24 @@ export interface ChangeWorkoutTypeAction {
 type ToggleMuteAction = {
   type: 'TOGGLE_MUTE';
 };
+type ReduceTimeAction = {
+  type: 'REDUCE_TIME';
+};
+type SkipWorkoutAction = {
+  type: 'SKIP_WORKOUT';
+};
+type QuitWorkoutAction = {
+  type: 'QUIT_WORKOUT';
+};
+type EmergencyQuitAction = {
+  type: 'EMERGENCY_QUIT';
+};
+type TogglePauseAction = {
+  type: 'TOGGLE_PAUSE';
+};
+type GoNextAction = {
+  type: 'GO_NEXT';
+};
 
 export type WorkoutAction =
   | DeleteWorkoutAction
@@ -139,7 +161,13 @@ export type WorkoutAction =
   | TogglePainAction
   | UnbanWorkoutAction
   | ChangeWorkoutTypeAction
-  | ToggleMuteAction;
+  | ToggleMuteAction
+  | ReduceTimeAction
+  | SkipWorkoutAction
+  | QuitWorkoutAction
+  | EmergencyQuitAction
+  | GoNextAction
+  | TogglePauseAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
   'UNDO_EDIT_WORKOUT_PLAN',
@@ -150,6 +178,12 @@ export const WORKOUT_ACTION_TYPES = [
   'UNBAN_WORKOUT',
   'CHANGE_WORKOUT_TYPE',
   'TOGGLE_MUTE',
+  'REDUCE_TIME',
+  'SKIP_WORKOUT',
+  'QUIT_WORKOUT',
+  'EMERGENCY_QUIT',
+  'GO_NEXT',
+  'TOGGLE_PAUSE',
 ];
 
 const toggledPlan = (plan: WorkoutPlan[], i: number) => {
@@ -236,6 +270,52 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         ...state,
         muted: !state.muted,
       };
+    case 'REDUCE_TIME':
+      return {
+        ...state,
+        time: state.time - 1,
+      };
+    case 'SKIP_WORKOUT':
+      return {
+        ...state,
+        current: [state.current[0], state.current[1] + 1],
+      };
+    case 'QUIT_WORKOUT':
+      return {
+        ...state,
+        current: [state.current[0] + 1, 0],
+      };
+    case 'GO_NEXT':
+      console.log(state.current);
+      const restTime = 10; // FIXME
+      const plan = state.plan.filter((p) => !p.hidden);
+      const [nextCurrent, nextTime] = (() => {
+        if (state.current[0] === -1) {
+          return [[0, 1], plan[0].time];
+        }
+        if (state.current[1] === plan[state.current[0]].sets * 2 - 1) {
+          if (state.current[0] === plan.length - 1) {
+            console.log('sss');
+            return [[-2, -2], 10];
+          }
+          return [[state.current[0] + 1, 0], restTime];
+        }
+        return [
+          [state.current[0], state.current[1] + 1],
+          state.current[1] % 2 === 0 ? plan[state.current[0]].time : restTime,
+        ];
+      })() as [[number, number], number];
+      return {
+        ...state,
+        current: nextCurrent,
+        time: nextTime,
+      };
+    case 'TOGGLE_PAUSE':
+      return {
+        ...state,
+        paused: !state.paused,
+      };
+    case 'EMERGENCY_QUIT':
     default:
       return state;
   }
@@ -267,4 +347,19 @@ export const changeWorkoutType = (payload: string) => {
 };
 export const toggleMute = () => {
   dispatch({ type: 'TOGGLE_MUTE' });
+};
+export const reduceTime = () => {
+  dispatch({ type: 'REDUCE_TIME' });
+};
+export const skipWorkout = () => {
+  dispatch({ type: 'SKIP_WORKOUT' });
+};
+export const quitWorkout = () => {
+  dispatch({ type: 'QUIT_WORKOUT' });
+};
+export const goNext = () => {
+  dispatch({ type: 'GO_NEXT' });
+};
+export const togglePause = () => {
+  dispatch({ type: 'TOGGLE_PAUSE' });
 };
