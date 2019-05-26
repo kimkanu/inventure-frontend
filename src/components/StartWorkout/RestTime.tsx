@@ -21,6 +21,8 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
     };
   });
 
+  const plan = workout.plan.filter((p) => !p.hidden);
+
   return workout.current[0] === -2 ? (
     <Redirect to="/workout/congrats" />
   ) : workout.current[0] === -1 ? (
@@ -83,7 +85,7 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
                 margin: '5px',
               })}
             >
-              Deadlift
+              {plan[workout.current[0]].name}
             </span>
 
             <span

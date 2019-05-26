@@ -52,24 +52,24 @@ export type ActionRecord = CreateRecord | DeleteRecord;
 const initialPlan = [
   // FIXME: temporary value
   {
-    name: 'incline dumbbell bench press',
+    name: 'barbell curl',
     reps: 12,
     sets: 2,
     time: 60,
     hidden: false,
   },
   {
-    name: 'diamond pushups',
+    name: 'lying triceps press',
     reps: 20,
     sets: 3,
     time: 45,
     hidden: false,
   },
   {
-    name: 'dumbbell shrugs',
+    name: 'bench press',
     reps: 12,
     sets: 1,
-    time: 2,
+    time: 22,
     hidden: false,
   },
 ];
@@ -295,7 +295,6 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         }
         if (state.current[1] === plan[state.current[0]].sets * 2 - 1) {
           if (state.current[0] === plan.length - 1) {
-            console.log('sss');
             return [[-2, -2], 10];
           }
           return [[state.current[0] + 1, 0], restTime];
