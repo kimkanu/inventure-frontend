@@ -10,11 +10,7 @@ const WorkoutTimeManager: FunctionComponent = () => {
         top: 0,
         zIndex: 999999,
       }}
-    >
-      {workout.time}
-      <br />
-      {workout.current[0]},{workout.current[1]}
-    </div>
+    />
   );
 };
 
