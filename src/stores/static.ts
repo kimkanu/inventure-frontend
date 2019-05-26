@@ -5,6 +5,7 @@ import { BodyPart } from './workout';
 export interface WorkoutInfo {
   imagePath: string;
   image?: string;
+  youtube?: string;
 }
 export interface Images {
   imagePath?: string;
@@ -25,11 +26,11 @@ export const initialStaticState: StaticState = {
 
 export interface SetWorkoutInfoAction {
   type: 'SET_WORKOUT_INFO_ACTION';
-  payload: { name: string; imagePath: string; image?: string }[];
+  payload: { name: string; imagePath: string; image?: string; youtube: string }[];
 }
 export interface SetWorkoutImageAction {
   type: 'SET_WORKOUT_IMAGE_ACTION';
-  payload: { name: string; image?: string }[];
+  payload: { name: string; image?: string; youtube: string }[];
 }
 export interface SetStaticImagesAction {
   type: 'SET_STATIC_IMAGES_ACTION';
@@ -60,7 +61,9 @@ export const staticReducer: Reducer<StaticState, StaticAction> = (state, action)
         workoutInfo: {
           ...state.workoutInfo,
           ...action.payload
-            .map(({ name, imagePath, image }) => ({ [name]: { imagePath, image } }))
+            .map(({ name, imagePath, image, youtube }) => ({
+              [name]: { imagePath, image, youtube },
+            }))
             .reduce((a, b) => ({ ...a, ...b })),
         },
       };
@@ -70,8 +73,8 @@ export const staticReducer: Reducer<StaticState, StaticAction> = (state, action)
         workoutInfo: {
           ...state.workoutInfo,
           ...action.payload
-            .map(({ name, image }) => ({
-              [name]: { image, imagePath: state.workoutInfo[name].imagePath },
+            .map(({ name, image, youtube }) => ({
+              [name]: { image, youtube, imagePath: state.workoutInfo[name].imagePath },
             }))
             .reduce((a, b) => ({ ...a, ...b })),
         },
@@ -101,10 +104,12 @@ export const staticReducer: Reducer<StaticState, StaticAction> = (state, action)
   }
 };
 
-export const setWorkoutInfo = (payload: { name: string; imagePath: string; image?: string }[]) => {
+export const setWorkoutInfo = (
+  payload: { name: string; imagePath: string; image?: string; youtube: string }[],
+) => {
   dispatch({ payload, type: 'SET_WORKOUT_INFO_ACTION' });
 };
-export const setWorkoutImage = (payload: { name: string; image?: string }[]) => {
+export const setWorkoutImage = (payload: { name: string; image?: string; youtube: string }[]) => {
   dispatch({ payload, type: 'SET_WORKOUT_IMAGE_ACTION' });
 };
 export const setStaticImages = (

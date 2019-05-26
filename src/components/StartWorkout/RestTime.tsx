@@ -10,6 +10,7 @@ import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 
 const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
   const [workout, setWorkout] = useGlobalState('workout');
+  const [staticInfo] = useGlobalState('static');
   useEffect(() => {
     if (workout.current[0] < 0) return;
     if (workout.time === 0) {
@@ -22,6 +23,9 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
   });
 
   const plan = workout.plan.filter((p) => !p.hidden);
+  console.log(plan[workout.current[0]].name);
+  console.log(staticInfo.workoutInfo);
+  console.log(staticInfo.workoutInfo[plan[workout.current[0]].name].youtube);
 
   return workout.current[0] === -2 ? (
     <Redirect to="/workout/congrats" />
@@ -110,7 +114,7 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
               <iframe
                 width="300"
                 height="200"
-                src="https://www.youtube.com/embed/-4qRntuXBSc?start=7"
+                src={staticInfo.workoutInfo[plan[workout.current[0]].name].youtube}
                 frameBorder="0"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

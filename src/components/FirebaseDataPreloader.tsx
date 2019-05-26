@@ -14,16 +14,20 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
     let isSubscribed = true;
 
     const databaseResponse = await firebase.database.ref('staticInfo/workouts').once('value');
-    const workoutData = databaseResponse.val() as { imagePath: string; name: string }[];
+    const workoutData = databaseResponse.val() as {
+      imagePath: string;
+      name: string;
+      youtube: string;
+    }[];
     setWorkoutInfo(workoutData);
 
     Promise.all(
       workoutData
-        .map(({ imagePath, name }) => async () => {
+        .map(({ imagePath, name, youtube }) => async () => {
           try {
             const local = localStorage.getItem(`workoutInfo/${imagePath}`);
             if (local) {
-              return { name, image: local };
+              return { name, image: local, youtube };
             }
             const url = await firebase.storage.ref(imagePath).getDownloadURL();
             const response = await fetch(url, {
@@ -52,10 +56,10 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
             const imageStr = arrayBufferToBase64(buffer);
             const base64Image = base64Flag + imageStr;
             localStorage.setItem(`workoutInfo/${imagePath}`, base64Image);
-            return { name, image: base64Image };
+            return { name, image: base64Image, youtube };
           } catch (e) {
             console.error(e);
-            return { name };
+            return { name, youtube };
           }
         })
         .map((x) => x()),
