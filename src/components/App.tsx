@@ -34,6 +34,14 @@ const NotImplemented: FunctionComponent = () => (
       <h1 className="heading">Not Implemented</h1>
       <p>This is not in the main tasks, so we temporarily skipped to implement it.</p>
       <Link to="/workout">Go to the main page</Link>
+      <button
+        onClick={() => {
+          localStorage.clear();
+          location.reload();
+        }}
+      >
+        Remove cache
+      </button>
     </div>
   </div>
 );
