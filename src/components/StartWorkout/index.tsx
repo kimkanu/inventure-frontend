@@ -126,7 +126,7 @@ const StartWorkout: FunctionComponent = () => {
         >
           <div>
             <ButtonLarge
-              link="/workout"
+              link="/workout/pain" /*fixme */
               backgroundColor={COLORS.red!.light}
               shadowColor={COLORS.red!.dark}
               label="quit"

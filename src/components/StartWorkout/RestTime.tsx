@@ -23,9 +23,6 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
   });
 
   const plan = workout.plan.filter((p) => !p.hidden);
-  console.log(plan[workout.current[0]].name);
-  console.log(staticInfo.workoutInfo);
-  console.log(staticInfo.workoutInfo[plan[workout.current[0]].name].youtube);
 
   return workout.current[0] === -2 ? (
     <Redirect to="/workout/congrats" />
