@@ -86,7 +86,9 @@ const StartWorkout: FunctionComponent = () => {
   });
   const plan = workout.plan.filter((p) => !p.hidden);
 
-  return workout.current[1] % 2 === 0 ? (
+  return workout.current[0] === -1 ? (
+    <Redirect to="/workout" />
+  ) : workout.current[1] % 2 === 0 ? (
     <Redirect to="/workout/rest" />
   ) : (
     <div className="content">
@@ -127,6 +129,7 @@ const StartWorkout: FunctionComponent = () => {
               link="/workout"
               backgroundColor={COLORS.red!.light}
               shadowColor={COLORS.red!.dark}
+              label="quit"
             >
               <EdgeIcon buttonSize={48}></EdgeIcon>
             </ButtonLarge>
@@ -138,6 +141,7 @@ const StartWorkout: FunctionComponent = () => {
             backgroundColor={COLORS.blue!.light}
             shadowColor={COLORS.blue!.dark}
             label="done"
+            onClick={goNext}
           >
             <EdgeIcon buttonSize={48}></EdgeIcon>
           </ButtonLarge>

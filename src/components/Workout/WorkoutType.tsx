@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { withRouter, Route, RouteComponentProps } from 'react-router-dom';
+import { withRouter, Route, RouteComponentProps, Redirect } from 'react-router-dom';
 import { useGlobalState } from '../../stores';
 import CardWithPicture from '../CardWithPicture';
 import Link from '../Link';
@@ -10,8 +10,14 @@ import { capitalizeFirst } from '../../utils';
 
 interface Props extends RouteComponentProps {}
 
-const WorkoutType: FunctionComponent<Props> = ({ history }) => {
-  const staticInfo = useGlobalState('static')[0];
+const WorkoutType: FunctionComponent<Props> = ({ location, history }) => {
+  const [workout] = useGlobalState('workout');
+  const [staticInfo] = useGlobalState('static');
+  useEffect(() => {
+    if (workout.current[0] >= 0 && location.pathname === '/workout') {
+      history.push('workout/start');
+    }
+  }, []);
 
   const workoutTypeList = [
     { name: 'bulking', options: ['Chest and Arms', 'Back', 'Legs'] },

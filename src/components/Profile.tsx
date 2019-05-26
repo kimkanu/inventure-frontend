@@ -288,7 +288,9 @@ const Profile: FunctionComponent<Props> = ({ location }) => {
                           </svg>
                           <VictoryChart theme={VictoryTheme.grayscale} height={300}>
                             <VictoryArea
-                              style={{ data: { fill: 'url(#myGradient)' } }}
+                              style={{
+                                data: { fill: 'url(#myGradient)' },
+                              }}
                               data={[
                                 { x: 1, y: 2 },
                                 { x: 2, y: 3 },

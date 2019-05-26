@@ -50,7 +50,9 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
   document.getElementById('loader')!.className = 'hidden';
 
   useEffect(() => {
-    history.push(untilNthIndex(location.pathname, '/', 2));
+    if (process.env.NODE_ENV === 'production') {
+      history.push(untilNthIndex(location.pathname, '/', 2));
+    }
     const timeout = setTimeout(() => {
       toggleLoading(LoadingData.App);
       document.getElementById('loader')!.className = 'hidden';

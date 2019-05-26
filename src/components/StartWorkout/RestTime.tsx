@@ -22,7 +22,7 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
   });
 
   return workout.current[0] === -2 ? (
-    <Redirect to="/workout/cong" />
+    <Redirect to="/workout/congrats" />
   ) : workout.current[0] === -1 ? (
     <Redirect to="/workout" />
   ) : workout.current[1] % 2 === 1 ? (

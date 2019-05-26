@@ -195,9 +195,9 @@ interface Props extends RouteComponentProps {}
 const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
   const [, setSelected] = useState<WorkoutPlan>({
     name: '',
-    reps: 5,
-    sets: 1,
-    time: 10,
+    reps: 15,
+    sets: 5,
+    time: 120,
     hidden: false,
   });
   const [dialog, s] = useState<DialogProps>({

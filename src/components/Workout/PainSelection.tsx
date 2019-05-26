@@ -367,6 +367,9 @@ const BannedTrainingList: FunctionComponent = () => {
         ).map((bannedWorkout, i) => (
           <FormControlLabel
             key={i}
+            style={{
+              marginBottom: '-0.3rem',
+            }}
             control={
               <Checkbox
                 defaultChecked={workout.unbannedWorkouts.includes(bannedWorkout)}
@@ -374,10 +377,19 @@ const BannedTrainingList: FunctionComponent = () => {
                   unbanWorkout(bannedWorkout);
                 }}
                 value={bannedWorkout}
+                color="primary"
               />
             }
             label={
-              <span style={useStyles(sansSerifFont, { fontSize: '1rem' })}>
+              <span
+                style={useStyles(
+                  sansSerifFont,
+                  { fontSize: '1rem' },
+                  workout.unbannedWorkouts.includes(bannedWorkout)
+                    ? {}
+                    : { color: COLORS.gray!.dark, textDecoration: 'line-through' },
+                )}
+              >
                 {capitalizeFirst(bannedWorkout)}
               </span>
             }

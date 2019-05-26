@@ -137,3 +137,7 @@ h1.heading {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 10px 1px, rgba(0, 0, 0, 0.08) 0px 6px 10px 1px,
     rgba(0, 0, 0, 0.03) 0px 5px 5px -3px;
 }
+
+tspan {
+  font-family: NotoSans, Helvetica, Tahoma, Verdana, Geneva, Arial, sans-serif !important;
+}
