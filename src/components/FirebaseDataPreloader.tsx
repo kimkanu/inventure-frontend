@@ -21,13 +21,27 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
     }[];
     setWorkoutInfo(workoutData);
 
+    setWorkoutImage(
+      Object.keys({ ...localStorage })
+        .filter((s) => s.startsWith('workoutInfo/'))
+        .map((localStorageKey) => {
+          return {
+            name: localStorageKey
+              .replace('workoutInfo/', '')
+              .replace(/\-/g, ' ')
+              .replace('.png', ''),
+            image: localStorage.getItem(localStorageKey) || undefined,
+          };
+        }),
+    );
+
     Promise.all(
       workoutData
         .map(({ imagePath, name, youtube }) => async () => {
           try {
             const local = localStorage.getItem(`workoutInfo/${imagePath}`);
             if (local) {
-              return { name, image: local, youtube };
+              return { name, youtube, image: local };
             }
             const url = await firebase.storage.ref(imagePath).getDownloadURL();
             const response = await fetch(url, {
@@ -56,7 +70,7 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
             const imageStr = arrayBufferToBase64(buffer);
             const base64Image = base64Flag + imageStr;
             localStorage.setItem(`workoutInfo/${imagePath}`, base64Image);
-            return { name, image: base64Image, youtube };
+            return { name, youtube, image: base64Image };
           } catch (e) {
             console.error(e);
             return { name, youtube };

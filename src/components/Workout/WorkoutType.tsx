@@ -55,7 +55,7 @@ const WorkoutType: FunctionComponent<Props> = ({ location, history }) => {
                     width: '100%',
                   }}
                 >
-                  <span style={useStyles(sansSerifFont, { fontSize: '1.5rem' })}>
+                  <span style={useStyles(sansSerifFont, { fontSize: '1.25rem' })}>
                     {capitalizeFirst(name)}
                   </span>
                 </div>

@@ -78,18 +78,13 @@ const ButtonLarge: FunctionComponent<Props> = ({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        margin: `.4rem 0`,
+        margin: '.4rem 0',
         opacity: hidden ? 0 : 1,
       }}
       hidden={hidden}
       aria-hidden={hidden}
     >
-      <div
-        onClick={onClick}
-        style={{
-          margin: `.4rem ${typeof margin === 'number' ? `${margin}px` : margin}`,
-        }}
-      >
+      <div onClick={onClick}>
         <ButtonBase
           style={{
             borderRadius: '24px',
@@ -107,7 +102,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
           style={useStyles(sansSerifFont, {
             fontSize: '0.9rem',
             width: 'fit-content',
-            marginTop: '.4em',
+            marginTop: '.2em',
             cursor: hidden ? 'default' : 'pointer',
           })}
           hidden={hidden}

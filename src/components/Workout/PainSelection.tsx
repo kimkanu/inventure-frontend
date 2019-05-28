@@ -52,6 +52,7 @@ const PainSelector: FunctionComponent<PainSelectorProps> = ({ bodyParts }) => {
                     handleChange(bodyParts[i], e.currentTarget.checked);
                   }}
                   value={bodyParts[i]}
+                  color="primary"
                 />
               }
               label={
@@ -91,7 +92,7 @@ const Spot: FunctionComponent<SpotProps> = ({ x, y, setDialog, bodyPart, onSave 
         minHeight: '24px',
         height: 'calc(6 * var(--vh))',
         borderRadius: '50%',
-        border: `3px dashed ${pain ? COLORS.red!.light : COLORS.gray!.normal}cc`,
+        border: `2.7px dashed ${pain ? COLORS.red!.light : COLORS.gray!.normal}cc`,
         backgroundColor: pain ? `${COLORS.red!.light}80` : '#fff9',
         boxSizing: 'border-box',
         cursor: 'pointer',
@@ -154,6 +155,7 @@ const PainSelectionAnatomy: FunctionComponent<AnatomyProps> = ({ setDialog }) =>
       <p
         style={{
           marginBottom: '.5em',
+          fontSize: '0.9em',
         }}
       >
         Touch wherever you feel a pain to select.

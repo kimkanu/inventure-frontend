@@ -19,6 +19,7 @@ import { toggleLoading, LoadingData } from '../stores/loading';
 import SliderContainer from './test/SliderContainer';
 import Friends from './Friends';
 import WorkoutTimeManager from './WorkoutTimeManager';
+import Banner from './Banner';
 
 const NotFound: FunctionComponent = () => (
   <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
@@ -54,8 +55,6 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
   if (language) {
     i18n.changeLanguage(language);
   }
-  toggleLoading(LoadingData.App);
-  document.getElementById('loader')!.className = 'hidden';
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
@@ -84,6 +83,7 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
           classNames={'content--top-level-transition'}
         >
           <div style={useStyles(sansSerifFont)}>
+            <Banner />
             <Switch location={location}>
               <Route path="/workout" component={Workout} />
               <Route path="/profile" component={Profile} />

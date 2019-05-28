@@ -26,12 +26,12 @@ const Achievement: FunctionComponent<AchievementProps> = ({
   scheme,
   color = '#fff',
 }) => (
-  <span
+  <div
     style={{
       lineHeight: '28px',
-      margin: '-2px 0 0',
-      display: 'inline-flex',
-      justifyContent: 'center',
+      margin: '-2px 0 0 2px',
+      width: '100%',
+      display: 'flex',
     }}
   >
     <div
@@ -49,30 +49,37 @@ const Achievement: FunctionComponent<AchievementProps> = ({
         transform: 'translateY(1pt)',
       }}
     >
-      <span
+      <div
         style={{
           fontFamily: 'EdgeIcons',
           display: 'inline-block',
+          width: '22px',
+          height: '22px',
           lineHeight: '22px',
           position: 'relative',
           top: '0',
           fontSize: '.85rem',
+          textAlign: 'center',
         }}
       >
         {icon}
-      </span>
+      </div>
     </div>
-    <span
+    <div
       style={{
         lineHeight: '22px',
         fontWeight: 'bold',
         position: 'relative',
         top: '2px',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        width: 'calc(100% - 32px)',
       }}
     >
       {name}
-    </span>
-  </span>
+    </div>
+  </div>
 );
 
 function ordinalSuffix(i: number) {
@@ -167,6 +174,9 @@ const ExerciseCard: FunctionComponent<ExerciseCardProps> = ({
           style={{
             display: 'flex',
             flexDirection: 'column',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
           }}
         >
           <span style={{ fontSize: '0.85rem', color: COLORS.gray!.dark }}>RECENT ACHIEVEMENT</span>

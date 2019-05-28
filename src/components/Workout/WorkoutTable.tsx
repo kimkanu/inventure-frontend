@@ -53,9 +53,9 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
   }) => (
     <tr
       style={{
-        height: 56,
+        height: 48,
         borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
-        fontSize: '1.07rem',
+        fontSize: '0.92em',
       }}
       key={key}
     >
@@ -134,16 +134,17 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
             <td
               colSpan={editable ? 4 : 3}
               style={{
-                height: 40,
+                height: 36,
                 color: COLORS.gray!.normal,
-                fontSize: '.9rem',
                 textAlign: 'center',
+                fontSize: '0.9em',
                 fontStyle: 'italic',
               }}
             >
               {visiblePlan.length === 0
                 ? 'CLICK ADD BUTTON TO ADD A NEW WORKOUT'
                 : '1-MINUTE BREAK BETWEEN EACH SET'}
+              {/* fixme */}
             </td>
           </tr>
           <tr>
@@ -151,11 +152,10 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
               colSpan={editable ? 4 : 3}
               style={{
                 paddingTop: '0.67em',
-                paddingLeft: '1.33em',
+                paddingLeft: '1em',
                 paddingBottom: '0.67em',
                 height: 40,
                 color: COLORS.gray!.darkest,
-                fontSize: '1em',
                 justifyContent: 'space-between',
               }}
             >
@@ -176,13 +176,13 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
                 )}
               </span>
               {editable ? null : (
-                <div style={{ float: 'right', margin: '-0.17rem 0.5rem 0rem 0' }}>
+                <div style={{ float: 'right', margin: '-0.17em 0em 0em 0' }}>
                   <ButtonLarge
                     backgroundColor={COLORS.gray!.normal}
                     shadowColor={COLORS.gray!.darker}
                     depth={6}
                     link="/workout/edit"
-                    labelInside="EDIT"
+                    labelInside="Edit"
                   >
                     <EdgeIcon buttonSize={48}></EdgeIcon>
                   </ButtonLarge>

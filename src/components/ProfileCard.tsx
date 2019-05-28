@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import { shadowText, useStyles, sansSerifFont, headingFont } from '../styles';
 import { Color, COLORS } from '../colors';
 import ButtonBase from '@material-ui/core/ButtonBase';
@@ -34,6 +34,17 @@ const ProfileCard: FunctionComponent<Props> = ({
   imgSrc,
   alt,
 }) => {
+  const [visibilityOfPoints, setVisibility] = useState(true);
+  useEffect(() => {
+    const setV = () => {
+      setVisibility(window.innerWidth >= 370);
+    };
+    setV();
+    window.addEventListener('resize', setV);
+    return () => {
+      window.removeEventListener('resize', setV);
+    };
+  }, []);
   const content = (
     <div
       style={{
@@ -110,7 +121,6 @@ const ProfileCard: FunctionComponent<Props> = ({
                 textOverflow: 'ellipsis',
                 overflow: 'hidden',
                 position: 'relative',
-                maxWidth: 'calc(100% - 7rem)',
               }}
             >
               <span
@@ -137,14 +147,15 @@ const ProfileCard: FunctionComponent<Props> = ({
             <div
               style={{
                 marginBottom: '.1rem',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
               }}
             >
               <span
                 style={{
                   color: COLORS.gray!.dark,
                   fontSize: '.9rem',
-                  textOverflow: 'ellipsis',
-                  overflow: 'hidden',
                 }}
               >
                 <span
@@ -162,6 +173,7 @@ const ProfileCard: FunctionComponent<Props> = ({
             </div>
             <div
               style={{
+                whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
                 overflow: 'hidden',
               }}
@@ -209,48 +221,52 @@ const ProfileCard: FunctionComponent<Props> = ({
                 {level}
               </span>
             </div>
-            <div
-              style={{
-                marginTop: '-6px',
-              }}
-            >
-              <span
+            {visibilityOfPoints ? (
+              <div
                 style={{
-                  color: COLORS.gray!.dark,
-                  fontSize: '.8rem',
+                  marginTop: '-6px',
                 }}
               >
                 <span
                   style={{
-                    fontFamily: 'EdgeIcons',
-                    display: 'inline-block',
-                    transform: 'translateY(1pt)',
-                    marginRight: '1px',
+                    color: COLORS.gray!.dark,
+                    fontSize: '.8rem',
                   }}
                 >
-                  
-                </span>
-                <b>{points}</b>/{maxPoints} pts{' '}
-                <div
-                  style={{
-                    border: `1px solid ${COLORS.gray!.normal}`,
-                    borderRadius: '4px',
-                    height: '10px',
-                    marginTop: '.2rem',
-                  }}
-                >
+                  <span
+                    style={{
+                      fontFamily: 'EdgeIcons',
+                      display: 'inline-block',
+                      transform: 'translateY(1pt)',
+                      marginRight: '1px',
+                    }}
+                  >
+                    
+                  </span>
+                  <b>{points}</b>/{maxPoints} pts{' '}
                   <div
                     style={{
-                      backgroundColor: COLORS.blue!.lighter,
+                      border: `1px solid ${COLORS.gray!.normal}`,
                       borderRadius: '4px',
-                      height: '6px',
-                      margin: '2px',
-                      width: `calc(${(points / maxPoints) * 100}% - ${points / maxPoints / 25}px)`,
+                      height: '10px',
+                      marginTop: '.2rem',
                     }}
-                  />
-                </div>
-              </span>
-            </div>
+                  >
+                    <div
+                      style={{
+                        backgroundColor: COLORS.blue!.lighter,
+                        borderRadius: '4px',
+                        height: '6px',
+                        margin: '2px',
+                        width: `calc(${(points / maxPoints) * 100}% - ${points /
+                          maxPoints /
+                          25}px)`,
+                      }}
+                    />
+                  </div>
+                </span>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

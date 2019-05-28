@@ -30,7 +30,7 @@ export interface SetWorkoutInfoAction {
 }
 export interface SetWorkoutImageAction {
   type: 'SET_WORKOUT_IMAGE_ACTION';
-  payload: { name: string; image?: string; youtube: string }[];
+  payload: { name: string; image?: string; youtube?: string }[];
 }
 export interface SetStaticImagesAction {
   type: 'SET_STATIC_IMAGES_ACTION';
@@ -64,7 +64,7 @@ export const staticReducer: Reducer<StaticState, StaticAction> = (state, action)
             .map(({ name, imagePath, image, youtube }) => ({
               [name]: { imagePath, image, youtube },
             }))
-            .reduce((a, b) => ({ ...a, ...b })),
+            .reduce((a, b) => ({ ...a, ...b }), {}),
         },
       };
     case 'SET_WORKOUT_IMAGE_ACTION':
@@ -74,9 +74,13 @@ export const staticReducer: Reducer<StaticState, StaticAction> = (state, action)
           ...state.workoutInfo,
           ...action.payload
             .map(({ name, image, youtube }) => ({
-              [name]: { image, youtube, imagePath: state.workoutInfo[name].imagePath },
+              [name]: {
+                image,
+                youtube: youtube || (state.workoutInfo[name] || { youtube: undefined }).youtube,
+                imagePath: (state.workoutInfo[name] || { imagePath: undefined }).imagePath,
+              },
             }))
-            .reduce((a, b) => ({ ...a, ...b })),
+            .reduce((a, b) => ({ ...a, ...b }), {}),
         },
       };
     case 'SET_STATIC_IMAGES_ACTION':
@@ -109,7 +113,7 @@ export const setWorkoutInfo = (
 ) => {
   dispatch({ payload, type: 'SET_WORKOUT_INFO_ACTION' });
 };
-export const setWorkoutImage = (payload: { name: string; image?: string; youtube: string }[]) => {
+export const setWorkoutImage = (payload: { name: string; image?: string; youtube?: string }[]) => {
   dispatch({ payload, type: 'SET_WORKOUT_IMAGE_ACTION' });
 };
 export const setStaticImages = (
