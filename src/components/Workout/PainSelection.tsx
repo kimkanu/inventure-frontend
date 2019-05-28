@@ -22,6 +22,8 @@ import {
   FormHelperText,
 } from '@material-ui/core';
 import { sansSerifFont, useStyles } from '../../styles';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface PainSelectorProps {
   bodyParts: BodyPart[];
@@ -402,7 +404,7 @@ const BannedTrainingList: FunctionComponent = () => {
 
 interface DialogProps {
   show: boolean;
-  title: string;
+  title: string | React.ReactNode;
   children: React.ReactNode;
 }
 interface Props extends RouteComponentProps {}
@@ -498,11 +500,21 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
                     }
                     setDialog({
                       show: true,
-                      title: '',
+                      title: (
+                        <span>
+                          <FontAwesomeIcon
+                            icon={faExclamationTriangle}
+                            style={{
+                              color: COLORS.red!.light,
+                            }}
+                          />{' '}
+                          Warning!
+                        </span>
+                      ),
                       children: (
                         <div>
                           <p style={{ marginTop: 0 }}>
-                            These workouts can cause you pain. You may select them to include in
+                            These workouts can cause you PAIN. You may select them to include in
                             today's training.
                           </p>
                           <BannedTrainingList />

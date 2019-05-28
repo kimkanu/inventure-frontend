@@ -5,7 +5,7 @@ import './index.css';
 
 interface Props {
   show: boolean;
-  title?: string;
+  title?: string | React.ReactNode;
   onClose?: (event: React.SyntheticEvent<{}, Event>) => void;
 }
 
