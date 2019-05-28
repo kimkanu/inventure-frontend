@@ -13,6 +13,7 @@ import CardWithPicture from '../CardWithPicture';
 import { useGlobalState } from '../../stores';
 import WorkoutType from './WorkoutType';
 import WorkoutOption from './WorkoutOption';
+import Congrats from './Congrats';
 
 interface Props extends RouteComponentProps {}
 
@@ -77,7 +78,6 @@ const Workout: FunctionComponent<Props> = ({ location, history }) => {
                           render={() => <PainSelection />}
                         />
                       </div>
-
                     </CSSTransition>
                   </TransitionGroup>
                   <TransitionGroup>
@@ -116,8 +116,23 @@ const Workout: FunctionComponent<Props> = ({ location, history }) => {
                       </div>
                     </CSSTransition>
                   </TransitionGroup>
-                <Route path="/workout/start" component={() => <StartWorkout />} />
-                <Route path="/workout/rest" component={() => <RestTime />} />
+                  <TransitionGroup>
+                    <CSSTransition
+                      key={untilNthIndex(location.pathname, '/', 3)}
+                      timeout={{ enter: 300, exit: 500 }}
+                      classNames={'content--pop-up-transition'}
+                    >
+                      <div>
+                        <Route
+                          location={location}
+                          path="/workout/congrats"
+                          render={() => <Congrats />}
+                        />
+                      </div>
+                    </CSSTransition>
+                  </TransitionGroup>
+                  <Route path="/workout/start" component={() => <StartWorkout />} />
+                  <Route path="/workout/rest" component={() => <RestTime />} />
                 </div>
               )}
             />

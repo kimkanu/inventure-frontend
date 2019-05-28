@@ -5,11 +5,12 @@ import { useStyles, sansSerifFont } from '../../styles';
 
 interface Props {
   name: string;
+  reps: number;
   sets: { current: number; total: number };
   time: { current: number; total: number };
 }
 
-const Timer: FunctionComponent<Props> = ({ name, sets, time }) => {
+const Timer: FunctionComponent<Props> = ({ name, sets, time, reps }) => {
   return (
     <div
       style={{
@@ -22,16 +23,16 @@ const Timer: FunctionComponent<Props> = ({ name, sets, time }) => {
       <div style={{ position: 'absolute' }}>
         <CircularProgressbar
           percentage={(100 * (time.total - time.current)) / time.total}
+          strokeWidth={7}
           styles={{
             root: {
-              width: '45vh',
-              height: '45vh',
+              width: 'calc(40 * var(--vh))',
+              height: 'calc(40 * var(--vh))',
             },
           }}
         />
         <div
           style={useStyles(sansSerifFont, {
-            fontWeight: 'bold',
             position: 'absolute',
             height: '100%',
             width: '100%',
@@ -47,7 +48,7 @@ const Timer: FunctionComponent<Props> = ({ name, sets, time }) => {
               fontSize: '1.2em',
             }}
           >
-            {name}
+            {reps} {name}
           </span>
           <span
             style={{
@@ -59,9 +60,17 @@ const Timer: FunctionComponent<Props> = ({ name, sets, time }) => {
           <span
             style={{
               fontSize: '2em',
+              fontWeight: 'bold',
             }}
           >
-            {Math.floor(time.current / 60)}:{(time.current < 10 ? '0' : '') + (time.current % 60)}
+            {time.current < 0 ? (
+              <>0:00</>
+            ) : (
+              <>
+                {Math.floor(time.current / 60)}:
+                {(time.current % 60 < 10 ? '0' : '') + (time.current % 60)}
+              </>
+            )}
           </span>
         </div>
       </div>

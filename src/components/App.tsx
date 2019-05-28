@@ -17,6 +17,8 @@ import { sansSerifFont, useStyles } from '../styles';
 import FirebaseDataPreloader from './FirebaseDataPreloader';
 import { toggleLoading, LoadingData } from '../stores/loading';
 import SliderContainer from './test/SliderContainer';
+import Friends from './Friends';
+import WorkoutTimeManager from './WorkoutTimeManager';
 
 const NotFound: FunctionComponent = () => (
   <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
@@ -32,6 +34,14 @@ const NotImplemented: FunctionComponent = () => (
       <h1 className="heading">Not Implemented</h1>
       <p>This is not in the main tasks, so we temporarily skipped to implement it.</p>
       <Link to="/workout">Go to the main page</Link>
+      <button
+        onClick={() => {
+          localStorage.clear();
+          location.reload();
+        }}
+      >
+        Remove cache
+      </button>
     </div>
   </div>
 );
@@ -48,7 +58,9 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
   document.getElementById('loader')!.className = 'hidden';
 
   useEffect(() => {
-    history.push(untilNthIndex(location.pathname, '/', 2));
+    if (process.env.NODE_ENV === 'production') {
+      history.push(untilNthIndex(location.pathname, '/', 2));
+    }
     const timeout = setTimeout(() => {
       toggleLoading(LoadingData.App);
       document.getElementById('loader')!.className = 'hidden';
@@ -75,6 +87,7 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
             <Switch location={location}>
               <Route path="/workout" component={Workout} />
               <Route path="/profile" component={Profile} />
+              <Route path="/friends" component={Friends} />
               <Route path="/settings" component={NotImplemented} />
               <Route path="/" component={NotFound} />
             </Switch>
@@ -83,6 +96,7 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
       </TransitionGroup>
       <BottomNavigator />
       <FirebaseDataPreloader />
+      <WorkoutTimeManager />
     </GlobalStateProvider>
   );
 };

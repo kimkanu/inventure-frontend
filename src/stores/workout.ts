@@ -12,8 +12,10 @@ export interface WorkoutPlan {
 
 export type BodyPart =
   | 'neck'
-  | 'chest-n-back'
-  | 'stomach-n-waist'
+  | 'chest'
+  | 'back'
+  | 'stomach'
+  | 'waist'
   | 'shoulder'
   | 'arm'
   | 'wrist'
@@ -21,7 +23,7 @@ export type BodyPart =
   | 'knee'
   | 'calf'
   | 'ankle';
-export type PainInfo = { [part in BodyPart]: { name: string; ban: string[]; checked: boolean }[] };
+export type Pain = { [part in BodyPart]: boolean };
 
 // interface for selected workout
 export interface Workout {
@@ -29,10 +31,12 @@ export interface Workout {
   plan: WorkoutPlan[];
   tempPlan: WorkoutPlan[];
   actionRecords: ActionRecord[];
-  painInfo: PainInfo;
+  pain: Pain;
   unbannedWorkouts: string[];
   muted: boolean;
-  current: number;
+  paused: boolean;
+  current: [number, number];
+  time: number;
 }
 export interface CreateRecord {
   type: 'create';
@@ -48,55 +52,40 @@ export type ActionRecord = CreateRecord | DeleteRecord;
 const initialPlan = [
   // FIXME: temporary value
   {
-    name: 'incline dumbbell bench press',
+    name: 'barbell curl',
     reps: 12,
     sets: 2,
     time: 60,
     hidden: false,
   },
   {
-    name: 'diamond pushups',
+    name: 'lying triceps press',
     reps: 20,
     sets: 3,
     time: 45,
     hidden: false,
   },
   {
-    name: 'dumbbell shrugs',
+    name: 'bench press',
     reps: 12,
     sets: 1,
-    time: 45,
+    time: 22,
     hidden: false,
   },
 ];
-const initialPainInfo = {
-  neck: [
-    {
-      name: '목아파',
-      ban: [],
-      checked: false,
-    },
-  ],
-  'chest-n-back': [],
-  'stomach-n-waist': [],
-  shoulder: [],
-  arm: [
-    {
-      name: 'Stretched muscle',
-      ban: ['deadlift'],
-      checked: false,
-    },
-    {
-      name: 'Burning feeling',
-      ban: ['deadlift'],
-      checked: false,
-    },
-  ],
-  wrist: [],
-  thigh: [],
-  knee: [],
-  calf: [],
-  ankle: [],
+const initialPain = {
+  neck: false,
+  chest: false,
+  back: false,
+  stomach: false,
+  waist: false,
+  shoulder: false,
+  arm: false,
+  wrist: false,
+  thigh: false,
+  knee: false,
+  calf: false,
+  ankle: false,
 };
 
 export const initialWorkoutState: WorkoutState = {
@@ -104,10 +93,12 @@ export const initialWorkoutState: WorkoutState = {
   plan: initialPlan,
   tempPlan: initialPlan,
   actionRecords: [],
-  painInfo: initialPainInfo,
+  pain: initialPain,
   unbannedWorkouts: [],
   muted: false,
-  current: -1,
+  paused: false,
+  current: [-1, -1],
+  time: 0,
 };
 
 export interface DeleteWorkoutAction {
@@ -129,7 +120,7 @@ export interface AddWorkoutAction {
 }
 export interface TogglePainAction {
   type: 'TOGGLE_PAIN';
-  payload: { bodyPart: BodyPart; name: string; checked?: boolean };
+  payload: { bodyPart: BodyPart; checked?: boolean };
 }
 export interface UnbanWorkoutAction {
   type: 'UNBAN_WORKOUT';
@@ -142,6 +133,24 @@ export interface ChangeWorkoutTypeAction {
 type ToggleMuteAction = {
   type: 'TOGGLE_MUTE';
 };
+type ReduceTimeAction = {
+  type: 'REDUCE_TIME';
+};
+type SkipWorkoutAction = {
+  type: 'SKIP_WORKOUT';
+};
+type QuitWorkoutAction = {
+  type: 'QUIT_WORKOUT';
+};
+type EmergencyQuitAction = {
+  type: 'EMERGENCY_QUIT';
+};
+type TogglePauseAction = {
+  type: 'TOGGLE_PAUSE';
+};
+type GoNextAction = {
+  type: 'GO_NEXT';
+};
 
 export type WorkoutAction =
   | DeleteWorkoutAction
@@ -152,7 +161,13 @@ export type WorkoutAction =
   | TogglePainAction
   | UnbanWorkoutAction
   | ChangeWorkoutTypeAction
-  | ToggleMuteAction;
+  | ToggleMuteAction
+  | ReduceTimeAction
+  | SkipWorkoutAction
+  | QuitWorkoutAction
+  | EmergencyQuitAction
+  | GoNextAction
+  | TogglePauseAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
   'UNDO_EDIT_WORKOUT_PLAN',
@@ -163,6 +178,12 @@ export const WORKOUT_ACTION_TYPES = [
   'UNBAN_WORKOUT',
   'CHANGE_WORKOUT_TYPE',
   'TOGGLE_MUTE',
+  'REDUCE_TIME',
+  'SKIP_WORKOUT',
+  'QUIT_WORKOUT',
+  'EMERGENCY_QUIT',
+  'GO_NEXT',
+  'TOGGLE_PAUSE',
 ];
 
 const toggledPlan = (plan: WorkoutPlan[], i: number) => {
@@ -225,29 +246,11 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         actionRecords: [...state.actionRecords, { type: 'create' } as CreateRecord],
       };
     case 'TOGGLE_PAIN':
-      const newBodyState = (origState: { name: string; ban: string[]; checked: boolean }[]) => {
-        const index = origState.map((pain) => pain.name).indexOf(action.payload.name);
-        if (index < 0) {
-          return state;
-        }
-        return [
-          ...origState.slice(0, index),
-          {
-            name: action.payload.name,
-            ban: origState[index].ban,
-            checked:
-              action.payload.checked !== undefined
-                ? action.payload.checked
-                : !origState[index].checked,
-          },
-          ...origState.slice(index + 1),
-        ];
-      };
       return {
         ...state,
-        painInfo: {
-          ...state.painInfo,
-          [action.payload.bodyPart]: newBodyState(state.painInfo[action.payload.bodyPart]),
+        pain: {
+          ...state.pain,
+          [action.payload.bodyPart]: action.payload.checked || !state.pain[action.payload.bodyPart],
         },
       };
     case 'UNBAN_WORKOUT':
@@ -267,6 +270,51 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         ...state,
         muted: !state.muted,
       };
+    case 'REDUCE_TIME':
+      return {
+        ...state,
+        time: state.time - 1,
+      };
+    case 'SKIP_WORKOUT':
+      return {
+        ...state,
+        current: [state.current[0], state.current[1] + 1],
+      };
+    case 'QUIT_WORKOUT':
+      return {
+        ...state,
+        current: [state.current[0] + 1, 0],
+      };
+    case 'GO_NEXT':
+      console.log(state.current);
+      const restTime = 10; // FIXME
+      const plan = state.plan.filter((p) => !p.hidden);
+      const [nextCurrent, nextTime] = (() => {
+        if (state.current[0] === -1) {
+          return [[0, 1], plan[0].time];
+        }
+        if (state.current[1] === plan[state.current[0]].sets * 2 - 1) {
+          if (state.current[0] === plan.length - 1) {
+            return [[-2, -2], 10];
+          }
+          return [[state.current[0] + 1, 0], restTime];
+        }
+        return [
+          [state.current[0], state.current[1] + 1],
+          state.current[1] % 2 === 0 ? plan[state.current[0]].time : restTime,
+        ];
+      })() as [[number, number], number];
+      return {
+        ...state,
+        current: nextCurrent,
+        time: nextTime,
+      };
+    case 'TOGGLE_PAUSE':
+      return {
+        ...state,
+        paused: !state.paused,
+      };
+    case 'EMERGENCY_QUIT':
     default:
       return state;
   }
@@ -287,7 +335,7 @@ export const discardEditWorkoutPlan = () => {
 export const addWorkout = (payload: WorkoutPlan) => {
   dispatch({ payload, type: 'ADD_WORKOUT' });
 };
-export const togglePain = (payload: { bodyPart: BodyPart; name: string; checked?: boolean }) => {
+export const togglePain = (payload: { bodyPart: BodyPart; checked?: boolean }) => {
   dispatch({ payload, type: 'TOGGLE_PAIN' });
 };
 export const unbanWorkout = (payload: string) => {
@@ -298,4 +346,19 @@ export const changeWorkoutType = (payload: string) => {
 };
 export const toggleMute = () => {
   dispatch({ type: 'TOGGLE_MUTE' });
+};
+export const reduceTime = () => {
+  dispatch({ type: 'REDUCE_TIME' });
+};
+export const skipWorkout = () => {
+  dispatch({ type: 'SKIP_WORKOUT' });
+};
+export const quitWorkout = () => {
+  dispatch({ type: 'QUIT_WORKOUT' });
+};
+export const goNext = () => {
+  dispatch({ type: 'GO_NEXT' });
+};
+export const togglePause = () => {
+  dispatch({ type: 'TOGGLE_PAUSE' });
 };

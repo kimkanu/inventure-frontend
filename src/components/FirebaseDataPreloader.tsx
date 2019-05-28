@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from 'react';
 import Firebase, { FirebaseContext } from './Firebase';
 import { useAsyncEffect, unique } from '../utils';
-import { setWorkoutInfo, setWorkoutImage, setStaticImages } from '../stores/static';
+import { setWorkoutInfo, setWorkoutImage, setStaticImages, setPainInfo } from '../stores/static';
 import { toggleLoading, LoadingData } from '../stores/loading';
+import { BodyPart } from '../stores/workout';
 
 interface Props {
   firebase: Firebase;
@@ -13,16 +14,20 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
     let isSubscribed = true;
 
     const databaseResponse = await firebase.database.ref('staticInfo/workouts').once('value');
-    const workoutData = databaseResponse.val() as { imagePath: string; name: string }[];
+    const workoutData = databaseResponse.val() as {
+      imagePath: string;
+      name: string;
+      youtube: string;
+    }[];
     setWorkoutInfo(workoutData);
 
     Promise.all(
       workoutData
-        .map(({ imagePath, name }) => async () => {
-          {
+        .map(({ imagePath, name, youtube }) => async () => {
+          try {
             const local = localStorage.getItem(`workoutInfo/${imagePath}`);
             if (local) {
-              return { name, image: local };
+              return { name, image: local, youtube };
             }
             const url = await firebase.storage.ref(imagePath).getDownloadURL();
             const response = await fetch(url, {
@@ -33,11 +38,28 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
             });
 
             const buffer = await response.arrayBuffer();
-            const base64Flag = 'data:image/png;base64,';
+            const base64Flag = (() => {
+              switch (true) {
+                case imagePath.endsWith('.jpg'):
+                case imagePath.endsWith('.jpeg'):
+                  return 'data:image/jpeg;base64,';
+                case imagePath.endsWith('.gif'):
+                  return 'data:image/gif;base64,';
+                case imagePath.endsWith('.png'):
+                  return 'data:image/png;base64,';
+                case imagePath.endsWith('.svg'):
+                  return 'data:image/svg+xml;base64,';
+                default:
+                  return '';
+              }
+            })();
             const imageStr = arrayBufferToBase64(buffer);
             const base64Image = base64Flag + imageStr;
             localStorage.setItem(`workoutInfo/${imagePath}`, base64Image);
-            return { name, image: base64Image };
+            return { name, image: base64Image, youtube };
+          } catch (e) {
+            console.error(e);
+            return { name, youtube };
           }
         })
         .map((x) => x()),
@@ -65,7 +87,7 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
     Promise.all(
       imageData
         .map(({ imagePath, name }) => async () => {
-          {
+          try {
             const local = localStorage.getItem(`images/${imagePath}`);
             if (local) {
               return { name, image: local };
@@ -98,6 +120,9 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
             const base64Image = base64Flag + imageStr;
             localStorage.setItem(`images/${imagePath}`, base64Image);
             return { name, image: base64Image };
+          } catch (e) {
+            console.error(e);
+            return { name };
           }
         })
         .map((x) => x()),
@@ -113,6 +138,13 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
     return () => {
       isSubscribed = false;
     };
+  }, []);
+
+  useAsyncEffect(async () => {
+    const databaseResponse = await firebase.database.ref('staticInfo/painInfo').once('value');
+    const painInfo = databaseResponse.val() as { [bodyPart in BodyPart]: string[] };
+    setPainInfo(painInfo);
+    console.log('pain info loaded');
   }, []);
 
   return <></>;

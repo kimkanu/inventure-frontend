@@ -10,7 +10,7 @@ import EdgeIcon from '../Icons/EdgeIcon';
 import DialogTextButton from '../Dialog/DialogTextButton';
 import { WorkoutPlan, addWorkout, BodyPart, togglePain, unbanWorkout } from '../../stores/workout';
 import Dialog from '../Dialog';
-import { capitalizeFirst } from '../../utils';
+import { capitalizeFirst, unique } from '../../utils';
 import { History } from 'history';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -24,16 +24,13 @@ import {
 import { sansSerifFont, useStyles } from '../../styles';
 
 interface PainSelectorProps {
-  bodyPart: BodyPart;
+  bodyParts: BodyPart[];
 }
-const PainSelector: FunctionComponent<PainSelectorProps> = ({ bodyPart }) => {
+const PainSelector: FunctionComponent<PainSelectorProps> = ({ bodyParts }) => {
   const [workout] = useGlobalState('workout');
 
-  const handleChange = (
-    bodyPart: BodyPart,
-    { name, checked }: { name: string; checked: boolean },
-  ) => {
-    togglePain({ bodyPart, name, checked });
+  const handleChange = (bodyPart: BodyPart, checked: boolean) => {
+    togglePain({ bodyPart, checked });
   };
 
   return (
@@ -43,25 +40,27 @@ const PainSelector: FunctionComponent<PainSelectorProps> = ({ bodyPart }) => {
       }}
     >
       <FormGroup>
-        {workout.painInfo[bodyPart].map((pain, i) => (
-          <FormControlLabel
-            key={i}
-            control={
-              <Checkbox
-                defaultChecked={pain.checked}
-                onChange={(e) => {
-                  handleChange(bodyPart, { ...pain, checked: e.currentTarget.checked });
-                }}
-                value={pain.name}
-              />
-            }
-            label={
-              <span style={useStyles(sansSerifFont, { fontSize: '1rem' })}>
-                {capitalizeFirst(pain.name)}
-              </span>
-            }
-          />
-        ))}
+        {bodyParts
+          .map((x) => workout.pain[x])
+          .map((pain, i) => (
+            <FormControlLabel
+              key={i}
+              control={
+                <Checkbox
+                  defaultChecked={pain}
+                  onChange={(e) => {
+                    handleChange(bodyParts[i], e.currentTarget.checked);
+                  }}
+                  value={bodyParts[i]}
+                />
+              }
+              label={
+                <span style={useStyles(sansSerifFont, { fontSize: '1rem' })}>
+                  {capitalizeFirst(bodyParts[i])}
+                </span>
+              }
+            />
+          ))}
       </FormGroup>
     </FormControl>
   );
@@ -70,13 +69,16 @@ const PainSelector: FunctionComponent<PainSelectorProps> = ({ bodyPart }) => {
 interface SpotProps {
   x: number;
   y: number;
-  bodyPart: BodyPart;
+  bodyPart: BodyPart | BodyPart[];
   right?: boolean;
   setDialog: (newDialog: Partial<DialogProps>) => void;
   onSave: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 const Spot: FunctionComponent<SpotProps> = ({ x, y, setDialog, bodyPart, onSave }) => {
-  const pain = useGlobalState('workout')[0].painInfo[bodyPart].some((x) => x.checked);
+  const workout = useGlobalState('workout')[0];
+  const pain = Array.isArray(bodyPart)
+    ? bodyPart.some((x) => workout.pain[x])
+    : workout.pain[bodyPart];
   return (
     <div
       style={{
@@ -95,12 +97,16 @@ const Spot: FunctionComponent<SpotProps> = ({ x, y, setDialog, bodyPart, onSave 
         cursor: 'pointer',
       }}
       onClick={() => {
+        if (!Array.isArray(bodyPart)) {
+          togglePain({ bodyPart, checked: !pain });
+          return;
+        }
         setDialog({
           show: true,
-          title: capitalizeFirst(bodyPart).replace(/-n-/, ' & '),
+          title: bodyPart.map(capitalizeFirst).join(' & '),
           children: (
             <div style={{ width: '400px', maxWidth: '100%' }}>
-              <PainSelector bodyPart={bodyPart} />
+              <PainSelector bodyParts={bodyPart} />
               <div
                 style={{
                   display: 'flex',
@@ -182,7 +188,7 @@ const PainSelectionAnatomy: FunctionComponent<AnatomyProps> = ({ setDialog }) =>
         <Spot
           x={50}
           y={27}
-          bodyPart="chest-n-back"
+          bodyPart={['chest', 'back']}
           setDialog={setDialog}
           onSave={() => {
             setDialog({ show: false });
@@ -192,7 +198,7 @@ const PainSelectionAnatomy: FunctionComponent<AnatomyProps> = ({ setDialog }) =>
         <Spot
           x={50}
           y={40}
-          bodyPart="stomach-n-waist"
+          bodyPart={['stomach', 'waist']}
           setDialog={setDialog}
           onSave={() => {
             setDialog({ show: false });
@@ -345,6 +351,7 @@ const PainSelectionAnatomy: FunctionComponent<AnatomyProps> = ({ setDialog }) =>
 
 const BannedTrainingList: FunctionComponent = () => {
   const [workout] = useGlobalState('workout');
+  const [staticInfo] = useGlobalState('static');
   return (
     <FormControl
       style={{
@@ -352,30 +359,42 @@ const BannedTrainingList: FunctionComponent = () => {
       }}
     >
       <FormGroup>
-        {Object.values(workout.painInfo)
-          .reduce((a, b) => [...a, ...b], [])
-          .filter((pain) => pain.checked)
-          .map((pain) => pain.ban)
-          .reduce((a, b) => [...a, ...b], [])
-          .map((bannedWorkout, i) => (
-            <FormControlLabel
-              key={i}
-              control={
-                <Checkbox
-                  defaultChecked={workout.unbannedWorkouts.includes(bannedWorkout)}
-                  onChange={(e) => {
-                    unbanWorkout(bannedWorkout);
-                  }}
-                  value={bannedWorkout}
-                />
-              }
-              label={
-                <span style={useStyles(sansSerifFont, { fontSize: '1rem' })}>
-                  {capitalizeFirst(bannedWorkout)}
-                </span>
-              }
-            />
-          ))}
+        {unique(
+          Object.keys(staticInfo.painInfo)
+            .filter((bodyPart) => (workout.pain as any)[bodyPart] as boolean)
+            .map((bodyPart) => staticInfo.painInfo[bodyPart])
+            .reduce((a, b) => [...a, ...b], []),
+        ).map((bannedWorkout, i) => (
+          <FormControlLabel
+            key={i}
+            style={{
+              marginBottom: '-0.3rem',
+            }}
+            control={
+              <Checkbox
+                defaultChecked={workout.unbannedWorkouts.includes(bannedWorkout)}
+                onChange={(e) => {
+                  unbanWorkout(bannedWorkout);
+                }}
+                value={bannedWorkout}
+                color="primary"
+              />
+            }
+            label={
+              <span
+                style={useStyles(
+                  sansSerifFont,
+                  { fontSize: '1rem' },
+                  workout.unbannedWorkouts.includes(bannedWorkout)
+                    ? {}
+                    : { color: COLORS.gray!.dark, textDecoration: 'line-through' },
+                )}
+              >
+                {capitalizeFirst(bannedWorkout)}
+              </span>
+            }
+          />
+        ))}
       </FormGroup>
     </FormControl>
   );
@@ -388,9 +407,9 @@ interface DialogProps {
 }
 interface Props extends RouteComponentProps {}
 const PainSelection: FunctionComponent<Props> = ({ history }) => {
-  const pain = Object.values(useGlobalState('workout')[0].painInfo)
-    .reduce((a, b) => [...a, ...b], [])
-    .some((x) => x.checked);
+  const [workout] = useGlobalState('workout');
+  const pain = Object.values(workout.pain).some((x) => x);
+  const [staticInfo] = useGlobalState('static');
   const [dialog, s] = useState<DialogProps>({
     show: false,
     title: '',
@@ -432,6 +451,12 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
       ...newDialog,
     }));
   };
+  const bannedWorkouts =
+    Object.keys(staticInfo.painInfo)
+      .filter((bodyPart) => (workout.pain as any)[bodyPart] as boolean)
+      .map((bodyPart) => staticInfo.painInfo[bodyPart])
+      .reduce((a, b) => [...a, ...b], [])
+      .filter((name) => !workout.unbannedWorkouts.includes(name)).length === 0;
 
   return (
     <Route
@@ -468,6 +493,9 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
                   backgroundColor={COLORS.red!.light}
                   labelInside="Continue with pain"
                   onClick={() => {
+                    if (bannedWorkouts) {
+                      history.push('/workout/view');
+                    }
                     setDialog({
                       show: true,
                       title: '',

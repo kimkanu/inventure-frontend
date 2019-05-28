@@ -84,7 +84,12 @@ const ButtonLarge: FunctionComponent<Props> = ({
       hidden={hidden}
       aria-hidden={hidden}
     >
-      <div onClick={onClick}>
+      <div
+        onClick={onClick}
+        style={{
+          margin: `.4rem ${typeof margin === 'number' ? `${margin}px` : margin}`,
+        }}
+      >
         <ButtonBase
           style={{
             borderRadius: '24px',

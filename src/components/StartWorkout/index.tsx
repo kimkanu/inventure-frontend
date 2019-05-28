@@ -2,20 +2,14 @@ import React, { FunctionComponent, useState, useMemo, useEffect, Component } fro
 import Timer from './Timer';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import EdgeIcon from '../Icons/EdgeIcon';
-import { COLORS } from '../../colors';
+import { COLORS, COLOR_BACKGROUND } from '../../colors';
 import { useStyles, sansSerifFont } from '../../styles';
 import { Redirect } from 'react-router-dom';
 import { useGlobalState } from '../../stores';
-import { toggleMute } from '../../stores/workout';
+import { toggleMute, reduceTime, goNext } from '../../stores/workout';
 
 interface Props {
   nextStep: String;
-}
-
-interface State {
-  time: number;
-  sets: number;
-  show: boolean;
 }
 
 const NextSection: FunctionComponent<Props> = ({ nextStep }) => {
@@ -35,7 +29,7 @@ const NextSection: FunctionComponent<Props> = ({ nextStep }) => {
           <span
             style={useStyles(sansSerifFont, {
               fontSize: '.9rem',
-              backgroundColor: '#f7f7f7',
+              backgroundColor: COLOR_BACKGROUND,
               display: 'inline-block',
               transform: 'translateY(-.8em)',
               padding: '0 .8em',
@@ -65,99 +59,96 @@ const MuteButton: FunctionComponent = () => {
       backgroundColor={'#fff'}
       shadowColor={COLORS.gray!.darker}
       color={COLORS.gray!.dark}
+      label={useGlobalState('workout')[0].muted ? 'MUTED' : 'UNMUTED'}
     >
       <EdgeIcon buttonSize={48}>{useGlobalState('workout')[0].muted ? '' : ''}</EdgeIcon>
     </ButtonLarge>
   );
 };
 
-class StartWorkout extends Component<{}, State> {
-  timeTotal = 30;
-  setsTotal = 4;
+const StartWorkout: FunctionComponent = () => {
+  const [workout, setWorkout] = useGlobalState('workout');
+  useEffect(() => {
+    const timeout = setTimeout(reduceTime, 100);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.time < 0) {
+      goNext();
+    }
+    const timeout = setTimeout(reduceTime, 1000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  });
+  const plan = workout.plan.filter((p) => !p.hidden);
 
-  state = {
-    show: true,
-    time: this.timeTotal,
-    sets: 1,
-  };
-  interval = undefined as any;
-
-  componentDidMount() {
-    this.interval = setTimeout(() => {}, 1000);
-  }
-  componentWillUnmount() {
-    clearTimeout(this.interval);
-  }
-
-  render() {
-    this.interval = setTimeout(() => {
-      this.setState((state) => {
-        if (state.time !== 0) return { ...state, time: state.time - 1 };
-        if (this.state.sets === this.setsTotal) {
-          return { ...state, show: false };
-        }
-        return { ...state, sets: state.sets + 1, time: this.timeTotal };
-      });
-    }, 1000);
-
-    return !this.state.show ? (
-      // <Redirect to="/profile" />
-      <div />
-    ) : (
-      <div className="content">
+  return workout.current[0] === -1 ? (
+    <Redirect to="/workout" />
+  ) : workout.current[1] % 2 === 0 ? (
+    <Redirect to="/workout/rest" />
+  ) : (
+    <div className="content">
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignContent: 'space-between',
+          height: 'calc(100% - 28px)',
+          marginTop: '28px',
+        }}
+      >
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignContent: 'space-between',
-            height: 'calc(100% - 28px)',
-            marginTop: '28px',
+            height: '48vh',
           }}
         >
-          <div
-            style={{
-              height: '48vh',
+          <Timer
+            name={plan[workout.current[0]].name}
+            reps={plan[workout.current[0]].reps}
+            sets={{
+              current: (workout.current[1] + 1) / 2,
+              total: plan[workout.current[0]].sets,
             }}
-          >
-            <Timer
-              name="15 Benchpress"
-              sets={{ current: this.state.sets, total: this.setsTotal }}
-              time={{ current: this.state.time, total: this.timeTotal }}
-            />
-          </div>
-          <NextSection nextStep="1 Minute Rest" />
-          <div
-            style={{
-              position: 'relative',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <div>
-              <ButtonLarge
-                link="/workout"
-                backgroundColor={COLORS.red!.light}
-                shadowColor={COLORS.red!.dark}
-              >
-                <EdgeIcon buttonSize={48}></EdgeIcon>
-              </ButtonLarge>
-            </div>
-
-            <MuteButton />
-
+            time={{ current: workout.time, total: plan[workout.current[0]].time }}
+          />
+        </div>
+        <NextSection nextStep="1 Minute Rest" />
+        <div
+          style={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <div>
             <ButtonLarge
-              link="/workout/rest"
-              onClick={this.componentWillUnmount.bind(this)}
-              backgroundColor={COLORS.blue!.light}
-              shadowColor={COLORS.blue!.dark}
+              link="/workout/pain" /*fixme */
+              backgroundColor={COLORS.red!.light}
+              shadowColor={COLORS.red!.dark}
+              label="quit"
             >
-              <EdgeIcon buttonSize={48}></EdgeIcon>
+              <EdgeIcon buttonSize={48}></EdgeIcon>
             </ButtonLarge>
           </div>
+
+          <MuteButton />
+
+          <ButtonLarge
+            backgroundColor={COLORS.blue!.light}
+            shadowColor={COLORS.blue!.dark}
+            label="done"
+            onClick={goNext}
+          >
+            <EdgeIcon buttonSize={48}></EdgeIcon>
+          </ButtonLarge>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default StartWorkout;

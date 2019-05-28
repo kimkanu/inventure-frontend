@@ -1,36 +1,53 @@
-import React, { FunctionComponent, Component, useEffect } from 'react';
+import React, { FunctionComponent, Component } from 'react';
 import Iframe from 'react-iframe';
 import { useStyles, headingFont, sansSerifFont } from '../../styles';
 import { COLORS } from '../../colors';
 import ButtonSmall from '../Buttons/ButtonSmall';
 import EdgeIcon from '../Icons/EdgeIcon';
-import { useGlobalState } from '../../stores';
-import { goNext, reduceTime } from '../../stores/workout';
-import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 
-const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
-  const [workout, setWorkout] = useGlobalState('workout');
-  const [staticInfo] = useGlobalState('static');
-  useEffect(() => {
-    if (workout.current[0] < 0) return;
-    if (workout.time === 0) {
-      goNext();
-    }
-    const timeout = setTimeout(reduceTime, 1000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  });
+interface State {
+  time: number;
+  show: boolean;
+}
 
-  const plan = workout.plan.filter((p) => !p.hidden);
+class RemainingTime extends Component<{}, State> {
+  timeTotal = 60;
 
-  return workout.current[0] === -2 ? (
-    <Redirect to="/workout/congrats" />
-  ) : workout.current[0] === -1 ? (
-    <Redirect to="/workout" />
-  ) : workout.current[1] % 2 === 1 ? (
-    <Redirect to="/workout/start" />
-  ) : (
+  state = {
+    show: true,
+    time: this.timeTotal,
+  };
+  interval = undefined as any;
+
+  componentDidMount() {
+    this.interval = setTimeout(() => {}, 1000);
+  }
+  componentWillUnmount() {
+    clearTimeout(this.interval);
+  }
+
+  render() {
+    this.interval = setTimeout(() => {
+      this.setState((state) => {
+        if (state.time !== 0) return { ...state, time: state.time - 1 };
+        return { ...state, show: false };
+      });
+    }, 1000);
+
+    return !this.state.show ? (
+      // <Redirect to="/profile" />
+      <div />
+    ) : (
+      <>
+        {Math.floor(this.state.time / 60)}:
+        {(this.state.time < 10 ? '0' : '') + (this.state.time % 60)}
+      </>
+    );
+  }
+}
+
+const RestTime: FunctionComponent = () => {
+  return (
     <>
       <div className="content">
         <div
@@ -56,8 +73,7 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
               fontWeight: 'normal',
             })}
           >
-            {Math.floor(workout.time / 60)}:
-            {(workout.time % 60 < 10 ? '0' : '') + (workout.time % 60)}
+            <RemainingTime />
           </div>
         </div>
         <div
@@ -86,7 +102,7 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
                 margin: '5px',
               })}
             >
-              {plan[workout.current[0]].name}
+              Deadlift
             </span>
 
             <span
@@ -111,7 +127,7 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
               <iframe
                 width="300"
                 height="200"
-                src={staticInfo.workoutInfo[plan[workout.current[0]].name].youtube}
+                src="https://www.youtube.com/embed/-4qRntuXBSc?start=7"
                 frameBorder="0"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -179,4 +195,4 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export default withRouter(RestTime);
+export default RestTime;
