@@ -42,7 +42,7 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setS
         <ButtonBase
           style={{
             borderRadius: '8px',
-            margin: '12px',
+            margin: '8px',
           }}
           onClick={() => {
             setSelected((ss: WorkoutPlan) => ({
@@ -55,8 +55,10 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setS
         >
           <div
             style={useStyles(shadow({ depth: 6, opacity: 2 }), {
-              width: '156px',
-              height: '156px',
+              width: '162px',
+              maxWidth: 'calc(50vw - 30px)',
+              height: '162px',
+              maxHeight: 'calc(50vw - 30px)',
               background: '#3b3e43',
               borderRadius: '8px',
               display: 'flex',
@@ -68,14 +70,14 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setS
           >
             <div
               style={{
-                maxWidth: '156px',
-                height: '124px',
+                position: 'relative',
+                maxWidth: 'calc(100% - 4px)',
+                maxHeight: 'calc(100% - 16px)',
                 display: 'flex',
               }}
             >
               <div
                 style={{
-                  maxWidth: '140px',
                   margin: '8px 8px 0',
                   borderRadius: '8px',
                   display: 'flex',
@@ -96,9 +98,9 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setS
             <div
               style={useStyles(sansSerifFont, {
                 width: '156px',
-                height: '32px',
-                lineHeight: '32px',
-                fontSize: '0.9rem',
+                height: '28px',
+                lineHeight: '28px',
+                fontSize: '0.82rem',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',

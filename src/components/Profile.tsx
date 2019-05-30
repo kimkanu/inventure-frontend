@@ -10,77 +10,9 @@ import { useGlobalState } from '../stores';
 import { sansSerifFont, shadowText, shadow } from '../styles';
 import { COLORS, ColorGradient, Color } from '../colors';
 import { VictoryChart, VictoryTheme, VictoryArea } from 'victory';
+import Achievement from './Achievement';
 
 interface Props extends RouteComponentProps {}
-
-interface AchievementProps {
-  icon: string;
-  name: string;
-  scheme: ColorGradient;
-  color?: string;
-}
-
-const Achievement: FunctionComponent<AchievementProps> = ({
-  icon,
-  name,
-  scheme,
-  color = '#fff',
-}) => (
-  <div
-    style={{
-      lineHeight: '28px',
-      margin: '-2px 0 0 2px',
-      width: '100%',
-      display: 'flex',
-    }}
-  >
-    <div
-      style={{
-        color,
-        backgroundColor: scheme.light,
-        ...shadow({ depth: 3, color: new Color(scheme.dark), opacity: 3 }),
-        display: 'inline-flex',
-        width: '22px',
-        height: '22px',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: '50%',
-        margin: '0 6px 0 0',
-        transform: 'translateY(1pt)',
-      }}
-    >
-      <div
-        style={{
-          fontFamily: 'EdgeIcons',
-          display: 'inline-block',
-          width: '22px',
-          height: '22px',
-          lineHeight: '22px',
-          position: 'relative',
-          top: '0',
-          fontSize: '.85rem',
-          textAlign: 'center',
-        }}
-      >
-        {icon}
-      </div>
-    </div>
-    <div
-      style={{
-        lineHeight: '22px',
-        fontWeight: 'bold',
-        position: 'relative',
-        top: '2px',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        width: 'calc(100% - 32px)',
-      }}
-    >
-      {name}
-    </div>
-  </div>
-);
 
 function ordinalSuffix(i: number) {
   const j = i % 10;
@@ -181,21 +113,7 @@ const ExerciseCard: FunctionComponent<ExerciseCardProps> = ({
         >
           <span style={{ fontSize: '0.85rem', color: COLORS.gray!.dark }}>RECENT ACHIEVEMENT</span>
           <span style={{ fontSize: '1rem' }}>
-            <Achievement icon="" name={achievement.name} scheme={COLORS.orange!} />
-          </span>
-          <span
-            style={{
-              fontSize: '0.85rem',
-              color: COLORS.gray!.dark,
-              textAlign: 'right',
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
-              marginLeft: '1rem',
-              maxWidth: 'calc(100% - 1rem)',
-            }}
-          >
-            1000x benched, 60 kg max. record
+            <Achievement {...achievement} />
           </span>
         </div>
       ) : null}

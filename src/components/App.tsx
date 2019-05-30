@@ -77,13 +77,13 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
     <GlobalStateProvider>
       <Route exact path="/" render={() => <Redirect to={{ pathname: '/workout' }} />} />
       <TransitionGroup>
+        <Banner />
         <CSSTransition
           key={untilNthIndex(location.pathname, '/', 2)}
           timeout={{ enter: 300, exit: 300 }}
           classNames={'content--top-level-transition'}
         >
           <div style={useStyles(sansSerifFont)}>
-            <Banner />
             <Switch location={location}>
               <Route path="/workout" component={Workout} />
               <Route path="/profile" component={Profile} />

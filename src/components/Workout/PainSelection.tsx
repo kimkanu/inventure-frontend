@@ -516,8 +516,8 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
                       children: (
                         <div>
                           <p style={{ marginTop: 0 }}>
-                            These workouts can cause you PAIN. You may select them to include in
-                            today's training.
+                            These workouts can cause you <b>PAIN</b>. You may select them to include
+                            in today's training.
                           </p>
                           <BannedTrainingList />
                           <div

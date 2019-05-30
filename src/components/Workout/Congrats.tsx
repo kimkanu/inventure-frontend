@@ -5,7 +5,7 @@ import CardWithPicture from '../CardWithPicture';
 import Link from '../Link';
 import { useStyles, sansSerifFont } from '../../styles';
 import { transparentImage } from '../../contants';
-import { changeWorkoutType } from '../../stores/workout';
+import { changeWorkoutType, goNext, initializeWorkout } from '../../stores/workout';
 import { capitalizeFirst } from '../../utils';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import { COLORS } from '../../colors';
@@ -31,12 +31,12 @@ class Confetti {
     this.x = Math.random() * window.innerWidth;
     this.y = -Math.random() * window.innerHeight - 10;
     this.vx = Math.random() * 0.5;
-    this.vy = 0.7 * this.r + Math.random() * 5 + 1;
+    this.vy = 0.8 * this.r + Math.random() * 5 + 2;
     this.opacitySpeed = 0.03 * (Math.random() * 3 + 1);
     this.globalOpacity = 10;
   }
   draw(drawCircle: (x: number, y: number, r: number, style?: string) => void, delta: number) {
-    this.globalOpacity -= delta / 25;
+    this.globalOpacity -= delta / 20;
     this.x += this.vx * delta;
     this.y += this.vy * delta;
     this.opacity += this.opacitySpeed * delta;
@@ -59,8 +59,8 @@ class Confetti {
 }
 
 const Congrats: FunctionComponent<Props> = ({ location, history }) => {
-  let flag = Date.now();
-  const confettis = [...Array(50).keys()].map((x) => new Confetti());
+  const flag = Date.now();
+  const confettis = [...Array(150).keys()].map(() => new Confetti());
   let lastRender = Date.now();
 
   const drawCircle = (
@@ -76,7 +76,6 @@ const Congrats: FunctionComponent<Props> = ({ location, history }) => {
     ctx.fill();
   };
   const step = (ctx: CanvasRenderingContext2D) => {
-    console.log('hihi');
     const delta = Date.now() - lastRender;
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
     const dC = (x: number, y: number, r: number, style?: string) => {
@@ -87,6 +86,8 @@ const Congrats: FunctionComponent<Props> = ({ location, history }) => {
     lastRender = Date.now();
   };
   useEffect(() => {
+    initializeWorkout();
+
     lastRender = Date.now();
     const canvas = document.getElementById('congrats') as HTMLCanvasElement;
     const handler = () => {
@@ -96,7 +97,6 @@ const Congrats: FunctionComponent<Props> = ({ location, history }) => {
     if (canvas) {
       handler();
       const ctx = canvas.getContext('2d')!;
-      console.log('congr');
       step(ctx);
     }
     window.addEventListener('resize', handler);

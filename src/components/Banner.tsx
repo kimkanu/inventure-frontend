@@ -1,10 +1,11 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 import { COLORS } from '../colors';
+import { sansSerifFont } from '../styles';
 
 const Banner: FunctionComponent = () => {
   const [visible, setV] = useState(false);
   useEffect(() => {
-    if (window.innerWidth < 360 || window.innerHeight < 600) {
+    if (window.innerWidth < 360 || window.innerHeight < 360) {
       setV(true);
     }
   }, []);
@@ -12,6 +13,7 @@ const Banner: FunctionComponent = () => {
   return (
     <div
       style={{
+        ...sansSerifFont,
         width: 'calc(100% - 16px)',
         position: 'fixed',
         bottom: 'calc(100 * var(--vh) + 2px)',
@@ -21,16 +23,24 @@ const Banner: FunctionComponent = () => {
         transform: visible ? 'translateY(calc(100% + 2px))' : 'none',
         backgroundColor: COLORS.red!.lighter,
         color: 'white',
-        padding: '4px 8px',
+        padding: '0 8px',
         fontSize: '0.8rem',
         display: 'flex',
         justifyContent: 'space-between',
       }}
     >
-      <span>Your screen size is not supported.</span>
+      <span
+        style={{
+          padding: '4px 6px',
+        }}
+      >
+        Your screen size is not supported.
+      </span>
       <span
         style={{
           fontFamily: 'EdgeIcons',
+          cursor: 'pointer',
+          padding: '4px 6px',
         }}
         onClick={() => {
           setV(false);

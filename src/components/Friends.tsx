@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMedal } from '@fortawesome/free-solid-svg-icons';
 import BackButton from './Buttons/BackButton';
 import Fuse from 'fuse.js';
+import Feed from './Feed';
 
 interface CardProps {
   rank: number;
@@ -242,6 +243,7 @@ const Friends: FunctionComponent<Props> = ({ location }) => {
                           textDecoration: 'none',
                           color: COLORS.gray!.darker,
                         }}
+                        className="without-blue"
                       >
                         <ButtonBase
                           style={{
@@ -266,6 +268,7 @@ const Friends: FunctionComponent<Props> = ({ location }) => {
                           textDecoration: 'none',
                           color: COLORS.gray!.darker,
                         }}
+                        className="without-blue"
                       >
                         <ButtonBase
                           style={{
@@ -286,7 +289,7 @@ const Friends: FunctionComponent<Props> = ({ location }) => {
                       </Link>
                     </div>
                   </h1>
-                  <div>sdsdd</div>
+                  <Feed />
                 </div>
                 <Route
                   render={({ location }) => (

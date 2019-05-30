@@ -88,18 +88,22 @@ const Slider: FunctionComponent<Props> = ({
   return (
     <div
       style={{
-        margin: '1rem 0',
+        margin: '1rem 0 1rem -6px',
         overflowX: 'hidden',
       }}
     >
       {title ? (
-        <div>
+        <div
+          style={{
+            marginLeft: '6px',
+            overflowX: 'hidden',
+          }}
+        >
           <span>{title}</span>
         </div>
       ) : null}
       <div
         style={{
-          margin: '0 0.5rem',
           display: 'flex',
           ...style,
         }}
@@ -124,7 +128,12 @@ const Slider: FunctionComponent<Props> = ({
       >
         <div
           className={`slider${active ? ' active' : ''}`}
-          style={{ position: 'relative', height: '48px', width: '100%', margin: '0 36px 0 16px' }}
+          style={{
+            position: 'relative',
+            height: '48px',
+            width: 'calc(100% + 24px)',
+            margin: '0 24px 0 16px',
+          }}
           id={`slider-${id}`}
         >
           <div

@@ -9,6 +9,9 @@
   color: #14171a;
   background-color: #eff1f2;
 }
+.pop-content .content {
+  padding: 0 0.67rem 1.3rem;
+}
 
 .content--top-level-transition-exit .top-level {
   opacity: 1;
@@ -115,13 +118,13 @@ h1.heading {
 }
 .search-container label {
   position: absolute;
-  font-size: 0.9rem;
+  font-size: 0.97rem;
   bottom: 0.6rem;
   margin-left: 0.5rem;
   cursor: text;
   opacity: 0.78;
-  transition: font-size 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.15s cubic-bezier(0.2, 0, 0.2, 1);
+  transform-origin: top left;
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1);
 }
 .search-container input {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 5px 0px, rgba(0, 0, 0, 0.08) 0px 1px 10px 0px,
@@ -129,8 +132,7 @@ h1.heading {
   transition: box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .search-container.active label {
-  font-size: 0.8rem;
-  transform: translateY(-1.4rem);
+  transform: translateY(-1.1rem) scale(0.8);
   margin-left: 0.5rem;
 }
 .search-container.active input {
@@ -140,4 +142,25 @@ h1.heading {
 
 tspan {
   font-family: NotoSans, Helvetica, Tahoma, Verdana, Geneva, Arial, sans-serif !important;
+}
+
+/* Remove blue box appearing during touch without affecting the a11y */
+.without-blue::-moz-selection {
+  background: rgba(0, 0, 0, 0);
+}
+.without-blue::selection {
+  background: rgba(0, 0, 0, 0);
+}
+.without-blue::-webkit-selection {
+  background: rgba(0, 0, 0, 0);
+}
+.without-blue {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: none;
 }

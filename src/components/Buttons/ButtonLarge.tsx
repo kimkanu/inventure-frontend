@@ -100,7 +100,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
       {label ? (
         <div
           style={useStyles(sansSerifFont, {
-            fontSize: '0.9rem',
+            fontSize: '0.8rem',
             width: 'fit-content',
             marginTop: '.2em',
             cursor: hidden ? 'default' : 'pointer',

@@ -148,6 +148,9 @@ type EmergencyQuitAction = {
 type TogglePauseAction = {
   type: 'TOGGLE_PAUSE';
 };
+type InitializeWorkoutAction = {
+  type: 'INITIALIZE_WORKOUT';
+};
 type GoNextAction = {
   type: 'GO_NEXT';
 };
@@ -167,6 +170,7 @@ export type WorkoutAction =
   | QuitWorkoutAction
   | EmergencyQuitAction
   | GoNextAction
+  | InitializeWorkoutAction
   | TogglePauseAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
@@ -183,6 +187,7 @@ export const WORKOUT_ACTION_TYPES = [
   'QUIT_WORKOUT',
   'EMERGENCY_QUIT',
   'GO_NEXT',
+  'INITIALIZE_WORKOUT',
   'TOGGLE_PAUSE',
 ];
 
@@ -285,11 +290,19 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         ...state,
         current: [state.current[0] + 1, 0],
       };
+    case 'INITIALIZE_WORKOUT':
+      return {
+        ...state,
+        current: [-1, -1] as [number, number],
+        time: 10,
+      };
     case 'GO_NEXT':
-      console.log(state.current);
       const restTime = 10; // FIXME
       const plan = state.plan.filter((p) => !p.hidden);
       const [nextCurrent, nextTime] = (() => {
+        if (state.current[0] === -2) {
+          return [[-1, -1], 10];
+        }
         if (state.current[0] === -1) {
           return [[0, 1], plan[0].time];
         }
@@ -361,4 +374,7 @@ export const goNext = () => {
 };
 export const togglePause = () => {
   dispatch({ type: 'TOGGLE_PAUSE' });
+};
+export const initializeWorkout = () => {
+  dispatch({ type: 'INITIALIZE_WORKOUT' });
 };

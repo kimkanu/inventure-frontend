@@ -65,7 +65,7 @@ const ViewWorkout: FunctionComponent<Props> = ({}) => {
                 backgroundColor={'#fff'}
                 shadowColor={COLORS.gray!.darker}
                 color={COLORS.gray!.dark}
-                label={workout.muted ? 'unmute' : 'mute'}
+                label={workout.muted ? 'muted' : 'unmuted'}
                 margin="1.5rem"
                 onClick={() => toggleMute()}
               >
