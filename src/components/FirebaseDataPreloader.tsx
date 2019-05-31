@@ -17,6 +17,7 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
     const workoutData = databaseResponse.val() as {
       imagePath: string;
       name: string;
+      type: { name: string };
       youtube: string;
     }[];
     setWorkoutInfo(workoutData);

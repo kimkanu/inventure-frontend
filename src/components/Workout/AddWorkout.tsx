@@ -127,6 +127,7 @@ const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog, setSe
   const [staticInfo] = useGlobalState('static');
   const [workout] = useGlobalState('workout');
   const workouts = Object.keys(staticInfo.workoutInfo)
+    .filter((name) => [staticInfo.workoutInfo[name].type.name, 'custom'].includes(workout.type))
     .filter(
       (name) =>
         !Object.keys(staticInfo.painInfo)

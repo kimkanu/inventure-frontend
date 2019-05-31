@@ -6,6 +6,7 @@ export interface WorkoutInfo {
   imagePath: string;
   image?: string;
   youtube?: string;
+  type: { name: string };
 }
 export interface Images {
   imagePath?: string;
@@ -26,7 +27,13 @@ export const initialStaticState: StaticState = {
 
 export interface SetWorkoutInfoAction {
   type: 'SET_WORKOUT_INFO_ACTION';
-  payload: { name: string; imagePath: string; image?: string; youtube: string }[];
+  payload: {
+    name: string;
+    imagePath: string;
+    image?: string;
+    youtube: string;
+    type: { name: string };
+  }[];
 }
 export interface SetWorkoutImageAction {
   type: 'SET_WORKOUT_IMAGE_ACTION';
@@ -61,8 +68,8 @@ export const staticReducer: Reducer<StaticState, StaticAction> = (state, action)
         workoutInfo: {
           ...state.workoutInfo,
           ...action.payload
-            .map(({ name, imagePath, image, youtube }) => ({
-              [name]: { imagePath, image, youtube },
+            .map(({ name, imagePath, image, youtube, type }) => ({
+              [name]: { imagePath, image, youtube, type },
             }))
             .reduce((a, b) => ({ ...a, ...b }), {}),
         },
@@ -76,6 +83,7 @@ export const staticReducer: Reducer<StaticState, StaticAction> = (state, action)
             .map(({ name, image, youtube }) => ({
               [name]: {
                 image,
+                type: (state.workoutInfo[name] || { type: { name: '' } }).type,
                 youtube: youtube || (state.workoutInfo[name] || { youtube: undefined }).youtube,
                 imagePath: (state.workoutInfo[name] || { imagePath: undefined }).imagePath,
               },
@@ -109,7 +117,13 @@ export const staticReducer: Reducer<StaticState, StaticAction> = (state, action)
 };
 
 export const setWorkoutInfo = (
-  payload: { name: string; imagePath: string; image?: string; youtube: string }[],
+  payload: {
+    name: string;
+    imagePath: string;
+    image?: string;
+    youtube: string;
+    type: { name: string };
+  }[],
 ) => {
   dispatch({ payload, type: 'SET_WORKOUT_INFO_ACTION' });
 };

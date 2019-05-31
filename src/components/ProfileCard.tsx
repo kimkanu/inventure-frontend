@@ -52,7 +52,7 @@ const ProfileCard: FunctionComponent<Props> = ({
         display: 'flex',
         width: '100%',
         height: '8rem',
-        borderRadius: '50%',
+        borderRadius: '8px',
         boxShadow: shadowText({
           depth,
           opacity,
@@ -75,7 +75,7 @@ const ProfileCard: FunctionComponent<Props> = ({
           src={imgSrc}
           style={{
             height: '6rem',
-            borderRadius: '8px',
+            borderRadius: '50%',
           }}
           alt={alt}
         />
