@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { shadow, useStyles, fullWidth, sansSerifFont } from '../../styles';
 import { Color, COLORS } from '../../colors';
 import { deleteWorkout, Workout, WorkoutPlan } from '../../stores/workout';
@@ -6,14 +6,22 @@ import ButtonSmall from '../Buttons/ButtonSmall';
 import EdgeIcon from '../Icons/EdgeIcon';
 import { secondsToTimeLiteral } from '../../utils';
 import ButtonLarge from '../Buttons/ButtonLarge';
+import { Prompt, RouteComponentProps, withRouter } from 'react-router-dom';
+import DialogTextButton from '../Dialog/DialogTextButton';
+import Dialog from '../Dialog';
 
-interface Props {
+interface DialogProps {
+  show: boolean;
+  title: string;
+  children: React.ReactNode;
+}
+interface Props extends RouteComponentProps {
   editable: boolean;
   workout: Workout;
   onChange?: () => void;
 }
 
-const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange }) => {
+const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange, history }) => {
   const plan = editable ? workout.tempPlan : workout.plan;
   const visiblePlan = plan.filter((x) => !x.hidden);
   const breakTime = 60;
@@ -55,7 +63,7 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
       style={{
         height: 48,
         borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
-        fontSize: '0.92em',
+        fontSize: '0.95em',
       }}
       key={key}
     >
@@ -82,118 +90,186 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange })
       ) : null}
     </tr>
   );
+  const [dialog, s] = useState<DialogProps>({
+    show: false,
+    title: 'Change rest time',
+    children: (
+      <div style={{ width: '400px', maxWidth: '100%' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: 'calc(100% + 1.6rem)',
+            marginLeft: '-0.8rem',
+            marginBottom: '-0.7rem',
+          }}
+        >
+          <div>
+            <DialogTextButton
+              text="cancel"
+              onClick={() => {
+                setDialog({ show: false });
+              }}
+            />
+          </div>
+          <div>
+            <DialogTextButton
+              text="add"
+              bold
+              onClick={() => {
+                setDialog({ show: false });
+                history.goBack();
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    ) as React.ReactNode,
+  });
+  const setDialog = (newDialog: Partial<DialogProps>) => {
+    s((d) => ({
+      ...d,
+      ...newDialog,
+    }));
+  };
   return (
-    <div style={useStyles({ padding: '0 -0.33em' })}>
-      <table
-        className="workout-table"
-        style={useStyles(
-          shadow({ depth: 4, color: new Color(143, 146, 169), opacity: 1.8 }),
-          fullWidth,
-          sansSerifFont,
-          {
-            borderRadius: 2,
-            backgroundColor: 'white',
-            borderCollapse: 'collapse',
-          },
-        )}
+    <>
+      <Prompt
+        when={dialog.show}
+        message={(location) => {
+          setDialog({
+            show: false,
+          });
+          return false;
+        }}
+      />
+      <Dialog
+        show={dialog.show}
+        title={dialog.title}
+        onClose={() =>
+          setDialog({
+            show: false,
+          })
+        }
       >
-        <thead>
-          <tr
-            style={{
-              height: 42,
-              borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
-              textAlign: 'center',
-              fontWeight: 'bold',
-            }}
-          >
-            <th style={useStyles(firstColumnStyle)}>Workout</th>
-            <th style={useStyles(secondColumnStyle)}>Sets</th>
-            <th style={useStyles(thirdColumnStyle)}>Time</th>
-            {editable ? <th style={useStyles(fourthColumnStyle)} /> : null}
-          </tr>
-        </thead>
-        <tbody>
-          {plan.map((x, i) =>
-            x.hidden
-              ? null
-              : td({
-                  ...x,
-                  key: i,
-                  handleDelete: () => {
-                    deleteWorkout(i);
-                  },
-                }),
-          )}
-        </tbody>
-        <tfoot>
-          <tr
-            style={{
-              borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
-            }}
-          >
-            <td
-              colSpan={editable ? 4 : 3}
+        {dialog.children}
+      </Dialog>
+      <div
+        style={useStyles(shadow({ depth: 4, color: new Color(143, 146, 169), opacity: 1.8 }), {
+          borderRadius: 2,
+          backgroundColor: 'white',
+          maxHeight: 'calc(100 * var(--vh) - 246px)',
+          overflow: 'auto',
+        })}
+      >
+        <table
+          className="workout-table"
+          style={useStyles(fullWidth, {
+            borderCollapse: 'collapse',
+          })}
+        >
+          <thead>
+            <tr
               style={{
-                height: 36,
-                color: COLORS.gray!.normal,
+                height: 42,
+                borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
                 textAlign: 'center',
-                fontSize: '0.9em',
-                fontStyle: 'italic',
+                fontWeight: 'bold',
               }}
             >
-              {visiblePlan.length === 0
-                ? 'CLICK ADD BUTTON TO ADD A NEW WORKOUT'
-                : '1-MINUTE BREAK BETWEEN EACH SET'}
-              {/* fixme */}
-            </td>
-          </tr>
-          <tr>
-            <td
-              colSpan={editable ? 4 : 3}
+              <th style={useStyles(firstColumnStyle)}>Workout</th>
+              <th style={useStyles(secondColumnStyle)}>Sets</th>
+              <th style={useStyles(thirdColumnStyle)}>Time</th>
+              {editable ? <th style={useStyles(fourthColumnStyle)} /> : null}
+            </tr>
+          </thead>
+          <tbody>
+            {plan.map((x, i) =>
+              x.hidden
+                ? null
+                : td({
+                    ...x,
+                    key: i,
+                    handleDelete: () => {
+                      deleteWorkout(i);
+                    },
+                  }),
+            )}
+          </tbody>
+          <tfoot>
+            <tr
               style={{
-                paddingTop: '0.67em',
-                paddingLeft: '1em',
-                paddingBottom: '0.67em',
-                height: 40,
-                color: COLORS.gray!.darkest,
-                justifyContent: 'space-between',
+                borderBottom: `1pt solid ${COLORS.gray!.lightest}`,
               }}
             >
-              <span style={{ lineHeight: editable ? '1.3em' : 'calc(2em + 18px)' }}>
-                Total expected time:
-              </span>
-              <span
+              <td
+                colSpan={editable ? 4 : 3}
                 style={{
-                  lineHeight: editable ? '1.3em' : 'calc(2em + 18px)',
-                  fontSize: '1.2em',
-                  fontWeight: 'bold',
+                  height: 36,
+                  color: COLORS.gray!.normal,
+                  textAlign: 'center',
+                  fontSize: '0.9em',
+                  fontStyle: 'italic',
                 }}
               >
-                {' '}
-                {secondsToTimeLiteral(
-                  visiblePlan.map((x) => x.time * x.sets).reduce((a, b) => a + b, 0) +
-                    breakTime * (visiblePlan.map((x) => x.sets).reduce((a, b) => a + b, 0) - 1),
+                {visiblePlan.length === 0 ? (
+                  'CLICK ADD BUTTON TO ADD A NEW WORKOUT'
+                ) : (
+                  <span>
+                    {editable ? (
+                      <span
+                        style={{
+                          color: COLORS.gray!.normal,
+                          textDecoration: 'underline',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                          setDialog({ show: true });
+                        }}
+                      >
+                        1 MINUTE BREAK
+                      </span>
+                    ) : (
+                      <>1 MINUTE BREAK</>
+                    )}{' '}
+                    BETWEEN EACH SET
+                  </span>
                 )}
-              </span>
-              {editable ? null : (
-                <div style={{ float: 'right', margin: '-0.17em 0em 0em 0' }}>
-                  <ButtonLarge
-                    backgroundColor={COLORS.gray!.normal}
-                    shadowColor={COLORS.gray!.darker}
-                    depth={6}
-                    link="/workout/edit"
-                    labelInside="Edit"
-                  >
-                    <EdgeIcon buttonSize={48}></EdgeIcon>
-                  </ButtonLarge>
-                </div>
-              )}
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+                {/* fixme */}
+              </td>
+            </tr>
+            <tr>
+              <td
+                colSpan={editable ? 4 : 3}
+                style={{
+                  paddingTop: '0.67em',
+                  paddingLeft: '1em',
+                  paddingBottom: '0.67em',
+                  color: COLORS.gray!.darkest,
+                  justifyContent: 'space-between',
+                }}
+              >
+                <span style={{ lineHeight: '1.3em' }}>Total expected time:</span>
+                <span
+                  style={{
+                    lineHeight: '1.3em',
+                    fontSize: '1.2em',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {' '}
+                  {secondsToTimeLiteral(
+                    visiblePlan.map((x) => x.time * x.sets).reduce((a, b) => a + b, 0) +
+                      breakTime * (visiblePlan.map((x) => x.sets).reduce((a, b) => a + b, 0) - 1),
+                  )}
+                </span>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </>
   );
 };
 
-export default WorkoutTable;
+export default withRouter(WorkoutTable);

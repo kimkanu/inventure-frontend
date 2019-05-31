@@ -73,9 +73,11 @@ export function unique<T>(
 }
 
 export function capitalizeFirst(s: string) {
+  if (s.length === 0) return '';
   return `${s[0].toLocaleUpperCase()}${s.slice(1)}`;
 }
 
 export function capitalizeFirstOnly(s: string) {
+  if (s.length === 0) return '';
   return `${s[0].toLocaleUpperCase()}${s.slice(1).toLocaleLowerCase()}`;
 }

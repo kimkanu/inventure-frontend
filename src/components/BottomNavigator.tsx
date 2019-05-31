@@ -47,6 +47,9 @@ const BottomNavigator: FunctionComponent<Props> = ({ location, history }) => {
 
   const [tab] = useGlobalState('tab');
   const handleChange = (event: ChangeEvent<{}>, value: string) => {
+    if (['/workout/start', '/workout/rest'].includes(location.pathname) && value === 'workout') {
+      return;
+    }
     const to = `${value}/`.slice(0, `${value}/`.slice(1).indexOf('/') + 1) as Tab;
     navigateTab(to);
     history.replace(`/${TABS.includes(to) ? to : ''}`);

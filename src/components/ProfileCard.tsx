@@ -52,7 +52,7 @@ const ProfileCard: FunctionComponent<Props> = ({
         display: 'flex',
         width: '100%',
         height: '8rem',
-        borderRadius: '8px',
+        borderRadius: '50%',
         boxShadow: shadowText({
           depth,
           opacity,

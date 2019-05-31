@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from './Link';
@@ -9,7 +9,14 @@ import SectionSelector from './SectionSelector';
 import { useGlobalState } from '../stores';
 import { sansSerifFont, shadowText, shadow } from '../styles';
 import { COLORS, ColorGradient, Color } from '../colors';
-import { VictoryChart, VictoryTheme, VictoryArea } from 'victory';
+import {
+  VictoryChart,
+  VictoryTheme,
+  VictoryArea,
+  VictoryAxis,
+  VictoryTooltip,
+  VictoryScatter,
+} from 'victory';
 import Achievement from './Achievement';
 
 interface Props extends RouteComponentProps {}
@@ -121,6 +128,113 @@ const ExerciseCard: FunctionComponent<ExerciseCardProps> = ({
   </CardWithPicture>
 );
 
+const WorkoutChart: FunctionComponent = () => {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  const adjust = () => {
+    setWidth(window.innerWidth);
+  };
+  useEffect(() => {
+    window.addEventListener('resize', adjust);
+    return () => {
+      window.removeEventListener('resize', adjust);
+    };
+  }, []);
+
+  const description = 'very very nice';
+  const data = [
+    { x: '20190517', y: 1 },
+    { x: '20190518', y: 1 },
+    { x: '20190519', y: 1 },
+    { x: '20190520', y: 1 },
+    { x: '20190521', y: 2 },
+    { x: '20190522', y: 1.5 },
+    { x: '20190523', y: 1.4 },
+  ];
+
+  return (
+    <>
+      <div
+        style={{
+          fontSize: '0.8rem',
+          width: '100%',
+          height: '0',
+          textAlign: 'right',
+          margin: '1.5em 2.3em -1.7em -2.3em',
+          color: COLORS.gray!.dark,
+          position: 'relative',
+          zIndex: 999999,
+        }}
+      >
+        {description}
+      </div>
+      <svg width="0" height="0">
+        <defs>
+          <linearGradient id="myGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#586fef" />
+            <stop offset="100%" stopColor="#88cbfe" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <VictoryChart width={width} height={300}>
+        <VictoryArea
+          style={{
+            data: { fill: 'url(#myGradient)' },
+          }}
+          domain={[0.5, 2.5]}
+          interpolation="cardinal"
+          data={data}
+        />
+        <VictoryAxis
+          tickFormat={(t: string) => `${t.slice(4, 6)}/${t.slice(6, 8)}`}
+          style={{
+            axis: { stroke: 'none' },
+            grid: { stroke: 'none' },
+            tickLabels: {
+              fontSize: 13,
+            },
+            axisLabel: {
+              fill: `${COLORS.gray!.normal}!important`,
+            },
+          }}
+        />
+        <VictoryAxis
+          dependentAxis
+          style={{
+            axis: { stroke: 'none' },
+            grid: {
+              stroke: new Color(COLORS.gray!.dark).changeA(0.25).toHexWithA(),
+              transform: `scaleX(${1.095 - window.innerWidth / 11000})`,
+            },
+            tickLabels: {
+              fontSize: 13,
+            },
+            axisLabel: {
+              fill: `${COLORS.gray!.normal}!important`,
+            },
+          }}
+        />
+        <VictoryScatter
+          data={data}
+          size={6}
+          style={{
+            data: {
+              fill: 'white',
+              stroke: '#586fef',
+              strokeWidth: 3,
+              boxShadow: shadowText({
+                depth: 2,
+                color: new Color('#586fef'),
+              }),
+            },
+          }}
+          labelComponent={<VictoryTooltip />}
+        />
+      </VictoryChart>
+    </>
+  );
+};
+
 const Profile: FunctionComponent<Props> = ({ location }) => {
   const [section, setSection] = useState(0);
   const [staticInfo] = useGlobalState('static');
@@ -198,7 +312,9 @@ const Profile: FunctionComponent<Props> = ({ location }) => {
                           style={{
                             backgroundColor: 'white',
                             display: 'flex',
+                            flexDirection: 'column',
                             width: '100%',
+                            margin: '1rem 0',
                             borderRadius: '8px',
                             boxShadow: shadowText({
                               depth: 4,
@@ -206,28 +322,7 @@ const Profile: FunctionComponent<Props> = ({ location }) => {
                             }),
                           }}
                         >
-                          <svg width="0" height="0">
-                            <defs>
-                              <linearGradient id="myGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#4293fa" />
-                                <stop offset="100%" stopColor="#a9d2ff" />
-                              </linearGradient>
-                            </defs>
-                          </svg>
-                          <VictoryChart theme={VictoryTheme.grayscale} height={300}>
-                            <VictoryArea
-                              style={{
-                                data: { fill: 'url(#myGradient)' },
-                              }}
-                              data={[
-                                { x: 1, y: 2 },
-                                { x: 2, y: 3 },
-                                { x: 3, y: 5 },
-                                { x: 4, y: 4 },
-                                { x: 5, y: 6 },
-                              ]}
-                            />
-                          </VictoryChart>
+                          <WorkoutChart />
                         </div>
                       )}
                     </div>

@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import CircularProgressbar from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useStyles, sansSerifFont } from '../../styles';
+import { COLORS, primaryColor } from '../../colors';
 
 interface Props {
   name: string;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const Timer: FunctionComponent<Props> = ({ name, sets, time, reps }) => {
+  const integerTime = Math.floor(time.current);
   return (
     <div
       style={{
@@ -22,12 +24,15 @@ const Timer: FunctionComponent<Props> = ({ name, sets, time, reps }) => {
     >
       <div style={{ position: 'absolute' }}>
         <CircularProgressbar
-          percentage={(100 * (time.total - time.current)) / time.total}
+          percentage={(100 * (time.total - integerTime)) / time.total}
           strokeWidth={7}
           styles={{
             root: {
               width: 'calc(40 * var(--vh))',
               height: 'calc(40 * var(--vh))',
+            },
+            path: {
+              stroke: primaryColor.light,
             },
           }}
         />
@@ -67,8 +72,8 @@ const Timer: FunctionComponent<Props> = ({ name, sets, time, reps }) => {
               <>0:00</>
             ) : (
               <>
-                {Math.floor(time.current / 60)}:
-                {(time.current % 60 < 10 ? '0' : '') + (time.current % 60)}
+                {Math.floor(integerTime / 60)}:
+                {(integerTime % 60 < 10 ? '0' : '') + (integerTime % 60)}
               </>
             )}
           </span>

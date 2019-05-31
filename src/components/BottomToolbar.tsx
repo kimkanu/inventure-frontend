@@ -2,11 +2,12 @@ import React, { FunctionComponent } from 'react';
 
 interface Props {
   id?: string;
-  position?: 'absolute' | 'relative';
+  position?: 'absolute' | 'relative' | 'fixed';
   bottom?: number | string;
+  zIndex?: number;
 }
 
-const BottomToolbar: FunctionComponent<Props> = ({ children, id, position, bottom }) => {
+const BottomToolbar: FunctionComponent<Props> = ({ children, id, position, bottom, zIndex }) => {
   return (
     <div
       id={id}
@@ -15,10 +16,11 @@ const BottomToolbar: FunctionComponent<Props> = ({ children, id, position, botto
         display: 'flex',
         position: position || 'relative',
         justifyContent: 'center',
-        width: 'calc(100% - 1.33rem)',
+        width: 'calc(100vw - 1.33rem)',
         marginTop: '1.33rem',
         marginLeft: 'auto',
         marginRight: 'auto',
+        ...(zIndex ? { zIndex } : {}),
       }}
     >
       {children}

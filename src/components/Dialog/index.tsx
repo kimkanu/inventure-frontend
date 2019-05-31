@@ -2,6 +2,7 @@ import React, { FunctionComponent, useState } from 'react';
 import { Dialog as D } from '@material-ui/core';
 import { useStyles, sansSerifFont, headingFont } from '../../styles';
 import './index.css';
+import { COLORS } from '../../colors';
 
 interface Props {
   show: boolean;
@@ -27,7 +28,7 @@ const Dialog: FunctionComponent<Props> = ({ show, title, children, onClose }) =>
       }}
     >
       {title ? (
-        <header style={useStyles(headingFont)}>
+        <header style={useStyles(headingFont, { color: COLORS.gray!.darkest })}>
           <h2 style={{ marginTop: '0' }}>{title}</h2>
         </header>
       ) : null}

@@ -14,31 +14,8 @@ import EdgeIcon from '../Icons/EdgeIcon';
 
 interface Props {}
 
-const bottomToolbarId = `bottom-toolbar--${randomString(10)}`;
-
-const adjustToolbarPosition = (
-  id: string,
-  setPosition: React.Dispatch<React.SetStateAction<boolean>>,
-) => {
-  const tableElement = document.querySelector('.workout-table') as HTMLTableElement;
-  const clientBottom = tableElement.clientTop + tableElement.clientHeight;
-  const bottomToolbar = document.getElementById(id) as HTMLDivElement;
-  const threshold = clientBottom + convertRemToPixels(1) + bottomToolbar.clientHeight + 176;
-  setPosition(window.innerHeight <= threshold);
-};
-
 const ViewWorkout: FunctionComponent<Props> = ({}) => {
-  const [position, setPosition] = useState(true); // true for relative, false for absolute
   const workout = useGlobalState('workout')[0];
-
-  useEffect(() => {
-    adjustToolbarPosition(bottomToolbarId, setPosition);
-    const handler = () => adjustToolbarPosition(bottomToolbarId, setPosition);
-    window.addEventListener('resize', handler);
-    return () => {
-      window.removeEventListener('resize', handler);
-    };
-  }, []);
 
   return (
     <Route
@@ -56,17 +33,22 @@ const ViewWorkout: FunctionComponent<Props> = ({}) => {
             </h1>
             <WorkoutTable workout={workout} editable={false} />
 
-            <BottomToolbar
-              id={bottomToolbarId}
-              position={position ? 'relative' : 'absolute'}
-              bottom={position ? undefined : '80px'}
-            >
+            <BottomToolbar position={'fixed'} bottom={'64px'}>
+              <ButtonLarge
+                backgroundColor={COLORS.gray!.normal}
+                shadowColor={COLORS.gray!.darker}
+                depth={6}
+                link="/workout/edit"
+                label="Edit"
+                margin=".8em"
+              >
+                <EdgeIcon buttonSize={48}></EdgeIcon>
+              </ButtonLarge>
               <ButtonLarge
                 backgroundColor={'#fff'}
                 shadowColor={COLORS.gray!.darker}
                 color={COLORS.gray!.dark}
                 label={workout.muted ? 'muted' : 'unmuted'}
-                margin="1.5rem"
                 onClick={() => toggleMute()}
               >
                 <EdgeIcon buttonSize={48}>{workout.muted ? '' : ''}</EdgeIcon>
@@ -76,7 +58,6 @@ const ViewWorkout: FunctionComponent<Props> = ({}) => {
                 shadowColor={COLORS.blue!.darker}
                 labelInside="Start"
                 label="&nbsp;"
-                margin="1.5rem"
                 link="/workout/start"
                 onClick={goNext}
               >

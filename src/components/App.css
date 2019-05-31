@@ -10,7 +10,7 @@
   background-color: #eff1f2;
 }
 .pop-content .content {
-  padding: 0 0.67rem 1.3rem;
+  padding: 0 0.67rem 1.33rem;
 }
 
 .content--top-level-transition-exit .top-level {
@@ -142,6 +142,7 @@ h1.heading {
 
 tspan {
   font-family: NotoSans, Helvetica, Tahoma, Verdana, Geneva, Arial, sans-serif !important;
+  fill: #57595c !important;
 }
 
 /* Remove blue box appearing during touch without affecting the a11y */

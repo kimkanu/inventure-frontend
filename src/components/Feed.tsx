@@ -92,7 +92,8 @@ const Post: FunctionComponent = () => {
             marginLeft: '1rem',
             display: 'flex',
             flexDirection: 'column',
-            width: 'calc(100% - 2rem)',
+            width: 'calc(100% - 5rem)',
+            position: 'relative',
           }}
         >
           <div

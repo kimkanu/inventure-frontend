@@ -20,21 +20,6 @@ import { History } from 'history';
 import DialogTextButton from '../Dialog/DialogTextButton';
 import AddWorkout from './AddWorkout';
 
-// the id for bottom toolbar in this component, containing three buttons: undo, add, and save.
-const bottomToolbarId = `bottom-toolbar--${randomString(10)}`;
-
-// function adjusting position property of the toolbar.
-// called when the component is loaded, the window is resized, or the table height is changed.
-const adjustToolbarPosition = (setPosition: React.Dispatch<React.SetStateAction<boolean>>) => {
-  const tableElement = document.querySelector('.workout-table') as HTMLTableElement;
-  const bottomToolbar = document.getElementById(bottomToolbarId) as HTMLDivElement;
-  if (tableElement && bottomToolbar) {
-    const clientBottom = tableElement.clientTop + tableElement.clientHeight;
-    const threshold = clientBottom + convertRemToPixels(1) + bottomToolbar.clientHeight + 72 + 104;
-    setPosition(window.innerHeight <= threshold);
-  }
-};
-
 // click handler for back button
 const backButtonClickHandler = (
   history: History<any>,
@@ -84,7 +69,6 @@ interface DialogProps {
 interface Props extends RouteComponentProps {}
 
 const EditWorkout: FunctionComponent<Props> = ({ history }) => {
-  const [position, setPosition] = useState(true); // true for relative, false for absolute
   const workout = useGlobalState('workout')[0];
   const [saved, setSaved] = useState(true);
 
@@ -132,15 +116,6 @@ const EditWorkout: FunctionComponent<Props> = ({ history }) => {
       ...newDialog,
     });
 
-  useEffect(() => {
-    adjustToolbarPosition(setPosition);
-    const handler = () => adjustToolbarPosition(setPosition);
-    window.addEventListener('resize', handler);
-    return () => {
-      window.removeEventListener('resize', handler);
-    };
-  }, []);
-
   return (
     <Route
       render={({ history }) => (
@@ -173,19 +148,9 @@ const EditWorkout: FunctionComponent<Props> = ({ history }) => {
                     <span>Edit Your Workout</span>
                   </h1>
 
-                  <WorkoutTable
-                    workout={workout}
-                    editable={true}
-                    onChange={() => {
-                      adjustToolbarPosition(setPosition);
-                    }}
-                  />
+                  <WorkoutTable workout={workout} editable={true} />
 
-                  <BottomToolbar
-                    id={bottomToolbarId}
-                    position={position ? 'relative' : 'absolute'}
-                    bottom={position ? undefined : '80px'}
-                  >
+                  <BottomToolbar position={'fixed'} bottom={'64px'}>
                     <ButtonLarge
                       backgroundColor={COLORS.gray!.light}
                       shadowColor={COLORS.gray!.dark}

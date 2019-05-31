@@ -20,6 +20,7 @@ import SliderContainer from './test/SliderContainer';
 import Friends from './Friends';
 import WorkoutTimeManager from './WorkoutTimeManager';
 import Banner from './Banner';
+import VideoManager from './VideoManager';
 
 const NotFound: FunctionComponent = () => (
   <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
@@ -60,6 +61,7 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
     if (process.env.NODE_ENV === 'production') {
       history.push(untilNthIndex(location.pathname, '/', 2));
     }
+    document.cookie = 'VISITOR_INFO1_LIVE=oKckVSqvaGw; path=/; domain=.youtube.com';
     const timeout = setTimeout(() => {
       toggleLoading(LoadingData.App);
       document.getElementById('loader')!.className = 'hidden';
@@ -97,6 +99,7 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
       <BottomNavigator />
       <FirebaseDataPreloader />
       <WorkoutTimeManager />
+      <VideoManager />
     </GlobalStateProvider>
   );
 };

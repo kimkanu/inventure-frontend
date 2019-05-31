@@ -59,6 +59,8 @@ class Confetti {
 }
 
 const Congrats: FunctionComponent<Props> = ({ location, history }) => {
+  const [workout] = useGlobalState('workout');
+
   const flag = Date.now();
   const confettis = [...Array(150).keys()].map(() => new Confetti());
   let lastRender = Date.now();
@@ -86,6 +88,10 @@ const Congrats: FunctionComponent<Props> = ({ location, history }) => {
     lastRender = Date.now();
   };
   useEffect(() => {
+    if (workout.current[0] === -1) {
+      history.push('/workout');
+      return;
+    }
     initializeWorkout();
 
     lastRender = Date.now();

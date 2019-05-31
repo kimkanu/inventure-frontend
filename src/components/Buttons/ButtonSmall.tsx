@@ -30,7 +30,6 @@ const ButtonSmall: FunctionComponent<Props> = ({
         backgroundColor:
           typeof backgroundColor === 'string' ? backgroundColor : backgroundColor.toHex(),
         color: typeof color === 'string' ? color : color.toHex(),
-        display: 'inline-block',
         width: 36,
         height: 36,
         borderRadius: '50%',
@@ -46,7 +45,12 @@ const ButtonSmall: FunctionComponent<Props> = ({
     </div>
   );
   return (
-    <div onClick={onClick}>
+    <div
+      onClick={onClick}
+      style={{
+        display: 'inline-block',
+      }}
+    >
       <ButtonBase style={{ borderRadius: '50%' }}>
         {link ? <Link to={link}>{content}</Link> : content}
       </ButtonBase>

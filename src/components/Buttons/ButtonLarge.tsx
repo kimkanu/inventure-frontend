@@ -84,18 +84,23 @@ const ButtonLarge: FunctionComponent<Props> = ({
       hidden={hidden}
       aria-hidden={hidden}
     >
-      <div onClick={onClick}>
-        <ButtonBase
-          style={{
-            borderRadius: '24px',
-            cursor: hidden ? 'default' : 'pointer',
-            margin: `0 ${typeof margin === 'number' ? `${margin}px` : margin}`,
-          }}
-          hidden={hidden}
-          aria-hidden={hidden}
-        >
-          {link ? <Link to={link}>{content}</Link> : content}
-        </ButtonBase>
+      <div
+        style={{
+          margin: `0 ${typeof margin === 'number' ? `${margin}px` : margin}`,
+        }}
+      >
+        <div onClick={onClick}>
+          <ButtonBase
+            style={{
+              borderRadius: '24px',
+              cursor: hidden ? 'default' : 'pointer',
+            }}
+            hidden={hidden}
+            aria-hidden={hidden}
+          >
+            {link ? <Link to={link}>{content}</Link> : content}
+          </ButtonBase>
+        </div>
       </div>
       {label ? (
         <div

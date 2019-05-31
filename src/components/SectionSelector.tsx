@@ -42,7 +42,8 @@ const SectionSelector: FunctionComponent<Props> = ({ onChange, defaultVal = 0, l
                 backgroundColor: value === index ? COLORS.blue!.lighter : 'transparent',
                 color: value === index ? '#fff' : COLORS.gray!.normal,
                 transition:
-                  'color 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  'color 0.3s cubic-bezier(0.4, 0, 0.2, 1),' +
+                  'background-color 0.56s cubic-bezier(0.4, 0, 0.2, 1)',
               })}
             >
               {label}

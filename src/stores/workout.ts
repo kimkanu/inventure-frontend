@@ -28,7 +28,9 @@ export type Pain = { [part in BodyPart]: boolean };
 // interface for selected workout
 export interface Workout {
   type: string;
+  restTime: number;
   plan: WorkoutPlan[];
+  completedPlan: WorkoutPlan[];
   tempPlan: WorkoutPlan[];
   actionRecords: ActionRecord[];
   pain: Pain;
@@ -90,7 +92,9 @@ const initialPain = {
 
 export const initialWorkoutState: WorkoutState = {
   type: '' as string,
+  restTime: 60,
   plan: initialPlan,
+  completedPlan: [],
   tempPlan: initialPlan,
   actionRecords: [],
   pain: initialPain,
@@ -133,8 +137,9 @@ export interface ChangeWorkoutTypeAction {
 type ToggleMuteAction = {
   type: 'TOGGLE_MUTE';
 };
-type ReduceTimeAction = {
-  type: 'REDUCE_TIME';
+type SetTimeAction = {
+  type: 'SET_TIME';
+  payload: number;
 };
 type SkipWorkoutAction = {
   type: 'SKIP_WORKOUT';
@@ -165,7 +170,7 @@ export type WorkoutAction =
   | UnbanWorkoutAction
   | ChangeWorkoutTypeAction
   | ToggleMuteAction
-  | ReduceTimeAction
+  | SetTimeAction
   | SkipWorkoutAction
   | QuitWorkoutAction
   | EmergencyQuitAction
@@ -182,7 +187,7 @@ export const WORKOUT_ACTION_TYPES = [
   'UNBAN_WORKOUT',
   'CHANGE_WORKOUT_TYPE',
   'TOGGLE_MUTE',
-  'REDUCE_TIME',
+  'SET_TIME',
   'SKIP_WORKOUT',
   'QUIT_WORKOUT',
   'EMERGENCY_QUIT',
@@ -275,10 +280,10 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         ...state,
         muted: !state.muted,
       };
-    case 'REDUCE_TIME':
+    case 'SET_TIME':
       return {
         ...state,
-        time: state.time - 1,
+        time: action.payload,
       };
     case 'SKIP_WORKOUT':
       return {
@@ -297,7 +302,6 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         time: 10,
       };
     case 'GO_NEXT':
-      const restTime = 10; // FIXME
       const plan = state.plan.filter((p) => !p.hidden);
       const [nextCurrent, nextTime] = (() => {
         if (state.current[0] === -2) {
@@ -310,17 +314,18 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
           if (state.current[0] === plan.length - 1) {
             return [[-2, -2], 10];
           }
-          return [[state.current[0] + 1, 0], restTime];
+          return [[state.current[0] + 1, 0], state.restTime];
         }
         return [
           [state.current[0], state.current[1] + 1],
-          state.current[1] % 2 === 0 ? plan[state.current[0]].time : restTime,
+          state.current[1] % 2 === 0 ? plan[state.current[0]].time : state.restTime,
         ];
       })() as [[number, number], number];
       return {
         ...state,
         current: nextCurrent,
         time: nextTime,
+        // paused: false, // FIXME
       };
     case 'TOGGLE_PAUSE':
       return {
@@ -360,8 +365,8 @@ export const changeWorkoutType = (payload: string) => {
 export const toggleMute = () => {
   dispatch({ type: 'TOGGLE_MUTE' });
 };
-export const reduceTime = () => {
-  dispatch({ type: 'REDUCE_TIME' });
+export const setTime = (payload: number) => {
+  dispatch({ payload, type: 'SET_TIME' });
 };
 export const skipWorkout = () => {
   dispatch({ type: 'SKIP_WORKOUT' });
