@@ -32,14 +32,8 @@ const ButtonSmall: FunctionComponent<Props> = ({
         color: typeof color === 'string' ? color : color.toHex(),
         width: 36,
         height: 36,
-        borderRadius: '50%',
-        WebkitAppearance: 'none',
+        borderRadius: '18px',
         textAlign: 'center',
-        boxShadow: shadowText({
-          depth,
-          opacity,
-          color: typeof shadowColor === 'string' ? new Color(shadowColor) : shadowColor,
-        }),
       }}
     >
       {children}
@@ -50,6 +44,13 @@ const ButtonSmall: FunctionComponent<Props> = ({
       onClick={onClick}
       style={{
         display: 'inline-block',
+        borderRadius: '18px',
+        WebkitAppearance: 'none',
+        boxShadow: shadowText({
+          depth,
+          opacity,
+          color: typeof shadowColor === 'string' ? new Color(shadowColor) : shadowColor,
+        }),
       }}
     >
       <ButtonBase style={{ borderRadius: '50%' }}>

@@ -45,12 +45,6 @@ const ButtonLarge: FunctionComponent<Props> = ({
         height: '48px',
         borderRadius: '24px',
         textAlign: 'center',
-        WebkitAppearance: 'none',
-        boxShadow: shadowText({
-          depth,
-          opacity,
-          color: typeof shadowColor === 'string' ? new Color(shadowColor) : shadowColor,
-        }),
       }}
     >
       <div style={labelInside ? { margin: '0 15px' } : {}}>
@@ -87,6 +81,13 @@ const ButtonLarge: FunctionComponent<Props> = ({
       <div
         style={{
           margin: `0 ${typeof margin === 'number' ? `${margin}px` : margin}`,
+          borderRadius: '24px',
+          WebkitAppearance: 'none',
+          boxShadow: shadowText({
+            depth,
+            opacity,
+            color: typeof shadowColor === 'string' ? new Color(shadowColor) : shadowColor,
+          }),
         }}
       >
         <div onClick={hidden ? undefined : onClick}>
