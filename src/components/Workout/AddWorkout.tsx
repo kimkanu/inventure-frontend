@@ -43,6 +43,8 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setS
           style={{
             borderRadius: '8px',
             margin: '8px',
+            WebkitAppearance: 'none',
+            ...shadow({ depth: 6, opacity: 2 }),
           }}
           onClick={() => {
             setSelected((ss: WorkoutPlan) => ({
@@ -54,7 +56,7 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setS
           key={i}
         >
           <div
-            style={useStyles(shadow({ depth: 6, opacity: 2 }), {
+            style={useStyles({
               width: '162px',
               maxWidth: 'calc(50vw - 30px)',
               height: '162px',
