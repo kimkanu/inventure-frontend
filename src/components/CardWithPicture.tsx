@@ -31,12 +31,6 @@ const CardWithPicture: FunctionComponent<Props> = ({
         height: '8rem',
         borderRadius: '8px',
         textAlign: 'initial',
-        WebkitAppearance: 'none',
-        boxShadow: shadowText({
-          depth,
-          opacity,
-          color: new Color(COLORS.gray!.darker),
-        }),
       }}
     >
       <div
@@ -80,6 +74,13 @@ const CardWithPicture: FunctionComponent<Props> = ({
       style={{
         width: '100%',
         margin: '1rem 0',
+        borderRadius: '8px',
+        WebkitAppearance: 'none',
+        boxShadow: shadowText({
+          depth,
+          opacity,
+          color: new Color(COLORS.gray!.darker),
+        }),
       }}
     >
       <ButtonBase
