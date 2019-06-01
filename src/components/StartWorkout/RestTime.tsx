@@ -1,6 +1,5 @@
-import React, { FunctionComponent, Component, useEffect } from 'react';
-import Iframe from 'react-iframe';
-import { useStyles, headingFont, sansSerifFont } from '../../styles';
+import React, { FunctionComponent, useEffect } from 'react';
+import { useStyles, sansSerifFont } from '../../styles';
 import { COLORS } from '../../colors';
 import ButtonSmall from '../Buttons/ButtonSmall';
 import EdgeIcon from '../Icons/EdgeIcon';
@@ -8,15 +7,8 @@ import { useGlobalState } from '../../stores';
 import { goNext, toggleMute, togglePause } from '../../stores/workout';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 import { capitalizeFirst } from '../../utils';
-import { Icon } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faInfo,
-  faCheck,
-  faAngleRight,
-  faArrowRight,
-  faCaretRight,
-} from '@fortawesome/free-solid-svg-icons';
+import { faInfo, faCheck, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import BottomToolbar from '../BottomToolbar';
 import ButtonLarge from '../Buttons/ButtonLarge';
 
@@ -46,9 +38,8 @@ const PauseButton: FunctionComponent = () => {
     </ButtonLarge>
   );
 };
-const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
-  const [workout, setWorkout] = useGlobalState('workout');
-  const [staticInfo] = useGlobalState('static');
+const RestTime: FunctionComponent<RouteComponentProps> = () => {
+  const [workout] = useGlobalState('workout');
   useEffect(() => {
     if (workout.current[0] < 0) return;
     if (workout.time < 0) {
@@ -84,9 +75,9 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
           </h1>
 
           <div
-            style={useStyles(headingFont, {
-              padding: '1.33rem  0',
-              fontSize: '2rem',
+            style={useStyles(sansSerifFont, {
+              padding: '0.6em 0px 1em',
+              fontSize: '1.6em',
               fontWeight: 'normal',
             })}
           >
@@ -114,7 +105,13 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
             }}
           >
             Next:{' '}
-            <b>{capitalizeFirst(workout.current[0] < 0 ? '' : plan[workout.current[0]].name)}</b>
+            <b
+              style={{
+                fontSize: '1.1em',
+              }}
+            >
+              {capitalizeFirst(workout.current[0] < 0 ? '' : plan[workout.current[0]].name)}
+            </b>
           </span>
           &nbsp;&nbsp;
           <ButtonSmall
@@ -138,6 +135,9 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
           <div>
             <ButtonLarge
               link="/workout/pain" /* fixme */
+              onClick={() => {
+                if (!workout.paused) togglePause();
+              }}
               backgroundColor={COLORS.red!.light}
               shadowColor={COLORS.red!.dark}
               label="quit"

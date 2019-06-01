@@ -75,11 +75,10 @@ const ButtonLarge: FunctionComponent<Props> = ({
     <div
       style={{
         display: 'inline-flex',
-        justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
         margin: '.4rem 0',
-        opacity: hidden ? 0 : 1,
+        opacity: hidden ? 0.2 : 1,
       }}
       hidden={hidden}
       aria-hidden={hidden}
@@ -89,7 +88,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
           margin: `0 ${typeof margin === 'number' ? `${margin}px` : margin}`,
         }}
       >
-        <div onClick={onClick}>
+        <div onClick={hidden ? undefined : onClick}>
           <ButtonBase
             style={{
               borderRadius: '24px',
@@ -98,7 +97,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
             hidden={hidden}
             aria-hidden={hidden}
           >
-            {link ? <Link to={link}>{content}</Link> : content}
+            {link && !hidden ? <Link to={link}>{content}</Link> : content}
           </ButtonBase>
         </div>
       </div>

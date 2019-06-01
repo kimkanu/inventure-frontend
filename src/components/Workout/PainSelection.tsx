@@ -8,9 +8,16 @@ import { COLORS } from '../../colors';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import EdgeIcon from '../Icons/EdgeIcon';
 import DialogTextButton from '../Dialog/DialogTextButton';
-import { WorkoutPlan, addWorkout, BodyPart, togglePain, unbanWorkout } from '../../stores/workout';
+import {
+  WorkoutPlan,
+  addWorkout,
+  BodyPart,
+  togglePain,
+  unbanWorkout,
+  saveEditWorkoutPlan,
+} from '../../stores/workout';
 import Dialog from '../Dialog';
-import { capitalizeFirst, unique } from '../../utils';
+import { capitalizeFirst, unique, randomElement } from '../../utils';
 import { History } from 'history';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -461,6 +468,41 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
       .map((bodyPart) => staticInfo.painInfo[bodyPart])
       .reduce((a, b) => [...a, ...b], [])
       .filter((name) => !workout.unbannedWorkouts.includes(name)).length === 0;
+  const workouts = Object.keys(staticInfo.workoutInfo)
+    .filter((name) => [staticInfo.workoutInfo[name].type.name, 'custom'].includes(workout.type))
+    .filter(
+      (name) =>
+        !Object.keys(staticInfo.painInfo)
+          .filter((bodyPart) => (workout.pain as any)[bodyPart] as boolean)
+          .map((bodyPart) => staticInfo.painInfo[bodyPart])
+          .reduce((a, b) => [...a, ...b], [])
+          .filter((name) => !workout.unbannedWorkouts.includes(name))
+          .includes(name),
+    )
+    .map((name) => ({
+      name,
+      ...staticInfo.workoutInfo[name],
+    }));
+
+  const setDefaultPlan = () => {
+    if (workout.plan.filter((p) => !p.hidden).length > 0) return;
+    if (workouts.length === 0) return;
+    [0, 1, 2].map(() => {
+      const { name } = randomElement(workouts)!;
+      const reps = 8 + Math.floor(Math.random() * 8);
+      const sets = 2 + Math.floor(Math.random() * 3);
+      const t = 4 + Math.random() * 8;
+      const time = Math.round((t * reps) / 5) * 5;
+      addWorkout({
+        name,
+        reps,
+        sets,
+        time,
+        hidden: false,
+      });
+      saveEditWorkoutPlan();
+    });
+  };
 
   return (
     <Route
@@ -534,6 +576,7 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
                                 text="proceed"
                                 bold
                                 onClick={() => {
+                                  setDefaultPlan();
                                   setDialog({ show: false });
                                   history.push('/workout/view');
                                 }}
@@ -551,6 +594,9 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
                   shadowColor={COLORS.blue!.dark}
                   backgroundColor={COLORS.blue!.light}
                   labelInside="I have no pain now"
+                  onClick={() => {
+                    setDefaultPlan();
+                  }}
                 />
               )}
             </BottomToolbar>

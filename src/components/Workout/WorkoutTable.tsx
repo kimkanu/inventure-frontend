@@ -136,7 +136,7 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange, h
     <>
       <Prompt
         when={dialog.show}
-        message={(location) => {
+        message={() => {
           setDialog({
             show: false,
           });

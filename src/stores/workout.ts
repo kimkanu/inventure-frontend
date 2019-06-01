@@ -51,30 +51,7 @@ export interface DeleteRecord {
 export type WorkoutState = Workout;
 export type ActionRecord = CreateRecord | DeleteRecord;
 
-const initialPlan = [
-  // FIXME: temporary value
-  {
-    name: 'barbell curl',
-    reps: 12,
-    sets: 2,
-    time: 60,
-    hidden: false,
-  },
-  {
-    name: 'lying triceps press',
-    reps: 20,
-    sets: 3,
-    time: 45,
-    hidden: false,
-  },
-  {
-    name: 'bench press',
-    reps: 12,
-    sets: 1,
-    time: 22,
-    hidden: false,
-  },
-];
+const initialPlan: WorkoutPlan[] = [];
 const initialPain = {
   neck: false,
   chest: false,
@@ -241,7 +218,6 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
       return {
         ...state,
         plan: state.tempPlan,
-        actionRecords: [],
       };
     case 'DISCARD_EDIT_WORKOUT_PLAN':
       return {
@@ -325,7 +301,7 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         ...state,
         current: nextCurrent,
         time: nextTime,
-        // paused: false, // FIXME
+        paused: false,
       };
     case 'TOGGLE_PAUSE':
       return {

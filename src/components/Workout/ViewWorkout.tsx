@@ -57,6 +57,7 @@ const ViewWorkout: FunctionComponent<Props> = ({}) => {
                 backgroundColor={COLORS.blue!.light}
                 shadowColor={COLORS.blue!.darker}
                 labelInside="Start"
+                hidden={workout.plan.filter((p) => !p.hidden).length === 0}
                 label="&nbsp;"
                 link="/workout/start"
                 onClick={goNext}

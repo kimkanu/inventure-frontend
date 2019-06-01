@@ -72,6 +72,11 @@ export function unique<T>(
   return res;
 }
 
+export function randomElement<T>(array: T[]): T | null {
+  if (array.length === 0) return null;
+  return array[Math.floor(Math.random() * array.length)];
+}
+
 export function capitalizeFirst(s: string) {
   if (s.length === 0) return '';
   return `${s[0].toLocaleUpperCase()}${s.slice(1)}`;
