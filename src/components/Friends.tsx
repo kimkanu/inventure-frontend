@@ -39,6 +39,7 @@ const RankingWithoutRouter: FunctionComponent<Props> = ({ history }) => {
           margin: '1rem 0',
           borderRadius: '8px',
           textAlign: 'initial',
+          WebkitAppearance: 'none',
           boxShadow: shadowText({
             depth: 4,
             color: new Color(COLORS.gray!.darker),

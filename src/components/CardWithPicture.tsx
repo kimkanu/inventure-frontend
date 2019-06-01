@@ -31,6 +31,7 @@ const CardWithPicture: FunctionComponent<Props> = ({
         height: '8rem',
         borderRadius: '8px',
         textAlign: 'initial',
+        WebkitAppearance: 'none',
         boxShadow: shadowText({
           depth,
           opacity,

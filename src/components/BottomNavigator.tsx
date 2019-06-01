@@ -39,6 +39,8 @@ const bottomNavigationStyles = makeStyles({
     bottom: 0,
     borderTop: `1px solid ${COLORS.gray!.lightest}`,
     boxShadow: shadowText({ depth: 4, opacity: 1.2 }),
+    borderRadius: '1px',
+    WebkitAppearance: 'none',
   },
 });
 

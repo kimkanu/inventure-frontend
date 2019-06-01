@@ -64,6 +64,7 @@ const Post: FunctionComponent = () => {
         height: 'fit-content',
         borderRadius: '8px',
         padding: '1rem',
+        WebkitAppearance: 'none',
         boxShadow: shadowText({
           depth: 4,
           color: new Color(COLORS.gray!.darker),

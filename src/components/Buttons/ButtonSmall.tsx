@@ -33,6 +33,7 @@ const ButtonSmall: FunctionComponent<Props> = ({
         width: 36,
         height: 36,
         borderRadius: '50%',
+        WebkitAppearance: 'none',
         textAlign: 'center',
         boxShadow: shadowText({
           depth,

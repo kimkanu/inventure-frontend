@@ -224,6 +224,8 @@ const WorkoutChart: FunctionComponent = () => {
               fill: 'white',
               stroke: '#586fef',
               strokeWidth: 3,
+              borderRadius: '1px',
+              WebkitAppearance: 'none',
               boxShadow: shadowText({
                 depth: 2,
                 color: new Color('#586fef'),
@@ -344,6 +346,7 @@ const Profile: FunctionComponent<Props> = ({ location, history }) => {
                             width: '100%',
                             margin: '1rem 0',
                             borderRadius: '8px',
+                            WebkitAppearance: 'none',
                             boxShadow: shadowText({
                               depth: 4,
                               color: new Color(COLORS.gray!.darker),

@@ -45,6 +45,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
         height: '48px',
         borderRadius: '24px',
         textAlign: 'center',
+        WebkitAppearance: 'none',
         boxShadow: shadowText({
           depth,
           opacity,
