@@ -4,10 +4,7 @@ import { setTime } from '../stores/workout';
 
 const WorkoutTimeManager: FunctionComponent = () => {
   const [workout] = useGlobalState('workout');
-  const [{ lastLocalTimeMili, lastWorkoutTime }, setState] = useState({
-    lastLocalTimeMili: new Date().getTime(),
-    lastWorkoutTime: workout.time,
-  });
+  const [lastLocalTimeMili, setState] = useState(new Date().getTime());
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -15,27 +12,14 @@ const WorkoutTimeManager: FunctionComponent = () => {
       if (!workout.paused && workout.current[0] >= 0) {
         setTime(workout.time - (dateTime - lastLocalTimeMili) / 1000);
       }
-      setState((s) => ({
-        ...s,
-        lastLocalTimeMili: dateTime,
-      }));
+      setState((s) => dateTime);
     }, 100);
     return () => {
       clearTimeout(timeout);
     };
   });
 
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        zIndex: 999999,
-      }}
-    >
-      {workout.time} s, current {workout.current[0]}, {workout.current[1]}
-    </div>
-  );
+  return null;
 };
 
 export default WorkoutTimeManager;

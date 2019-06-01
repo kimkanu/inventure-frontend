@@ -85,15 +85,17 @@ const VideoManager: FunctionComponent = () => {
             : {}
         }
       >
-        <iframe
-          id="video"
-          width={w.toString()}
-          height={h.toString()}
-          src={url ? `${url}?enablejsapi=1` : ''}
-          frameBorder="0"
-          allow="accelerometer; autoplay; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
+        {url ? (
+          <iframe
+            id="video"
+            width={w.toString()}
+            height={h.toString()}
+            src={`//${url.split('//')[1]}?enablejsapi=1`}
+            frameBorder="0"
+            allow="accelerometer; autoplay; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : null}
       </div>
     </div>
   );
