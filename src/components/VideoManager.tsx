@@ -47,6 +47,7 @@ const VideoManager: FunctionComponent = () => {
         if (typeof vid.mute === 'function') vid.mute();
       } else {
         if (typeof vid.unMute === 'function') vid.unMute();
+        vid.setVolume(50);
       }
     }
   }, [workout.muted]);

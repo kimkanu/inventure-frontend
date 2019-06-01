@@ -14,10 +14,18 @@ import { useGlobalState } from '../../stores';
 import WorkoutType from './WorkoutType';
 import WorkoutOption from './WorkoutOption';
 import Congrats from './Congrats';
+import { navigateTab } from '../../stores/tab';
 
 interface Props extends RouteComponentProps {}
 
 const Workout: FunctionComponent<Props> = ({ location, history }) => {
+  const [auth] = useGlobalState('auth');
+  useEffect(() => {
+    if (auth === null) {
+      history.replace('/login');
+      navigateTab('');
+    }
+  }, []);
   return (
     <Route
       render={() => (
@@ -28,7 +36,7 @@ const Workout: FunctionComponent<Props> = ({ location, history }) => {
           <div>
             <Route path="/workout" render={() => <WorkoutType />} />
             <Route
-              render={({ location }) => (
+              render={() => (
                 <div>
                   <TransitionGroup>
                     <CSSTransition

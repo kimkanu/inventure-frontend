@@ -67,7 +67,7 @@ const ProfileCard: FunctionComponent<Props> = ({
           overflow: 'hidden',
           display: 'flex',
           justifyContent: 'center',
-          borderRadius: '8px',
+          borderRadius: '50%',
           margin: '1rem',
         }}
       >

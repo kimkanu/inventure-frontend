@@ -46,20 +46,25 @@ const BottomNavigator: FunctionComponent<Props> = ({ location, history }) => {
   const { t } = useTranslation();
 
   const [tab] = useGlobalState('tab');
+  const [auth] = useGlobalState('auth');
   const handleChange = (event: ChangeEvent<{}>, value: string) => {
+    if (auth === null) {
+      navigateTab('');
+      return;
+    }
     if (['/workout/start', '/workout/rest'].includes(location.pathname) && value === 'workout') {
       return;
     }
-    const to = `${value}/`.slice(0, `${value}/`.slice(1).indexOf('/') + 1) as Tab;
-    navigateTab(to);
-    history.replace(`/${TABS.includes(to) ? to : ''}`);
+    const to = `${value}/`.slice(0, `${value}/`.slice(1).indexOf('/') + 1) as Tab | 'login';
+    navigateTab(to === 'login' ? '' : to);
+    history.replace(`/${to}`);
   };
 
   const category = untilNthIndex(location.pathname, '/', 2).slice(1);
 
   useMemo(() => {
-    if (TABS.includes(category) || !category) {
-      navigateTab((category || 'workout') as Tab);
+    if ([...TABS, 'login'].includes(category) || !category) {
+      navigateTab((category || '') as Tab);
     } else {
       navigateTab('' as Tab);
     }

@@ -18,6 +18,7 @@ import {
   VictoryScatter,
 } from 'victory';
 import Achievement from './Achievement';
+import { navigateTab } from '../stores/tab';
 
 interface Props extends RouteComponentProps {}
 
@@ -235,7 +236,28 @@ const WorkoutChart: FunctionComponent = () => {
   );
 };
 
-const Profile: FunctionComponent<Props> = ({ location }) => {
+const Profile: FunctionComponent<Props> = ({ location, history }) => {
+  const [ath] = useGlobalState('auth');
+  const auth = ath
+    ? ath
+    : {
+        id: '',
+        name: '',
+        points: 0,
+        level: 0,
+        profileImagePath: '',
+        profileImage: '',
+        profileMessage: '',
+        gym: '',
+        friends: [],
+        track: [],
+      };
+  useEffect(() => {
+    if (ath === null) {
+      history.replace('/login');
+      navigateTab('');
+    }
+  }, []);
   const [section, setSection] = useState(0);
   const [staticInfo] = useGlobalState('static');
   return (
@@ -256,14 +278,14 @@ const Profile: FunctionComponent<Props> = ({ location }) => {
                       <h1 className="heading">Profile</h1>
                       <ProfileCard
                         imgSrc="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y"
-                        alt="Profile image"
-                        name="Chad"
-                        id="chad0314"
-                        gym="Silloe Gym"
-                        level={16}
+                        alt={`Profile image of ${auth.name}`}
+                        name={auth.name}
+                        id={auth.id}
+                        gym={auth.gym}
+                        level={auth.level}
                         points={300}
                         maxPoints={2050}
-                        message="Aksdalsdk"
+                        message={auth.profileMessage}
                       />
                       <SectionSelector
                         onChange={(v, i) => {

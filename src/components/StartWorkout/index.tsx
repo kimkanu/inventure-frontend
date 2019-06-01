@@ -8,6 +8,7 @@ import { Redirect } from 'react-router-dom';
 import { useGlobalState } from '../../stores';
 import { toggleMute, goNext, togglePause } from '../../stores/workout';
 import BottomToolbar from '../BottomToolbar';
+import { voiceAssistance } from '../../voiceAssistance';
 
 const MuteButton: FunctionComponent = () => {
   return (
@@ -44,6 +45,13 @@ const StartWorkout: FunctionComponent = () => {
       goNext();
     }
   });
+  useEffect(() => {
+    if (workout.time < 10) {
+      voiceAssistance.speak({
+        text: 'Hello, how are you today?', // FIXME
+      });
+    }
+  }, [workout.time < 10]);
   const plan = workout.plan.filter((p) => !p.hidden);
 
   return workout.current[0] === -1 ? (

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from './Link';
@@ -16,6 +16,7 @@ import { faMedal } from '@fortawesome/free-solid-svg-icons';
 import BackButton from './Buttons/BackButton';
 import Fuse from 'fuse.js';
 import Feed from './Feed';
+import { navigateTab } from '../stores/tab';
 
 interface CardProps {
   rank: number;
@@ -214,9 +215,14 @@ const AddFriendsWithoutRouter: FunctionComponent<Props> = ({ history }) => {
 const AddFriends = withRouter(AddFriendsWithoutRouter);
 
 interface Props extends RouteComponentProps {}
-const Friends: FunctionComponent<Props> = ({ location }) => {
-  const [section, setSection] = useState(0);
-  const [staticInfo] = useGlobalState('static');
+const Friends: FunctionComponent<Props> = ({ location, history }) => {
+  const [auth] = useGlobalState('auth');
+  useEffect(() => {
+    if (auth === null) {
+      history.replace('/login');
+      navigateTab('');
+    }
+  }, []);
   return (
     <TransitionGroup className="top-level" style={{ height: '100vh', position: 'absolute' }}>
       <CSSTransition

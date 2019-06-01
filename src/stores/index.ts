@@ -21,6 +21,7 @@ import {
   LOADING_ACTION_TYPES,
   loadingReducer,
 } from './loading';
+import { initialAuthState, AuthAction, AUTH_ACTION_TYPES, authReducer, AuthState } from './auth';
 
 // interface for entire data -- store
 interface StoreState {
@@ -28,6 +29,7 @@ interface StoreState {
   workout: WorkoutState;
   static: StaticState;
   loading: LoadingState;
+  auth: AuthState;
 }
 
 const initialState: StoreState = {
@@ -35,9 +37,10 @@ const initialState: StoreState = {
   workout: initialWorkoutState,
   static: initialStaticState,
   loading: initialLoadingState,
+  auth: initialAuthState,
 };
 
-type StoreAction = TabAction | WorkoutAction | StaticAction | LoadingAction;
+type StoreAction = TabAction | WorkoutAction | StaticAction | LoadingAction | AuthAction;
 
 const reducer: Reducer<StoreState, StoreAction> = (state, action) => {
   switch (true) {
@@ -49,6 +52,8 @@ const reducer: Reducer<StoreState, StoreAction> = (state, action) => {
       return { ...state, static: staticReducer(state.static, action as StaticAction) };
     case LOADING_ACTION_TYPES.includes(action.type):
       return { ...state, loading: loadingReducer(state.loading, action as LoadingAction) };
+    case AUTH_ACTION_TYPES.includes(action.type):
+      return { ...state, auth: authReducer(state.auth, action as AuthAction) };
     default:
       return state;
   }

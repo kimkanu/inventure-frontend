@@ -218,6 +218,7 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
       return {
         ...state,
         plan: state.tempPlan,
+        actionRecords: [],
       };
     case 'DISCARD_EDIT_WORKOUT_PLAN':
       return {
@@ -284,7 +285,7 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
           return [[-1, -1], 10];
         }
         if (state.current[0] === -1) {
-          return [[0, 1], plan[0].time];
+          return [[0, 0], state.restTime];
         }
         if (state.current[1] === plan[state.current[0]].sets * 2 - 1) {
           if (state.current[0] === plan.length - 1) {

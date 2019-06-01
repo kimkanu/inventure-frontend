@@ -37,7 +37,9 @@
     "react-iframe": "^1.8.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
+    "react-switch": "^5.0.0",
     "react-transition-group": "^4.0.0",
+    "speak-tts": "^2.0.8",
     "typescript": "^3.4.3",
     "victory": "^32.2.3"
   },

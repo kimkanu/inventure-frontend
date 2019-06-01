@@ -21,6 +21,44 @@ import Friends from './Friends';
 import WorkoutTimeManager from './WorkoutTimeManager';
 import Banner from './Banner';
 import VideoManager from './VideoManager';
+import Settings from './Settings';
+import { navigateTab } from '../stores/tab';
+import { ButtonBase } from '@material-ui/core';
+import { login, AuthState } from '../stores/auth';
+import Firebase, { FirebaseContext } from './Firebase';
+import ButtonLarge from './Buttons/ButtonLarge';
+import { COLORS } from '../colors';
+import { History } from 'history';
+
+interface LoginProps extends RouteComponentProps {
+  firebase: Firebase;
+}
+const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
+  const loginAs = (userId: string) => async () => {
+    const response = await firebase.database.ref(`/users/${userId}`).once('value');
+    const userInfo = {
+      ...response.val(),
+      id: userId,
+    } as AuthState;
+    if (!userInfo) return;
+    login(userInfo);
+    history.push('/workout');
+    navigateTab('workout');
+  };
+  return (
+    <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
+      <div className="content">
+        <h1 className="heading">Login</h1>
+        <ButtonLarge
+          backgroundColor={COLORS.blue!.light}
+          shadowColor={COLORS.blue!.dark}
+          onClick={loginAs('chad0314')}
+          labelInside="Login as Chad"
+        />
+      </div>
+    </div>
+  );
+};
 
 const NotFound: FunctionComponent = () => (
   <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
@@ -30,23 +68,7 @@ const NotFound: FunctionComponent = () => (
     </div>
   </div>
 );
-const NotImplemented: FunctionComponent = () => (
-  <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
-    <div className="content">
-      <h1 className="heading">Not Implemented</h1>
-      <p>This is not in the main tasks, so we temporarily skipped to implement it.</p>
-      <Link to="/workout">Go to the main page</Link>
-      <button
-        onClick={() => {
-          localStorage.clear();
-          location.reload();
-        }}
-      >
-        Remove cache
-      </button>
-    </div>
-  </div>
-);
+
 interface Props extends RouteComponentProps {}
 
 const App: FunctionComponent<Props> = ({ location, history }) => {
@@ -75,9 +97,16 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
     };
   }, []);
 
+  const [auth] = useGlobalState('auth');
   return (
     <GlobalStateProvider>
-      <Route exact path="/" render={() => <Redirect to={{ pathname: '/workout' }} />} />
+      <Route
+        exact
+        path="/"
+        render={() =>
+          auth === null ? <Redirect to="/login" /> : <Redirect to={{ pathname: '/workout' }} />
+        }
+      />
       <TransitionGroup>
         <Banner />
         <CSSTransition
@@ -87,10 +116,20 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
         >
           <div style={useStyles(sansSerifFont)}>
             <Switch location={location}>
+              <Route
+                exact
+                path="/login"
+                render={(props) => (
+                  <FirebaseContext.Consumer>
+                    {(firebase) => <Login {...props} firebase={firebase} />}
+                  </FirebaseContext.Consumer>
+                )}
+              />
               <Route path="/workout" component={Workout} />
               <Route path="/profile" component={Profile} />
               <Route path="/friends" component={Friends} />
-              <Route path="/settings" component={NotImplemented} />
+              <Route path="/settings" component={Settings} />
+              <Route path="/login" component={Login} />
               <Route path="/" component={NotFound} />
             </Switch>
           </div>
