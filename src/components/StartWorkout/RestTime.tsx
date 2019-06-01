@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfo, faCheck, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import BottomToolbar from '../BottomToolbar';
 import ButtonLarge from '../Buttons/ButtonLarge';
+import { voiceAssistance } from '../../voiceAssistance';
 
 const MuteButton: FunctionComponent = () => {
   return (
@@ -46,6 +47,65 @@ const RestTime: FunctionComponent<RouteComponentProps> = () => {
       goNext();
     }
   });
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.muted) return;
+    if (workout.time < workout.restTime - 0.5) return;
+    voiceAssistance.speak({
+      text: `Next workout is ${plan[workout.current[0]].name}, set ${workout.current[1] / 2 +
+        1} of ${plan[workout.current[0]].sets}.`,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.muted) return;
+    if (workout.time < 31 && workout.time > 30.5) {
+      voiceAssistance.speak({
+        text: 'Thirty seconds before the workout starts.',
+      });
+    }
+  }, [workout.time < 31]);
+
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.muted) return;
+    if (workout.time < 11 && workout.time > 10.5) {
+      voiceAssistance.speak({
+        text: 'Ten seconds before the workout starts.',
+      });
+    }
+  }, [workout.time < 11]);
+
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.muted) return;
+    if (workout.time < 4 && workout.time > 3.5) {
+      voiceAssistance.speak({
+        text: 'three',
+      });
+    }
+  }, [workout.time < 4]);
+
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.muted) return;
+    if (workout.time < 3 && workout.time > 2.5) {
+      voiceAssistance.speak({
+        text: 'two',
+      });
+    }
+  }, [workout.time < 3]);
+
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.muted) return;
+    if (workout.time < 2 && workout.time > 1.5) {
+      voiceAssistance.speak({
+        text: 'one',
+      });
+    }
+  }, [workout.time < 2]);
 
   const plan = workout.plan.filter((p) => !p.hidden);
 

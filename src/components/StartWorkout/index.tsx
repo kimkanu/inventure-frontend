@@ -46,12 +46,65 @@ const StartWorkout: FunctionComponent = () => {
     }
   });
   useEffect(() => {
-    if (workout.time < 10) {
+    if (workout.current[0] < 0) return;
+    if (workout.current[1] % 2 === 0) return;
+    if (workout.muted) return;
+    if (workout.time < plan[workout.current[0]].time - 0.5) return;
+    voiceAssistance.speak({
+      text: `Let's start the workout ${plan[workout.current[0]].name}.`,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.muted) return;
+    if (workout.time < 31 && workout.time > 30.5) {
       voiceAssistance.speak({
-        text: 'Hello, how are you today?', // FIXME
+        text: 'Thirty seconds before the rest time starts.',
       });
     }
-  }, [workout.time < 10]);
+  }, [workout.time < 31]);
+
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.muted) return;
+    if (workout.time < 11 && workout.time > 10.5) {
+      voiceAssistance.speak({
+        text: 'Ten seconds before the rest time starts.',
+      });
+    }
+  }, [workout.time < 11]);
+
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.muted) return;
+    if (workout.time < 4 && workout.time > 3.5) {
+      voiceAssistance.speak({
+        text: 'three',
+      });
+    }
+  }, [workout.time < 4]);
+
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.muted) return;
+    if (workout.time < 3 && workout.time > 2.5) {
+      voiceAssistance.speak({
+        text: 'two',
+      });
+    }
+  }, [workout.time < 3]);
+
+  useEffect(() => {
+    if (workout.current[0] < 0) return;
+    if (workout.muted) return;
+    if (workout.time < 2 && workout.time > 1.5) {
+      voiceAssistance.speak({
+        text: 'one',
+      });
+    }
+  }, [workout.time < 2]);
+
   const plan = workout.plan.filter((p) => !p.hidden);
 
   return workout.current[0] === -1 ? (

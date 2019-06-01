@@ -11,7 +11,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { GlobalStateProvider, useGlobalState } from '../stores';
 
 import './App.css';
-import { untilNthIndex } from '../utils';
+import to, { untilNthIndex } from '../utils';
 import Profile from './Profile';
 import { sansSerifFont, useStyles } from '../styles';
 import FirebaseDataPreloader from './FirebaseDataPreloader';
@@ -36,9 +36,15 @@ interface LoginProps extends RouteComponentProps {
 const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
   const loginAs = (userId: string) => async () => {
     const response = await firebase.database.ref(`/users/${userId}`).once('value');
+    const responseVal = response.val();
+    const [, downloadURL] = await to(
+      firebase.storage.ref(responseVal.profileImagePath).getDownloadURL(),
+    );
     const userInfo = {
-      ...response.val(),
+      ...responseVal,
       id: userId,
+      level: 0,
+      profileImage: downloadURL,
     } as AuthState;
     if (!userInfo) return;
     login(userInfo);

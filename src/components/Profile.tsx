@@ -277,13 +277,13 @@ const Profile: FunctionComponent<Props> = ({ location, history }) => {
                     <div className="content">
                       <h1 className="heading">Profile</h1>
                       <ProfileCard
-                        imgSrc="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y"
+                        imgSrc={auth.profileImage}
                         alt={`Profile image of ${auth.name}`}
                         name={auth.name}
                         id={auth.id}
                         gym={auth.gym}
                         level={auth.level}
-                        points={300}
+                        points={auth.points}
                         maxPoints={2050}
                         message={auth.profileMessage}
                       />

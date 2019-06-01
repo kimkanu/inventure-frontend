@@ -90,7 +90,7 @@ const Settings: FunctionComponent<RouteComponentProps> = ({ history }) => {
           </Menu>
         </Card>
         <Card title="Version">
-          <Menu onClick={() => {}}>See tutorial</Menu>
+          <Menu onClick={() => {}}>inVenture App v{process.env.REACT_APP_VERSION}</Menu>
         </Card>
       </div>
     </div>

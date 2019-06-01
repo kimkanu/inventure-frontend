@@ -46,9 +46,8 @@ const BottomNavigator: FunctionComponent<Props> = ({ location, history }) => {
   const { t } = useTranslation();
 
   const [tab] = useGlobalState('tab');
-  const [auth] = useGlobalState('auth');
   const handleChange = (event: ChangeEvent<{}>, value: string) => {
-    if (auth === null) {
+    if (location.pathname === '/login') {
       navigateTab('');
       return;
     }
