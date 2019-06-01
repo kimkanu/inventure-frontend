@@ -12,8 +12,10 @@ export const shadow: (params: ShadowParams) => React.CSSProperties = ({
   color = new Color(0, 0, 0),
 }) => {
   const s = [0.1, 0.08, 0.03].map((alpha) => color.withARel(opacity * alpha).toRgba());
-  return (
-    ({
+  return {
+    borderRadius: '1px',
+    WebkitAppearance: 'none',
+    ...(({
       0: {
         boxShadow: 'none',
       },
@@ -49,8 +51,8 @@ export const shadow: (params: ShadowParams) => React.CSSProperties = ({
       },
     } as { [d: number]: React.CSSProperties })[depth] || {
       boxShadow: 'none',
-    }
-  );
+    }),
+  };
 };
 export const shadowText: (params: ShadowParams) => string = ({
   depth,
