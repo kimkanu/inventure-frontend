@@ -15,15 +15,22 @@ import WorkoutType from './WorkoutType';
 import WorkoutOption from './WorkoutOption';
 import Congrats from './Congrats';
 import { navigateTab } from '../../stores/tab';
+import { AuthState, login } from '../../stores/auth';
 
 interface Props extends RouteComponentProps {}
 
 const Workout: FunctionComponent<Props> = ({ location, history }) => {
   const [auth] = useGlobalState('auth');
   useEffect(() => {
-    if (auth === null) {
-      history.replace('/login');
-      navigateTab('');
+    if (auth.id === '') {
+      const a = localStorage.getItem('auth');
+      if (a !== null) {
+        login(JSON.parse(a) as AuthState);
+        navigateTab('workout');
+      } else {
+        history.replace('/login');
+        navigateTab('');
+      }
     }
   }, []);
   return (

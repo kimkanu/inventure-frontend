@@ -17,6 +17,7 @@ import BackButton from './Buttons/BackButton';
 import Fuse from 'fuse.js';
 import Feed from './Feed';
 import { navigateTab } from '../stores/tab';
+import { login, AuthState } from '../stores/auth';
 
 interface CardProps {
   rank: number;
@@ -218,9 +219,14 @@ interface Props extends RouteComponentProps {}
 const Friends: FunctionComponent<Props> = ({ location, history }) => {
   const [auth] = useGlobalState('auth');
   useEffect(() => {
-    if (auth === null) {
-      history.replace('/login');
-      navigateTab('');
+    if (auth.id === '') {
+      const a = localStorage.getItem('auth');
+      if (a !== null) {
+        login(JSON.parse(a) as AuthState);
+      } else {
+        history.replace('/login');
+        navigateTab('');
+      }
     }
   }, []);
   return (

@@ -70,10 +70,12 @@ const Slider: FunctionComponent<Props> = ({
     const { left, right } = sliderBar.getClientRects()[0];
     const thumbPosition = Math.max(Math.min(e.touches[0].clientX, right), left);
     const ratio = (thumbPosition - left) / (right - left);
-    const integralRatio = Math.round(ratio * (maxValue - minValue)) / (maxValue - minValue);
+    const integralRatio =
+      (Math.round(ratio * Math.floor((maxValue - minValue) / gap)) / (maxValue - minValue)) * gap;
     const percentage = (integer ? integralRatio : ratio) * 100;
     sliderThumbContainer.style.transform = `translateX(calc(${percentage}% - 24px))`;
-    const nextValue = (integer ? integralRatio : ratio) * (maxValue - minValue) + minValue;
+    const nV = (integer ? integralRatio : ratio) * (maxValue - minValue) + minValue;
+    const nextValue = integer ? Math.round(nV) : nV;
     setValue(nextValue);
     setInputString(uptoSecond(nextValue.toString()));
     if (value !== nextValue) onChange(nextValue);
@@ -99,7 +101,10 @@ const Slider: FunctionComponent<Props> = ({
             overflowX: 'hidden',
           }}
         >
-          <span>{title}</span>
+          <span>
+            {title}
+            {unit ? ` (${unit})` : ''}
+          </span>
         </div>
       ) : null}
       <div

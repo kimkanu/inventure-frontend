@@ -130,9 +130,9 @@ const WorkoutSearch: FunctionComponent<SearchProps> = ({ label, setDialog, setSe
     .filter((name) => [staticInfo.workoutInfo[name].type.name, 'custom'].includes(workout.type))
     .filter(
       (name) =>
-        !Object.keys(staticInfo.painInfo)
+        !Object.keys(staticInfo.others.painInfo)
           .filter((bodyPart) => (workout.pain as any)[bodyPart] as boolean)
-          .map((bodyPart) => staticInfo.painInfo[bodyPart])
+          .map((bodyPart) => staticInfo.others.painInfo[bodyPart])
           .reduce((a, b) => [...a, ...b], [])
           .filter((name) => !workout.unbannedWorkouts.includes(name))
           .includes(name),
@@ -196,13 +196,14 @@ interface DialogProps {
 interface Props extends RouteComponentProps {}
 
 const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
-  const [, setSelected] = useState<WorkoutPlan>({
+  const initialState = {
     name: '',
     reps: 15,
-    sets: 5,
-    time: 120,
+    sets: 4,
+    time: 100,
     hidden: false,
-  });
+  };
+  const [, setSelected] = useState<WorkoutPlan>(initialState);
   const [dialog, s] = useState<DialogProps>({
     show: false,
     title: '',
@@ -218,8 +219,8 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
             }));
           }}
           min={5}
-          defaultVal={15}
-          max={25}
+          defaultVal={initialState.reps}
+          max={20}
         />
         <Slider
           integer
@@ -230,9 +231,9 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
             }));
           }}
           title="Sets"
-          min={2}
-          defaultVal={5}
-          max={15}
+          min={1}
+          defaultVal={initialState.sets}
+          max={10}
         />
         <Slider
           integer
@@ -243,11 +244,11 @@ const AddWorkout: FunctionComponent<Props> = ({ history, location }) => {
             }));
           }}
           title="Time Per Set"
-          min={10}
-          defaultVal={120}
-          max={240}
+          min={30}
+          defaultVal={initialState.time}
+          max={160}
           gap={5}
-          unit="s"
+          unit="seconds"
         />
         <div
           style={{

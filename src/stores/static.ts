@@ -16,13 +16,18 @@ export interface Images {
 export interface StaticState {
   workoutInfo: { [name: string]: WorkoutInfo };
   images: { [name: string]: Images };
-  painInfo: { [bodyPart: string]: string[] };
+  others: {
+    painInfo: { [bodyPart: string]: string[] };
+    [key: string]: any;
+  };
 }
 
 export const initialStaticState: StaticState = {
   workoutInfo: {},
   images: {},
-  painInfo: {},
+  others: {
+    painInfo: {},
+  },
 };
 
 export interface SetWorkoutInfoAction {
@@ -43,21 +48,21 @@ export interface SetStaticImagesAction {
   type: 'SET_STATIC_IMAGES_ACTION';
   payload: { name: string; imagePath?: string; image?: string }[];
 }
-export interface SetPainInfoAction {
-  type: 'SET_PAIN_INFO_ACTION';
-  payload: { [bodyPart in BodyPart]: string[] };
+export interface SetOthersInfoAction {
+  type: 'SET_OTHERS_INFO_ACTION';
+  payload: any;
 }
 
 export type StaticAction =
   | SetWorkoutInfoAction
   | SetWorkoutImageAction
   | SetStaticImagesAction
-  | SetPainInfoAction;
+  | SetOthersInfoAction;
 export const STATIC_ACTION_TYPES = [
   'SET_WORKOUT_INFO_ACTION',
   'SET_WORKOUT_IMAGE_ACTION',
   'SET_STATIC_IMAGES_ACTION',
-  'SET_PAIN_INFO_ACTION',
+  'SET_OTHERS_INFO_ACTION',
 ];
 
 export const staticReducer: Reducer<StaticState, StaticAction> = (state, action) => {
@@ -103,11 +108,11 @@ export const staticReducer: Reducer<StaticState, StaticAction> = (state, action)
             .reduce((a, b) => ({ ...a, ...b })),
         },
       };
-    case 'SET_PAIN_INFO_ACTION':
+    case 'SET_OTHERS_INFO_ACTION':
       return {
         ...state,
-        painInfo: {
-          ...state.painInfo,
+        others: {
+          ...state.others,
           ...action.payload,
         },
       };
@@ -135,6 +140,6 @@ export const setStaticImages = (
 ) => {
   dispatch({ payload, type: 'SET_STATIC_IMAGES_ACTION' });
 };
-export const setPainInfo = (payload: { [bodyPart in BodyPart]: string[] }) => {
-  dispatch({ payload, type: 'SET_PAIN_INFO_ACTION' });
+export const setOthersInfo = (payload: any) => {
+  dispatch({ payload, type: 'SET_OTHERS_INFO_ACTION' });
 };

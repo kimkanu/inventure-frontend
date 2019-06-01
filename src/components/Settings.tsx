@@ -7,6 +7,7 @@ import { COLORS } from '../colors';
 import { useGlobalState } from '../stores';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { navigateTab } from '../stores/tab';
+import { login, AuthState, logout } from '../stores/auth';
 interface CardProps {
   title: string;
 }
@@ -64,9 +65,14 @@ const Menu: FunctionComponent<MenuProps> = ({ children, onClick }) => {
 const Settings: FunctionComponent<RouteComponentProps> = ({ history }) => {
   const [auth] = useGlobalState('auth');
   useEffect(() => {
-    if (auth === null) {
-      history.replace('/login');
-      navigateTab('');
+    if (auth.id === '') {
+      const a = localStorage.getItem('auth');
+      if (a !== null) {
+        login(JSON.parse(a) as AuthState);
+      } else {
+        history.replace('/login');
+        navigateTab('');
+      }
     }
   }, []);
   return (
@@ -75,6 +81,16 @@ const Settings: FunctionComponent<RouteComponentProps> = ({ history }) => {
         <h1 className="heading">Settings</h1>
         <Card title="Account">
           <Menu onClick={() => {}}>{auth ? `Signed in as ${auth.name}` : 'Log in'}</Menu>
+          <Menu
+            onClick={() => {
+              logout();
+              localStorage.removeItem('auth');
+              navigateTab('');
+              history.push('/login');
+            }}
+          >
+            Log out
+          </Menu>
         </Card>
         <Card title="Tutorial">
           <Menu onClick={() => {}}>See tutorial</Menu>

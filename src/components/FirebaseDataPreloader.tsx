@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import Firebase, { FirebaseContext } from './Firebase';
 import { useAsyncEffect, unique } from '../utils';
-import { setWorkoutInfo, setWorkoutImage, setStaticImages, setPainInfo } from '../stores/static';
+import { setWorkoutInfo, setWorkoutImage, setStaticImages, setOthersInfo } from '../stores/static';
 import { toggleLoading, LoadingData } from '../stores/loading';
 import { BodyPart } from '../stores/workout';
 
@@ -156,10 +156,11 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
   }, []);
 
   useAsyncEffect(async () => {
-    const databaseResponse = await firebase.database.ref('staticInfo/painInfo').once('value');
-    const painInfo = databaseResponse.val() as { [bodyPart in BodyPart]: string[] };
-    setPainInfo(painInfo);
-    console.log('pain info loaded');
+    const databaseResponse = await firebase.database.ref('staticInfo/others').once('value');
+    const others = databaseResponse.val();
+    setOthersInfo(others);
+    console.log(others);
+    console.log('others info loaded');
   }, []);
 
   return <></>;

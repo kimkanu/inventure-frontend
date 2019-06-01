@@ -20,9 +20,20 @@ export type AuthState = {
   gym: string;
   friends: string[];
   track: Track[];
-} | null;
+};
 
-export const initialAuthState: AuthState = null;
+export const initialAuthState: AuthState = {
+  id: '',
+  name: '',
+  points: 0,
+  level: 0,
+  profileImagePath: '',
+  profileImage: '',
+  profileMessage: '',
+  gym: '',
+  friends: [],
+  track: [],
+};
 
 export interface LoginAction {
   type: 'LOGIN_ACTION';
@@ -40,7 +51,7 @@ export const authReducer: Reducer<AuthState, AuthAction> = (state, action) => {
     case 'LOGIN_ACTION':
       return action.payload;
     case 'LOGOUT_ACTION':
-      return null;
+      return initialAuthState;
     default:
       return state;
   }

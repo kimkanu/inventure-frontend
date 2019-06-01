@@ -371,9 +371,9 @@ const BannedTrainingList: FunctionComponent = () => {
     >
       <FormGroup>
         {unique(
-          Object.keys(staticInfo.painInfo)
+          Object.keys(staticInfo.others.painInfo)
             .filter((bodyPart) => (workout.pain as any)[bodyPart] as boolean)
-            .map((bodyPart) => staticInfo.painInfo[bodyPart])
+            .map((bodyPart) => staticInfo.others.painInfo[bodyPart])
             .reduce((a, b) => [...a, ...b], []),
         ).map((bannedWorkout, i) => (
           <FormControlLabel
@@ -463,18 +463,18 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
     }));
   };
   const bannedWorkouts =
-    Object.keys(staticInfo.painInfo)
+    Object.keys(staticInfo.others.painInfo)
       .filter((bodyPart) => (workout.pain as any)[bodyPart] as boolean)
-      .map((bodyPart) => staticInfo.painInfo[bodyPart])
+      .map((bodyPart) => staticInfo.others.painInfo[bodyPart])
       .reduce((a, b) => [...a, ...b], [])
       .filter((name) => !workout.unbannedWorkouts.includes(name)).length === 0;
   const workouts = Object.keys(staticInfo.workoutInfo)
     .filter((name) => [staticInfo.workoutInfo[name].type.name, 'custom'].includes(workout.type))
     .filter(
       (name) =>
-        !Object.keys(staticInfo.painInfo)
+        !Object.keys(staticInfo.others.painInfo)
           .filter((bodyPart) => (workout.pain as any)[bodyPart] as boolean)
-          .map((bodyPart) => staticInfo.painInfo[bodyPart])
+          .map((bodyPart) => staticInfo.others.painInfo[bodyPart])
           .reduce((a, b) => [...a, ...b], [])
           .filter((name) => !workout.unbannedWorkouts.includes(name))
           .includes(name),

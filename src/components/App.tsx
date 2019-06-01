@@ -16,19 +16,16 @@ import Profile from './Profile';
 import { sansSerifFont, useStyles } from '../styles';
 import FirebaseDataPreloader from './FirebaseDataPreloader';
 import { toggleLoading, LoadingData } from '../stores/loading';
-import SliderContainer from './test/SliderContainer';
 import Friends from './Friends';
 import WorkoutTimeManager from './WorkoutTimeManager';
 import Banner from './Banner';
 import VideoManager from './VideoManager';
 import Settings from './Settings';
 import { navigateTab } from '../stores/tab';
-import { ButtonBase } from '@material-ui/core';
 import { login, AuthState } from '../stores/auth';
 import Firebase, { FirebaseContext } from './Firebase';
 import ButtonLarge from './Buttons/ButtonLarge';
 import { COLORS } from '../colors';
-import { History } from 'history';
 
 interface LoginProps extends RouteComponentProps {
   firebase: Firebase;
@@ -47,6 +44,7 @@ const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
       profileImage: downloadURL,
     } as AuthState;
     if (!userInfo) return;
+    localStorage.setItem('auth', JSON.stringify(userInfo));
     login(userInfo);
     history.push('/workout');
     navigateTab('workout');
@@ -55,12 +53,23 @@ const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
     <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
       <div className="content">
         <h1 className="heading">Login</h1>
-        <ButtonLarge
-          backgroundColor={COLORS.blue!.light}
-          shadowColor={COLORS.blue!.dark}
-          onClick={loginAs('chad0314')}
-          labelInside="Login as Chad"
-        />
+        <div
+          style={{
+            width: '100%',
+            height: 'calc(100% - 56px)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ButtonLarge
+            backgroundColor={COLORS.blue!.light}
+            shadowColor={COLORS.blue!.dark}
+            onClick={loginAs('chad0314')}
+            labelInside="Login as Chad"
+          />
+        </div>
       </div>
     </div>
   );
@@ -110,7 +119,11 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
         exact
         path="/"
         render={() =>
-          auth === null ? <Redirect to="/login" /> : <Redirect to={{ pathname: '/workout' }} />
+          auth.id === '' && localStorage.getItem('auth') === null ? (
+            <Redirect to="/login" />
+          ) : (
+            <Redirect to={{ pathname: '/workout' }} />
+          )
         }
       />
       <TransitionGroup>

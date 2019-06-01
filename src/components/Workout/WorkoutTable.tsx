@@ -5,10 +5,17 @@ import { deleteWorkout, Workout, WorkoutPlan } from '../../stores/workout';
 import ButtonSmall from '../Buttons/ButtonSmall';
 import EdgeIcon from '../Icons/EdgeIcon';
 import { secondsToTimeLiteral } from '../../utils';
-import ButtonLarge from '../Buttons/ButtonLarge';
 import { Prompt, RouteComponentProps, withRouter } from 'react-router-dom';
 import DialogTextButton from '../Dialog/DialogTextButton';
 import Dialog from '../Dialog';
+
+const timeToString = (time: number) => {
+  const min = Math.floor(time / 60);
+  const sec = time % 60;
+  if (min === 0) return `${sec} second${sec === 1 ? '' : 's'}`;
+  if (sec === 0) return `${min} minute${min === 1 ? '' : 's'}`;
+  return `${min} minute${min === 1 ? '' : 's'} ${sec} second${sec === 1 ? '' : 's'}`;
+};
 
 interface DialogProps {
   show: boolean;
@@ -104,6 +111,7 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange, h
             marginBottom: '-0.7rem',
           }}
         >
+          <div />
           <div>
             <DialogTextButton
               text="cancel"
@@ -114,11 +122,10 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange, h
           </div>
           <div>
             <DialogTextButton
-              text="add"
+              text="save"
               bold
               onClick={() => {
                 setDialog({ show: false });
-                history.goBack();
               }}
             />
           </div>
@@ -227,10 +234,10 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange, h
                           setDialog({ show: true });
                         }}
                       >
-                        1 MINUTE BREAK
+                        {timeToString(workout.restTime).toLocaleUpperCase()} BREAK
                       </span>
                     ) : (
-                      <>1 MINUTE BREAK</>
+                      <>{timeToString(workout.restTime).toLocaleUpperCase()} BREAK</>
                     )}{' '}
                     BETWEEN EACH SET
                   </span>

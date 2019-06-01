@@ -19,6 +19,7 @@ import {
 } from 'victory';
 import Achievement from './Achievement';
 import { navigateTab } from '../stores/tab';
+import { login, AuthState } from '../stores/auth';
 
 interface Props extends RouteComponentProps {}
 
@@ -253,9 +254,14 @@ const Profile: FunctionComponent<Props> = ({ location, history }) => {
         track: [],
       };
   useEffect(() => {
-    if (ath === null) {
-      history.replace('/login');
-      navigateTab('');
+    if (auth.id === '') {
+      const a = localStorage.getItem('auth');
+      if (a !== null) {
+        login(JSON.parse(a) as AuthState);
+      } else {
+        history.replace('/login');
+        navigateTab('');
+      }
     }
   }, []);
   const [section, setSection] = useState(0);
