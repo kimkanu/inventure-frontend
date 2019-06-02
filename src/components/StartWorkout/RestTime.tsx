@@ -132,7 +132,7 @@ const CurrentProgressItem: FunctionComponent<CurrentProgressItemProps> = ({
                 height: '1.6rem',
                 borderRadius: '50%',
                 textAlign: 'center',
-                marginRight: '1.5rem',
+                marginLeft: '1.5rem',
               }}
             >
               <FontAwesomeIcon
