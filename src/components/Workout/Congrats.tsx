@@ -5,12 +5,15 @@ import CardWithPicture from '../CardWithPicture';
 import Link from '../Link';
 import { useStyles, sansSerifFont } from '../../styles';
 import { transparentImage } from '../../contants';
-import { changeWorkoutType, goNext, initializeWorkout } from '../../stores/workout';
+import { changeWorkoutType, goNext, initializeWorkout, WorkoutPlan } from '../../stores/workout';
 import { capitalizeFirst } from '../../utils';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import { COLORS } from '../../colors';
+import Firebase, { FirebaseContext } from '../Firebase';
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps {
+  firebase: Firebase;
+}
 
 const colorArray = [[85, 71, 106], [174, 61, 99], [219, 56, 83], [244, 92, 68], [248, 182, 70]];
 
@@ -58,7 +61,7 @@ class Confetti {
   }
 }
 
-const Congrats: FunctionComponent<Props> = ({ location, history }) => {
+const CongratsConsumingFirebase: FunctionComponent<Props> = ({ location, history, firebase }) => {
   const [workout] = useGlobalState('workout');
 
   const flag = Date.now();
@@ -92,7 +95,6 @@ const Congrats: FunctionComponent<Props> = ({ location, history }) => {
       history.push('/workout');
       return;
     }
-    initializeWorkout();
 
     lastRender = Date.now();
     const canvas = document.getElementById('congrats') as HTMLCanvasElement;
@@ -110,6 +112,9 @@ const Congrats: FunctionComponent<Props> = ({ location, history }) => {
       window.removeEventListener('resize', handler);
     };
   }, []);
+
+  const [auth] = useGlobalState('auth');
+
   return (
     <Route
       path={['/workout/congrats']}
@@ -144,6 +149,30 @@ const Congrats: FunctionComponent<Props> = ({ location, history }) => {
                 labelInside="Go to My Profile"
                 backgroundColor={COLORS.blue!.light}
                 shadowColor={COLORS.blue!.dark}
+                onClick={async () => {
+                  const arr = workout.completed
+                    .map(([c, d], i) => [c, d, i] as [boolean, number, number])
+                    .filter(([c]) => c)
+                    .map(
+                      ([, d, i]) =>
+                        [workout.plan.filter((p) => !p.hidden)[i], d] as [WorkoutPlan, number],
+                    )
+                    .map(([{ reps, sets, name }, createdAt]) => ({
+                      reps,
+                      sets,
+                      name,
+                      createdAt,
+                    }));
+                  console.log(arr);
+                  const response = await firebase.database
+                    .ref(`/users/${auth.id}/track`)
+                    .once('value');
+                  const responseVal = response.val() || [];
+                  await firebase.database
+                    .ref(`/users/${auth.id}/track`)
+                    .set([...responseVal, ...arr]);
+                  initializeWorkout();
+                }}
               />
             </div>
             <canvas
@@ -159,6 +188,15 @@ const Congrats: FunctionComponent<Props> = ({ location, history }) => {
         </div>
       )}
     />
+  );
+};
+const CongratsConsumingFirebaseWithRouter = withRouter(CongratsConsumingFirebase);
+
+const Congrats: FunctionComponent<RouteComponentProps> = (props) => {
+  return (
+    <FirebaseContext.Consumer>
+      {(firebase) => <CongratsConsumingFirebaseWithRouter {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
   );
 };
 

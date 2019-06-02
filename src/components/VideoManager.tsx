@@ -52,6 +52,8 @@ const VideoManager: FunctionComponent = () => {
     }
   }, [workout.muted]);
 
+  const vis = ['/workout/start', '/workout/rest'].includes(location.pathname);
+
   return (
     <div
       style={
@@ -64,8 +66,8 @@ const VideoManager: FunctionComponent = () => {
               alignItems: 'center',
               width: '100%',
               height: -208 + 0.6 * window.innerHeight,
-              visibility: url && location.pathname.startsWith('/workout') ? 'visible' : 'hidden',
-              opacity: url && location.pathname.startsWith('/workout') ? 1 : 0,
+              visibility: url && vis ? 'visible' : 'hidden',
+              opacity: url && vis ? 1 : 0,
               transition:
                 'visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1),' +
                 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)',

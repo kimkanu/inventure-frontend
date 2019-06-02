@@ -152,7 +152,7 @@ const EditWorkout: FunctionComponent<Props> = ({ history }) => {
 
                   <BottomToolbar position={'fixed'} bottom={'64px'}>
                     <ButtonLarge
-                      backgroundColor={COLORS.gray!.light}
+                      backgroundColor={COLORS.gray!.normal}
                       shadowColor={COLORS.gray!.dark}
                       label="undo"
                       margin="1.5rem"

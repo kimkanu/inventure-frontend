@@ -146,8 +146,8 @@ const Workout: FunctionComponent<Props> = ({ location, history }) => {
                       </div>
                     </CSSTransition>
                   </TransitionGroup>
-                  <Route path="/workout/start" component={() => <StartWorkout />} />
-                  <Route path="/workout/rest" component={() => <RestTime />} />
+                  <Route path="/workout/start" render={() => <StartWorkout />} />
+                  <Route path="/workout/rest" render={() => <RestTime />} />
                 </div>
               )}
             />

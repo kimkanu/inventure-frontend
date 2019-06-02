@@ -1,4 +1,3 @@
-import React, { FunctionComponent } from 'react';
 import Speech from 'speak-tts';
 
 export const voiceAssistance = new Speech();

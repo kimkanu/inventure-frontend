@@ -30,13 +30,14 @@ export interface Workout {
   type: string;
   restTime: number;
   plan: WorkoutPlan[];
-  completedPlan: WorkoutPlan[];
+  completed: [boolean, number][];
   tempPlan: WorkoutPlan[];
   actionRecords: ActionRecord[];
   pain: Pain;
   unbannedWorkouts: string[];
   muted: boolean;
   paused: boolean;
+  quitted: boolean;
   current: [number, number];
   time: number;
 }
@@ -71,13 +72,14 @@ export const initialWorkoutState: WorkoutState = {
   type: '' as string,
   restTime: 60,
   plan: initialPlan,
-  completedPlan: [],
+  completed: [],
   tempPlan: initialPlan,
   actionRecords: [],
   pain: initialPain,
   unbannedWorkouts: [],
   muted: false,
   paused: false,
+  quitted: false,
   current: [-1, -1],
   time: 0,
 };
@@ -118,8 +120,8 @@ type SetTimeAction = {
   type: 'SET_TIME';
   payload: number;
 };
-type SkipWorkoutAction = {
-  type: 'SKIP_WORKOUT';
+type QuitEntireWorkoutAction = {
+  type: 'QUIT_ENTIRE_WORKOUT';
 };
 type QuitWorkoutAction = {
   type: 'QUIT_WORKOUT';
@@ -148,7 +150,7 @@ export type WorkoutAction =
   | ChangeWorkoutTypeAction
   | ToggleMuteAction
   | SetTimeAction
-  | SkipWorkoutAction
+  | QuitEntireWorkoutAction
   | QuitWorkoutAction
   | EmergencyQuitAction
   | GoNextAction
@@ -165,7 +167,7 @@ export const WORKOUT_ACTION_TYPES = [
   'CHANGE_WORKOUT_TYPE',
   'TOGGLE_MUTE',
   'SET_TIME',
-  'SKIP_WORKOUT',
+  'QUIT_ENTIRE_WORKOUT',
   'QUIT_WORKOUT',
   'EMERGENCY_QUIT',
   'GO_NEXT',
@@ -185,6 +187,7 @@ const toggledPlan = (plan: WorkoutPlan[], i: number) => {
 };
 
 export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, action) => {
+  const plan = state.plan.filter((p) => !p.hidden);
   switch (action.type) {
     case 'DELETE_WORKOUT':
       return {
@@ -262,47 +265,66 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         ...state,
         time: action.payload,
       };
-    case 'SKIP_WORKOUT':
+    case 'QUIT_ENTIRE_WORKOUT':
       return {
-        ...state,
-        current: [state.current[0], state.current[1] + 1],
+        ...initialWorkoutState,
+        quitted: true,
       };
     case 'QUIT_WORKOUT':
+      if (state.current[0] === plan.length - 1) {
+        return {
+          ...state,
+          current: [-2, -2],
+          completed: [...state.completed, [false, 0]],
+        };
+      }
       return {
         ...state,
         current: [state.current[0] + 1, 0],
+        completed: [...state.completed, [false, 0]],
       };
     case 'INITIALIZE_WORKOUT':
       return {
         ...state,
         current: [-1, -1] as [number, number],
         time: 10,
+        completed: [],
+        actionRecords: [],
+        plan: [],
+        tempPlan: [],
+        quitted: false,
       };
     case 'GO_NEXT':
-      const plan = state.plan.filter((p) => !p.hidden);
-      const [nextCurrent, nextTime] = (() => {
+      const [nextCurrent, nextTime, completed] = (() => {
         if (state.current[0] === -2) {
-          return [[-1, -1], 10];
+          return [[-1, -1], 10, false];
         }
         if (state.current[0] === -1) {
-          return [[0, 0], state.restTime];
+          return [[0, 0], state.restTime, false];
         }
         if (state.current[1] === plan[state.current[0]].sets * 2 - 1) {
           if (state.current[0] === plan.length - 1) {
-            return [[-2, -2], 10];
+            return [[-2, -2], 10, true];
           }
-          return [[state.current[0] + 1, 0], state.restTime];
+          return [[state.current[0] + 1, 0], state.restTime, true];
         }
         return [
           [state.current[0], state.current[1] + 1],
           state.current[1] % 2 === 0 ? plan[state.current[0]].time : state.restTime,
+          false,
         ];
-      })() as [[number, number], number];
+      })() as [[number, number], number, boolean];
       return {
         ...state,
         current: nextCurrent,
         time: nextTime,
         paused: false,
+        quitted: false,
+        ...(completed
+          ? {
+              completed: [...state.completed, [true, new Date().getTime()]],
+            }
+          : {}),
       };
     case 'TOGGLE_PAUSE':
       return {
@@ -345,8 +367,8 @@ export const toggleMute = () => {
 export const setTime = (payload: number) => {
   dispatch({ payload, type: 'SET_TIME' });
 };
-export const skipWorkout = () => {
-  dispatch({ type: 'SKIP_WORKOUT' });
+export const quitEntireWorkout = () => {
+  dispatch({ type: 'QUIT_ENTIRE_WORKOUT' });
 };
 export const quitWorkout = () => {
   dispatch({ type: 'QUIT_WORKOUT' });

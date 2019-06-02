@@ -57,7 +57,7 @@ export const COLORS: ColorSystem = {
     lightest: '#eaeced',
     lighter: '#c5c8cc',
     light: '#a3a8af',
-    normal: '#7d8188',
+    normal: '#70747b',
     dark: '#57595c',
     darker: '#3b3e43',
     darkest: '#14171a',

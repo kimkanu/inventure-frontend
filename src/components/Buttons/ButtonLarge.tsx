@@ -17,6 +17,7 @@ interface Props {
   depth?: number;
   opacity?: number;
   hidden?: boolean;
+  style?: React.CSSProperties;
 }
 
 const ButtonLarge: FunctionComponent<Props> = ({
@@ -32,6 +33,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
   depth = 8,
   opacity = 1.6,
   hidden = false,
+  style,
 }) => {
   const content = (
     <div
@@ -74,6 +76,7 @@ const ButtonLarge: FunctionComponent<Props> = ({
         flexDirection: 'column',
         margin: '.4rem 0',
         opacity: hidden ? 0.2 : 1,
+        ...(style || {}),
       }}
       hidden={hidden}
       aria-hidden={hidden}
