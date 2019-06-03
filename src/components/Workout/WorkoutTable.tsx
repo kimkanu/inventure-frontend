@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import { shadow, useStyles, fullWidth, sansSerifFont } from '../../styles';
 import { Color, COLORS } from '../../colors';
 import { deleteWorkout, Workout, WorkoutPlan } from '../../stores/workout';
@@ -42,7 +42,6 @@ const WorkoutTable: FunctionComponent<Props> = ({
 }) => {
   const plan = editable ? workout.tempPlan : workout.plan;
   const visiblePlan = plan.filter((x) => !x.hidden);
-  const breakTime = 60;
 
   const nonHeaderStyle = {
     paddingTop: '0.5em',
@@ -293,7 +292,8 @@ const WorkoutTable: FunctionComponent<Props> = ({
                   {' '}
                   {secondsToTimeLiteral(
                     visiblePlan.map((x) => x.time * x.sets).reduce((a, b) => a + b, 0) +
-                      breakTime * (visiblePlan.map((x) => x.sets).reduce((a, b) => a + b, 0) - 1),
+                      (editable ? 60 * (mins || 0) + (secs || 0) : workout.restTime) *
+                        (visiblePlan.map((x) => x.sets).reduce((a, b) => a + b, 0) - 1),
                   )}
                 </span>
               </td>

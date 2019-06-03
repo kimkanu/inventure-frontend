@@ -83,7 +83,10 @@ const EditWorkout: FunctionComponent<Props> = ({ history }) => {
   const workout = useGlobalState('workout')[0];
   const [saved, setSaved] = useState(true);
   const [error, setError] = useState(false);
-
+  const [{ mins, secs }, setTime] = useState({
+    mins: Math.min(Math.floor(workout.restTime / 60), 5),
+    secs: Math.round((workout.restTime % 60) / 15) * 15,
+  });
   const [dialog, s] = useState<DialogProps>({
     show: false,
     title: 'Discard changes?',
@@ -120,20 +123,20 @@ const EditWorkout: FunctionComponent<Props> = ({ history }) => {
     ) as React.ReactNode,
   });
 
+  const notChanged =
+    mins === Math.min(Math.floor(workout.restTime / 60), 5) &&
+    secs === Math.round((workout.restTime % 60) / 15) * 15 &&
+    !workout.actionRecords.length;
+
   useEffect(() => {
-    setSaved(!workout.actionRecords.length);
-  }, [workout.actionRecords.length]);
+    setSaved(notChanged);
+  }, [workout.actionRecords.length, mins, secs]);
 
   const setDialog = (newDialog: Partial<DialogProps>) =>
     s({
       ...dialog,
       ...newDialog,
     });
-
-  const [{ mins, secs }, setTime] = useState({
-    mins: Math.min(Math.floor(workout.restTime / 60), 5),
-    secs: Math.round((workout.restTime % 60) / 15) * 15,
-  });
 
   return (
     <Route
@@ -144,7 +147,7 @@ const EditWorkout: FunctionComponent<Props> = ({ history }) => {
             render={() => (
               <div className="fade">
                 <Prompt
-                  when={!!workout.actionRecords.length}
+                  when={!notChanged}
                   message={(location) => {
                     if (location.pathname === '/workout/view') {
                       if (!saved) {
