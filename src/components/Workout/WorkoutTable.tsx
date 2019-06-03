@@ -234,12 +234,12 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange, h
                           setDialog({ show: true });
                         }}
                       >
-                        {timeToString(workout.restTime).toLocaleUpperCase()} BREAK
+                        {timeToString(workout.restTime).toLocaleUpperCase()}
                       </span>
                     ) : (
-                      <>{timeToString(workout.restTime).toLocaleUpperCase()} BREAK</>
+                      <>{timeToString(workout.restTime).toLocaleUpperCase()}</>
                     )}{' '}
-                    BETWEEN EACH SET
+                    BREAK BETWEEN EACH SET
                   </span>
                 )}
                 {/* fixme */}

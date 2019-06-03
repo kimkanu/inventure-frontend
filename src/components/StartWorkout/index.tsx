@@ -65,6 +65,7 @@ const StartWorkout: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[1] % 2 === 0) return;
     if (workout.muted) return;
     if (workout.time < plan[workout.current[0]].time - 0.5) return;
+    if (voiceAssistance.speaking()) voiceAssistance.cancel();
     voiceAssistance.speak({
       text: `Let's start the workout ${plan[workout.current[0]].name}.`,
     });
@@ -74,6 +75,7 @@ const StartWorkout: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[0] < 0) return;
     if (workout.muted) return;
     if (workout.time < 31 && workout.time > 30.5) {
+      if (voiceAssistance.speaking()) voiceAssistance.cancel();
       voiceAssistance.speak({
         text: 'Thirty seconds before the rest time starts.',
       });
@@ -84,6 +86,7 @@ const StartWorkout: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[0] < 0) return;
     if (workout.muted) return;
     if (workout.time < 11 && workout.time > 10.5) {
+      if (voiceAssistance.speaking()) voiceAssistance.cancel();
       voiceAssistance.speak({
         text: 'Ten seconds before the rest time starts.',
       });
@@ -94,6 +97,7 @@ const StartWorkout: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[0] < 0) return;
     if (workout.muted) return;
     if (workout.time < 4 && workout.time > 3.5) {
+      if (voiceAssistance.speaking()) voiceAssistance.cancel();
       voiceAssistance.speak({
         text: 'three',
       });
@@ -104,6 +108,7 @@ const StartWorkout: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[0] < 0) return;
     if (workout.muted) return;
     if (workout.time < 3 && workout.time > 2.5) {
+      if (voiceAssistance.speaking()) voiceAssistance.cancel();
       voiceAssistance.speak({
         text: 'two',
       });
@@ -114,11 +119,16 @@ const StartWorkout: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[0] < 0) return;
     if (workout.muted) return;
     if (workout.time < 2 && workout.time > 1.5) {
+      if (voiceAssistance.speaking()) voiceAssistance.cancel();
       voiceAssistance.speak({
         text: 'one',
       });
     }
   }, [workout.time < 2]);
+
+  useEffect(() => {
+    if (workout.muted && voiceAssistance.speaking()) voiceAssistance.cancel();
+  }, [workout.muted]);
 
   const plan = workout.plan.filter((p) => !p.hidden);
 

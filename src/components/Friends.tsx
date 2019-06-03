@@ -248,7 +248,7 @@ const Friends: FunctionComponent<Props> = ({ location, history }) => {
                     className="heading"
                     style={{ display: 'flex', justifyContent: 'space-between' }}
                   >
-                    <span>Recent Feed</span>
+                    <span>Friends</span>
                     <div>
                       <Link
                         to="/friends/ranking"

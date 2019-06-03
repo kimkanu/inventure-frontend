@@ -26,6 +26,8 @@ import { login, AuthState, calculateLevel } from '../stores/auth';
 import Firebase, { FirebaseContext } from './Firebase';
 import ButtonLarge from './Buttons/ButtonLarge';
 import { COLORS } from '../colors';
+import color from '@material-ui/core/colors/lightGreen';
+import { colors } from '@material-ui/core';
 
 interface LoginProps extends RouteComponentProps {
   firebase: Firebase;
@@ -60,7 +62,7 @@ const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
         <div
           style={{
             width: '100%',
-            height: 'calc(100% - 56px)',
+            height: 'calc(100% - 76px)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -68,10 +70,25 @@ const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
           }}
         >
           <ButtonLarge
-            backgroundColor={COLORS.blue!.light}
-            shadowColor={COLORS.blue!.dark}
+            backgroundColor="white"
+            color={COLORS.gray!.darkest}
+            shadowColor={COLORS.gray!.dark}
             onClick={loginAs('chad0314')}
             labelInside="Login as Chad"
+          />
+          <ButtonLarge
+            backgroundColor="white"
+            color={COLORS.gray!.darkest}
+            shadowColor={COLORS.gray!.dark}
+            onClick={loginAs('dmt322')}
+            labelInside="Login as Zeppe"
+          />
+          <ButtonLarge
+            backgroundColor="white"
+            color={COLORS.gray!.darkest}
+            shadowColor={COLORS.gray!.dark}
+            onClick={loginAs('ostrich101')}
+            labelInside="Login as Emil"
           />
         </div>
       </div>
