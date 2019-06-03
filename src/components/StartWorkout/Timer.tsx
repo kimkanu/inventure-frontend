@@ -51,6 +51,7 @@ const Timer: FunctionComponent<Props> = ({ name, sets, time, reps }) => {
           <span
             style={{
               fontSize: '1.2em',
+              textAlign: 'center',
             }}
           >
             {reps} {name}
