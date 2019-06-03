@@ -78,7 +78,14 @@ const Settings: FunctionComponent<RouteComponentProps> = ({ history }) => {
   return (
     <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
       <div className="content">
-        <h1 className="heading">Settings</h1>
+        <h1
+          className="heading"
+          style={{
+            marginBottom: '1rem',
+          }}
+        >
+          Settings
+        </h1>
         <Card title="Account">
           <Menu onClick={() => {}}>{auth ? `Signed in as ${auth.name}` : 'Log in'}</Menu>
           <Menu
@@ -91,9 +98,6 @@ const Settings: FunctionComponent<RouteComponentProps> = ({ history }) => {
           >
             Log out
           </Menu>
-        </Card>
-        <Card title="Tutorial">
-          <Menu onClick={() => {}}>See tutorial</Menu>
         </Card>
         <Card title="Cache">
           <Menu

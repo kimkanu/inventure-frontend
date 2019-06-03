@@ -138,6 +138,10 @@ type InitializeWorkoutAction = {
 type GoNextAction = {
   type: 'GO_NEXT';
 };
+type SetRestTimeAction = {
+  type: 'SET_REST_TIME';
+  payload: number;
+};
 
 export type WorkoutAction =
   | DeleteWorkoutAction
@@ -155,7 +159,8 @@ export type WorkoutAction =
   | EmergencyQuitAction
   | GoNextAction
   | InitializeWorkoutAction
-  | TogglePauseAction;
+  | TogglePauseAction
+  | SetRestTimeAction;
 export const WORKOUT_ACTION_TYPES = [
   'DELETE_WORKOUT',
   'UNDO_EDIT_WORKOUT_PLAN',
@@ -173,6 +178,7 @@ export const WORKOUT_ACTION_TYPES = [
   'GO_NEXT',
   'INITIALIZE_WORKOUT',
   'TOGGLE_PAUSE',
+  'SET_REST_TIME',
 ];
 
 const toggledPlan = (plan: WorkoutPlan[], i: number) => {
@@ -265,6 +271,7 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         ...state,
         time: action.payload,
       };
+    case 'EMERGENCY_QUIT':
     case 'QUIT_ENTIRE_WORKOUT':
       return {
         ...initialWorkoutState,
@@ -331,7 +338,11 @@ export const workoutReducer: Reducer<WorkoutState, WorkoutAction> = (state, acti
         ...state,
         paused: !state.paused,
       };
-    case 'EMERGENCY_QUIT':
+    case 'SET_REST_TIME':
+      return {
+        ...state,
+        restTime: action.payload,
+      };
     default:
       return state;
   }
@@ -381,4 +392,7 @@ export const togglePause = () => {
 };
 export const initializeWorkout = () => {
   dispatch({ type: 'INITIALIZE_WORKOUT' });
+};
+export const setRestTime = (payload: number) => {
+  dispatch({ payload, type: 'SET_REST_TIME' });
 };

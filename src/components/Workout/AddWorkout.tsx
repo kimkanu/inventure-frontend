@@ -41,10 +41,10 @@ const WorkoutAlbum: FunctionComponent<AlbumProps> = ({ workouts, setDialog, setS
       {workouts.map((x, i) => (
         <ButtonBase
           style={{
-            borderRadius: '8px',
             margin: '8px',
             WebkitAppearance: 'none',
             ...shadow({ depth: 6, opacity: 2 }),
+            borderRadius: '8px',
           }}
           onClick={() => {
             setSelected((ss: WorkoutPlan) => ({

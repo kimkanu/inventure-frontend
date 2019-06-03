@@ -5,9 +5,8 @@ import { deleteWorkout, Workout, WorkoutPlan } from '../../stores/workout';
 import ButtonSmall from '../Buttons/ButtonSmall';
 import EdgeIcon from '../Icons/EdgeIcon';
 import { secondsToTimeLiteral } from '../../utils';
-import { Prompt, RouteComponentProps, withRouter } from 'react-router-dom';
-import DialogTextButton from '../Dialog/DialogTextButton';
-import Dialog from '../Dialog';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 
 const timeToString = (time: number) => {
   const min = Math.floor(time / 60);
@@ -17,18 +16,30 @@ const timeToString = (time: number) => {
   return `${min} minute${min === 1 ? '' : 's'} ${sec} second${sec === 1 ? '' : 's'}`;
 };
 
-interface DialogProps {
-  show: boolean;
-  title: string;
-  children: React.ReactNode;
-}
 interface Props extends RouteComponentProps {
   editable: boolean;
   workout: Workout;
   onChange?: () => void;
+  mins?: number;
+  secs?: number;
+  error?: boolean;
+  setTime?: React.Dispatch<
+    React.SetStateAction<{
+      mins: number;
+      secs: number;
+    }>
+  >;
 }
 
-const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange, history }) => {
+const WorkoutTable: FunctionComponent<Props> = ({
+  editable,
+  workout,
+  onChange,
+  mins,
+  secs,
+  error,
+  setTime,
+}) => {
   const plan = editable ? workout.tempPlan : workout.plan;
   const visiblePlan = plan.filter((x) => !x.hidden);
   const breakTime = 60;
@@ -55,6 +66,7 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange, h
     width: 48,
     paddingRight: '.8em',
   };
+
   const td = ({
     key,
     name,
@@ -97,70 +109,8 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange, h
       ) : null}
     </tr>
   );
-  const [dialog, s] = useState<DialogProps>({
-    show: false,
-    title: 'Change rest time',
-    children: (
-      <div style={{ width: '400px', maxWidth: '100%' }}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: 'calc(100% + 1.6rem)',
-            marginLeft: '-0.8rem',
-            marginBottom: '-0.7rem',
-          }}
-        >
-          <div />
-          <div>
-            <DialogTextButton
-              text="cancel"
-              onClick={() => {
-                setDialog({ show: false });
-              }}
-            />
-          </div>
-          <div>
-            <DialogTextButton
-              text="save"
-              bold
-              onClick={() => {
-                setDialog({ show: false });
-              }}
-            />
-          </div>
-        </div>
-      </div>
-    ) as React.ReactNode,
-  });
-  const setDialog = (newDialog: Partial<DialogProps>) => {
-    s((d) => ({
-      ...d,
-      ...newDialog,
-    }));
-  };
   return (
     <>
-      <Prompt
-        when={dialog.show}
-        message={() => {
-          setDialog({
-            show: false,
-          });
-          return false;
-        }}
-      />
-      <Dialog
-        show={dialog.show}
-        title={dialog.title}
-        onClose={() =>
-          setDialog({
-            show: false,
-          })
-        }
-      >
-        {dialog.children}
-      </Dialog>
       <div
         style={useStyles(shadow({ depth: 4, color: new Color(143, 146, 169), opacity: 1.8 }), {
           borderRadius: 2,
@@ -216,33 +166,109 @@ const WorkoutTable: FunctionComponent<Props> = ({ editable, workout, onChange, h
                   color: COLORS.gray!.normal,
                   textAlign: 'center',
                   fontSize: '0.9em',
-                  fontStyle: 'italic',
                 }}
               >
                 {visiblePlan.length === 0 ? (
-                  'CLICK ADD BUTTON TO ADD A NEW WORKOUT'
-                ) : (
-                  <span>
-                    {editable ? (
+                  <span
+                    style={{
+                      color: COLORS.gray!.normal,
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    CLICK <u>ADD BUTTON</u> TO ADD A NEW WORKOUT
+                  </span>
+                ) : editable ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <div
+                      style={{
+                        margin: '0.3em 0',
+                      }}
+                    >
+                      <FormControl
+                        error={error}
+                        style={{
+                          margin: '0 0.4em 0 0.7em',
+                        }}
+                      >
+                        <Select
+                          value={mins}
+                          onChange={(event) => {
+                            if (!setTime) return;
+                            setTime((s) => ({ ...s, mins: parseInt(event.target.value, 10) }));
+                          }}
+                          name="mins"
+                        >
+                          {[0, 1, 2, 3, 4, 5].map((x) => (
+                            <MenuItem value={x} key={x}>
+                              {x.toString()}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>{' '}
                       <span
                         style={{
                           color: COLORS.gray!.normal,
-                          textDecoration: 'underline',
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => {
-                          setDialog({ show: true });
+                          fontStyle: 'italic',
+                          lineHeight: '1.88rem',
                         }}
                       >
-                        {timeToString(workout.restTime).toLocaleUpperCase()}
+                        MINUTE{mins === 1 ? '' : 'S'}
+                      </span>{' '}
+                      <FormControl
+                        error={error}
+                        style={{
+                          margin: '0 0.4em 0 0.8em',
+                        }}
+                      >
+                        <Select
+                          value={secs}
+                          onChange={(event) => {
+                            if (!setTime) return;
+                            setTime((s) => ({ ...s, secs: parseInt(event.target.value, 10) }));
+                          }}
+                          name="secs"
+                        >
+                          {[0, 1, 2, 3].map((x) => (
+                            <MenuItem value={15 * x} key={x}>
+                              {(15 * x).toString()}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <span
+                        style={{
+                          color: COLORS.gray!.normal,
+                          fontStyle: 'italic',
+                          lineHeight: '1.88rem',
+                        }}
+                      >
+                        SECONDS
                       </span>
-                    ) : (
-                      <>{timeToString(workout.restTime).toLocaleUpperCase()}</>
-                    )}{' '}
-                    BREAK BETWEEN EACH SET
+                    </div>
+                    <span
+                      style={{
+                        color: COLORS.gray!.normal,
+                        fontStyle: 'italic',
+                      }}
+                    >
+                      BREAK BETWEEN EACH SET
+                    </span>
+                  </div>
+                ) : (
+                  <span
+                    style={{
+                      color: COLORS.gray!.normal,
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    {timeToString(workout.restTime).toLocaleUpperCase()} BREAK BETWEEN EACH SET
                   </span>
                 )}
-                {/* fixme */}
               </td>
             </tr>
             <tr>

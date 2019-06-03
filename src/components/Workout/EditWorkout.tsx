@@ -14,6 +14,7 @@ import {
   ActionRecord,
   saveEditWorkoutPlan,
   discardEditWorkoutPlan,
+  setRestTime,
 } from '../../stores/workout';
 import Dialog from '../Dialog';
 import { History } from 'history';
@@ -36,11 +37,21 @@ const backButtonClickHandler = (
 };
 
 // click handler for save button
-const saveButtonClickHandler = (history: History<any>, setDialog: any) => {
+const saveButtonClickHandler = (
+  history: History<any>,
+  setDialog: any,
+  restTime: number,
+  setError: () => void,
+) => {
+  if (!restTime) {
+    setError();
+    return;
+  }
   saveEditWorkoutPlan();
   setDialog({
     show: false,
   });
+  setRestTime(restTime);
   history.goBack();
 };
 // click handler for cancel button
@@ -71,6 +82,7 @@ interface Props extends RouteComponentProps {}
 const EditWorkout: FunctionComponent<Props> = ({ history }) => {
   const workout = useGlobalState('workout')[0];
   const [saved, setSaved] = useState(true);
+  const [error, setError] = useState(false);
 
   const [dialog, s] = useState<DialogProps>({
     show: false,
@@ -98,7 +110,9 @@ const EditWorkout: FunctionComponent<Props> = ({ history }) => {
             <DialogTextButton
               text="save"
               bold
-              onClick={() => saveButtonClickHandler(history, setDialog)}
+              onClick={() =>
+                saveButtonClickHandler(history, setDialog, mins * 60 + secs, () => setError(true))
+              }
             />
           </div>
         </div>
@@ -115,6 +129,11 @@ const EditWorkout: FunctionComponent<Props> = ({ history }) => {
       ...dialog,
       ...newDialog,
     });
+
+  const [{ mins, secs }, setTime] = useState({
+    mins: Math.min(Math.floor(workout.restTime / 60), 5),
+    secs: Math.round((workout.restTime % 60) / 15) * 15,
+  });
 
   return (
     <Route
@@ -148,7 +167,14 @@ const EditWorkout: FunctionComponent<Props> = ({ history }) => {
                     <span>Edit Your Workout</span>
                   </h1>
 
-                  <WorkoutTable workout={workout} editable={true} />
+                  <WorkoutTable
+                    workout={workout}
+                    editable={true}
+                    mins={mins}
+                    secs={secs}
+                    setTime={setTime}
+                    error={error}
+                  />
 
                   <BottomToolbar position={'fixed'} bottom={'64px'}>
                     <ButtonLarge
@@ -179,7 +205,11 @@ const EditWorkout: FunctionComponent<Props> = ({ history }) => {
                     <ButtonLarge
                       backgroundColor={COLORS.blue!.lighter}
                       shadowColor={COLORS.blue!.darker}
-                      onClick={() => saveButtonClickHandler(history, setDialog)}
+                      onClick={() =>
+                        saveButtonClickHandler(history, setDialog, mins * 60 + secs, () =>
+                          setError(true),
+                        )
+                      }
                       label="save"
                       margin="1.5rem"
                     >
