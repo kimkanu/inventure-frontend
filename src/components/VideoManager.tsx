@@ -42,13 +42,15 @@ const VideoManager: FunctionComponent = () => {
     if (url) setVid(new YT.Player('video'));
   }, [url]);
   useEffect(() => {
-    if (vid) {
+    try {
       if (workout.muted) {
         if (typeof vid.mute === 'function') vid.mute();
       } else {
         if (typeof vid.unMute === 'function') vid.unMute();
         vid.setVolume(50);
       }
+    } catch (e) {
+      console.log('Youtube cannot be muted,', e);
     }
   }, [workout.muted]);
 
