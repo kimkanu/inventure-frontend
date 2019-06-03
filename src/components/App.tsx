@@ -56,7 +56,7 @@ const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
         <div
           style={{
             width: '100%',
-            height: 'calc(100% - 56px)',
+            height: 'calc(100% - 76px)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',

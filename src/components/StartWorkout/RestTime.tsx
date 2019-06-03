@@ -80,7 +80,7 @@ const CurrentProgressItem: FunctionComponent<CurrentProgressItemProps> = ({
   return (
     <div
       style={{
-        margin: '0.5rem 0',
+        margin: '0.8rem 0',
       }}
     >
       {current ? (
@@ -117,6 +117,7 @@ const CurrentProgressItem: FunctionComponent<CurrentProgressItemProps> = ({
           style={{
             color: yet || current ? COLORS.gray!.darkest : COLORS.gray!.dark,
             textDecoration: yet || current ? '' : 'line-through',
+            lineHeight: '1rem',
           }}
         >
           {current ? <b>{name}</b> : name}

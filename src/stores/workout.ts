@@ -70,7 +70,7 @@ const initialPain = {
 
 export const initialWorkoutState: WorkoutState = {
   type: '' as string,
-  restTime: 60,
+  restTime: 30,
   plan: initialPlan,
   completed: [],
   tempPlan: initialPlan,
