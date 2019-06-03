@@ -80,7 +80,7 @@ const CurrentProgressItem: FunctionComponent<CurrentProgressItemProps> = ({
   return (
     <div
       style={{
-        margin: '0.5rem 0',
+        margin: '0.8rem 0',
       }}
     >
       {current ? (
@@ -117,6 +117,7 @@ const CurrentProgressItem: FunctionComponent<CurrentProgressItemProps> = ({
           style={{
             color: yet || current ? COLORS.gray!.darkest : COLORS.gray!.dark,
             textDecoration: yet || current ? '' : 'line-through',
+            lineHeight: '1rem',
           }}
         >
           {current ? <b>{name}</b> : name}
@@ -206,6 +207,7 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[0] < 0) return;
     if (workout.muted) return;
     if (workout.time < workout.restTime - 0.5) return;
+    if (voiceAssistance.speaking()) voiceAssistance.cancel();
     voiceAssistance.speak({
       text: `Next workout is ${plan[workout.current[0]].name}, set ${workout.current[1] / 2 +
         1} of ${plan[workout.current[0]].sets}.`,
@@ -216,6 +218,7 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[0] < 0) return;
     if (workout.muted) return;
     if (workout.time < 31 && workout.time > 30.5) {
+      if (voiceAssistance.speaking()) voiceAssistance.cancel();
       voiceAssistance.speak({
         text: 'Thirty seconds before the workout starts.',
       });
@@ -226,6 +229,7 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[0] < 0) return;
     if (workout.muted) return;
     if (workout.time < 11 && workout.time > 10.5) {
+      if (voiceAssistance.speaking()) voiceAssistance.cancel();
       voiceAssistance.speak({
         text: 'Ten seconds before the workout starts.',
       });
@@ -236,6 +240,7 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[0] < 0) return;
     if (workout.muted) return;
     if (workout.time < 4 && workout.time > 3.5) {
+      if (voiceAssistance.speaking()) voiceAssistance.cancel();
       voiceAssistance.speak({
         text: 'three',
       });
@@ -246,6 +251,7 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[0] < 0) return;
     if (workout.muted) return;
     if (workout.time < 3 && workout.time > 2.5) {
+      if (voiceAssistance.speaking()) voiceAssistance.cancel();
       voiceAssistance.speak({
         text: 'two',
       });
@@ -256,11 +262,16 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
     if (workout.current[0] < 0) return;
     if (workout.muted) return;
     if (workout.time < 2 && workout.time > 1.5) {
+      if (voiceAssistance.speaking()) voiceAssistance.cancel();
       voiceAssistance.speak({
         text: 'one',
       });
     }
   }, [workout.time < 2]);
+
+  useEffect(() => {
+    if (workout.muted && voiceAssistance.speaking()) voiceAssistance.cancel();
+  }, [workout.muted]);
 
   const plan = workout.plan.filter((p) => !p.hidden);
 
