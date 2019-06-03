@@ -1,5 +1,6 @@
 import { Reducer } from 'react-hooks-global-state';
 import { dispatch } from '.';
+import { StaticState, staticReducer } from './static';
 
 export type Track = {
   createdAt: number;
@@ -42,9 +43,13 @@ export interface LoginAction {
 export interface LogoutAction {
   type: 'LOGOUT_ACTION';
 }
+export interface CalculateLevelAction {
+  type: 'CALCULATE_LEVEL_ACTION';
+  payload: { staticInfo: StaticState; points: number };
+}
 
-export type AuthAction = LoginAction | LogoutAction;
-export const AUTH_ACTION_TYPES = ['LOGIN_ACTION', 'LOGOUT_ACTION'];
+export type AuthAction = LoginAction | LogoutAction | CalculateLevelAction;
+export const AUTH_ACTION_TYPES = ['LOGIN_ACTION', 'LOGOUT_ACTION', 'CALCULATE_LEVEL_ACTION'];
 
 export const authReducer: Reducer<AuthState, AuthAction> = (state, action) => {
   switch (action.type) {
@@ -52,6 +57,24 @@ export const authReducer: Reducer<AuthState, AuthAction> = (state, action) => {
       return action.payload;
     case 'LOGOUT_ACTION':
       return initialAuthState;
+    case 'CALCULATE_LEVEL_ACTION':
+      if (
+        Array.isArray(action.payload.staticInfo.others.levels) &&
+        action.payload.staticInfo.others.levels.length !== 0
+      ) {
+        const level = (action.payload.staticInfo.others.levels as number[])
+          .reduce((a, x, i) => [...a, x + (a[i - 1] || 0)], [] as number[])
+          .findIndex((x: number) => x > action.payload.points);
+        return {
+          ...state,
+          level,
+          points: action.payload.points,
+        };
+      }
+      return {
+        ...state,
+        points: action.payload.points,
+      };
     default:
       return state;
   }
@@ -63,4 +86,8 @@ export const login = (payload: AuthState) => {
 };
 export const logout = () => {
   dispatch({ type: 'LOGOUT_ACTION' });
+};
+export const calculateLevel = (payload: { staticInfo: StaticState; points: number }) => {
+  console.log(payload);
+  dispatch({ payload, type: 'CALCULATE_LEVEL_ACTION' });
 };

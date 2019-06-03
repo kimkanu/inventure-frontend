@@ -292,7 +292,12 @@ const Profile: FunctionComponent<Props> = ({ location, history }) => {
                         gym={auth.gym}
                         level={auth.level}
                         points={auth.points}
-                        maxPoints={2050}
+                        prevMaxPoints={((staticInfo.others.levels || [0]) as number[])
+                          .slice(0, auth.level)
+                          .reduce((a, b) => a + b, 0)}
+                        maxPoints={((staticInfo.others.levels || [0]) as number[])
+                          .slice(0, auth.level + 1)
+                          .reduce((a, b) => a + b, 0)}
                         message={auth.profileMessage}
                       />
                       <SectionSelector

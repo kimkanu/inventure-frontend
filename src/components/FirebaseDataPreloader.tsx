@@ -1,15 +1,20 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import Firebase, { FirebaseContext } from './Firebase';
 import { useAsyncEffect, unique } from '../utils';
 import { setWorkoutInfo, setWorkoutImage, setStaticImages, setOthersInfo } from '../stores/static';
 import { toggleLoading, LoadingData } from '../stores/loading';
 import { BodyPart } from '../stores/workout';
+import { useGlobalState } from '../stores';
+import { calculateLevel } from '../stores/auth';
 
 interface Props {
   firebase: Firebase;
 }
 
 const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
+  const [staticInfo] = useGlobalState('static');
+  const [auth] = useGlobalState('auth');
+
   useAsyncEffect(async () => {
     let isSubscribed = true;
 
@@ -159,9 +164,14 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
     const databaseResponse = await firebase.database.ref('staticInfo/others').once('value');
     const others = databaseResponse.val();
     setOthersInfo(others);
-    console.log(others);
     console.log('others info loaded');
   }, []);
+
+  useEffect(() => {
+    if (staticInfo.others.levels) {
+      calculateLevel({ staticInfo, points: auth.points });
+    }
+  }, [staticInfo]);
 
   return <></>;
 };

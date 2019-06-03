@@ -22,7 +22,7 @@ import Banner from './Banner';
 import VideoManager from './VideoManager';
 import Settings from './Settings';
 import { navigateTab } from '../stores/tab';
-import { login, AuthState } from '../stores/auth';
+import { login, AuthState, calculateLevel } from '../stores/auth';
 import Firebase, { FirebaseContext } from './Firebase';
 import ButtonLarge from './Buttons/ButtonLarge';
 import { COLORS } from '../colors';
@@ -31,6 +31,7 @@ interface LoginProps extends RouteComponentProps {
   firebase: Firebase;
 }
 const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
+  const [staticInfo] = useGlobalState('static');
   const loginAs = (userId: string) => async () => {
     const response = await firebase.database.ref(`/users/${userId}`).once('value');
     const responseVal = response.val();
@@ -43,6 +44,9 @@ const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
       level: 0,
       profileImage: downloadURL,
     } as AuthState;
+    if (staticInfo.others.levels) {
+      calculateLevel({ staticInfo, points: userInfo.points });
+    }
     if (!userInfo) return;
     localStorage.setItem('auth', JSON.stringify(userInfo));
     login(userInfo);

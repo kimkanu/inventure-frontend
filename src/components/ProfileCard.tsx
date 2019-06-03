@@ -15,6 +15,7 @@ interface Props {
   level: number;
   points: number;
   maxPoints: number;
+  prevMaxPoints?: number;
   opacity?: number;
   imgSrc?: string;
   alt?: string;
@@ -29,6 +30,7 @@ const ProfileCard: FunctionComponent<Props> = ({
   level,
   points,
   maxPoints,
+  prevMaxPoints = 0,
   depth = 4,
   opacity = 1.6,
   imgSrc,
@@ -259,8 +261,9 @@ const ProfileCard: FunctionComponent<Props> = ({
                         borderRadius: '4px',
                         height: '6px',
                         margin: '2px',
-                        width: `calc(${(points / maxPoints) * 100}% - ${points /
-                          maxPoints /
+                        width: `calc(${((points - prevMaxPoints) * 100) /
+                          (maxPoints - prevMaxPoints)}% - ${(points - prevMaxPoints) /
+                          (maxPoints - prevMaxPoints) /
                           25}px)`,
                       }}
                     />
