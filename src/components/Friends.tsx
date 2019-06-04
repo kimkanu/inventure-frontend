@@ -159,7 +159,6 @@ const RankingWithoutRouter: FunctionComponent<Props> = ({ history }) => {
 
   return (
     <div className="pop-content">
-      {' '}
       <div className="content">
         <h1 className="heading">
           <BackButton onClick={history.goBack} />
