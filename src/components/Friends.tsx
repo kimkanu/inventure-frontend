@@ -152,7 +152,7 @@ const RankingWithoutRouter: FunctionComponent<Props> = ({ history }) => {
   );
   const [auth] = useGlobalState('auth');
   const sortedFriends = [...auth.friends, auth.id]
-    .map((id) => auth.users.find((user) => user.id === id)!)
+    .map((id) => (auth.users || []).find((user) => user.id === id)!)
     .sort((f1, f2) => f2.points - f1.points);
 
   return (
