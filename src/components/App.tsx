@@ -87,6 +87,13 @@ const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
             backgroundColor="white"
             color={COLORS.gray!.darkest}
             shadowColor={COLORS.gray!.dark}
+            onClick={loginW('juhokim')}
+            labelInside="Login as Juho Kim"
+          />
+          <ButtonLarge
+            backgroundColor="white"
+            color={COLORS.gray!.darkest}
+            shadowColor={COLORS.gray!.dark}
             onClick={loginW('chad0314')}
             labelInside="Login as Chad"
           />
