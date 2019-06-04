@@ -1,11 +1,11 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import Firebase, { FirebaseContext } from './Firebase';
-import { useAsyncEffect, unique } from '../utils';
+import to, { useAsyncEffect, unique } from '../utils';
 import { setWorkoutInfo, setWorkoutImage, setStaticImages, setOthersInfo } from '../stores/static';
 import { toggleLoading, LoadingData } from '../stores/loading';
 import { BodyPart } from '../stores/workout';
 import { useGlobalState } from '../stores';
-import { calculateLevel } from '../stores/auth';
+import { calculateLevel, UserProps, saveUsers } from '../stores/auth';
 
 interface Props {
   firebase: Firebase;
@@ -14,6 +14,7 @@ interface Props {
 const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
   const [staticInfo] = useGlobalState('static');
   const [auth] = useGlobalState('auth');
+  const [loading] = useGlobalState('loading');
 
   useAsyncEffect(async () => {
     let isSubscribed = true;
@@ -161,17 +162,58 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
   }, []);
 
   useAsyncEffect(async () => {
+    let isSubscribed = true;
     const databaseResponse = await firebase.database.ref('staticInfo/others').once('value');
     const others = databaseResponse.val();
-    setOthersInfo(others);
+    if (isSubscribed) setOthersInfo(others);
     console.log('others info loaded');
+    return () => {
+      isSubscribed = false;
+    };
   }, []);
 
   useEffect(() => {
+    console.log('level', (staticInfo.others.levels || []).length);
     if (staticInfo.others.levels) {
       calculateLevel({ staticInfo, points: auth.points });
     }
-  }, [staticInfo]);
+  }, [(staticInfo.others.levels || []).length, auth.points]);
+
+  useAsyncEffect(async () => {
+    let isSubscribed = true;
+    const response = await firebase.database.ref('/users').once('value');
+    const responseVal = response.val() as {
+      [id: string]: UserProps;
+    };
+
+    Promise.all(
+      Object.keys(responseVal)
+        .map((id) => async () => {
+          const [, downloadURL] = await to(
+            firebase.storage.ref(responseVal[id].profileImagePath).getDownloadURL(),
+          );
+          return [id, downloadURL || undefined] as [string, string | undefined];
+        })
+        .map((x) => x()),
+    )
+      .then((list) =>
+        list.map(([id, profileImagePath]) => ({
+          id,
+          ...responseVal[id],
+          profileImagePath,
+        })),
+      )
+      .then((usersArray) => {
+        if (isSubscribed) {
+          saveUsers(usersArray);
+          toggleLoading(LoadingData.UsersInfo);
+          console.log('users info loaded');
+        }
+      });
+    return () => {
+      isSubscribed = false;
+    };
+  }, []);
 
   return <></>;
 };

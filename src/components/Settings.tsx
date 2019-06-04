@@ -66,15 +66,10 @@ const Settings: FunctionComponent<RouteComponentProps> = ({ history }) => {
   const [auth] = useGlobalState('auth');
   useEffect(() => {
     if (auth.id === '') {
-      const a = localStorage.getItem('auth');
-      if (a !== null) {
-        login(JSON.parse(a) as AuthState);
-      } else {
-        history.replace('/login');
-        navigateTab('');
-      }
+      history.push('/login?redirect=settings');
+      navigateTab('');
     }
-  }, []);
+  });
   return (
     <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
       <div className="content">

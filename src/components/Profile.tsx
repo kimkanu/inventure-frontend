@@ -257,15 +257,10 @@ const Profile: FunctionComponent<Props> = ({ location, history }) => {
       };
   useEffect(() => {
     if (auth.id === '') {
-      const a = localStorage.getItem('auth');
-      if (a !== null) {
-        login(JSON.parse(a) as AuthState);
-      } else {
-        history.replace('/login');
-        navigateTab('');
-      }
+      history.push('/login?redirect=profile');
+      navigateTab('');
     }
-  }, []);
+  });
   const [section, setSection] = useState(0);
   const [staticInfo] = useGlobalState('static');
   return (

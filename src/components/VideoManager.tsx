@@ -49,9 +49,7 @@ const VideoManager: FunctionComponent = () => {
         if (typeof vid.unMute === 'function') vid.unMute();
         vid.setVolume(50);
       }
-    } catch (e) {
-      console.log('Youtube cannot be muted,', e);
-    }
+    } catch (e) {}
   }, [workout.muted]);
 
   const vis = ['/workout/start', '/workout/rest'].includes(location.pathname);

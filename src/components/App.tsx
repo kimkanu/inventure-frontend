@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo, useEffect } from 'react';
+import React, { FunctionComponent, useMemo, useEffect, useState } from 'react';
 import BottomNavigator from './BottomNavigator';
 import Workout from './Workout';
 
@@ -21,41 +21,56 @@ import WorkoutTimeManager from './WorkoutTimeManager';
 import Banner from './Banner';
 import VideoManager from './VideoManager';
 import Settings from './Settings';
-import { navigateTab } from '../stores/tab';
+import { navigateTab, Tab } from '../stores/tab';
 import { login, AuthState, calculateLevel } from '../stores/auth';
 import Firebase, { FirebaseContext } from './Firebase';
 import ButtonLarge from './Buttons/ButtonLarge';
 import { COLORS } from '../colors';
-import color from '@material-ui/core/colors/lightGreen';
-import { colors } from '@material-ui/core';
+import { History } from 'history';
+import { StaticState } from '../stores/static';
 
 interface LoginProps extends RouteComponentProps {
   firebase: Firebase;
 }
-const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
-  const [staticInfo] = useGlobalState('static');
-  const loginAs = (userId: string) => async () => {
-    const response = await firebase.database.ref(`/users/${userId}`).once('value');
-    const responseVal = response.val();
-    const [, downloadURL] = await to(
-      firebase.storage.ref(responseVal.profileImagePath).getDownloadURL(),
-    );
-    const userInfo = {
-      ...responseVal,
-      id: userId,
-      level: 0,
-      profileImage: downloadURL,
-    } as AuthState;
-    if (staticInfo.others.levels) {
-      calculateLevel({ staticInfo, points: userInfo.points });
-    }
-    if (!userInfo) return;
-    localStorage.setItem('auth', JSON.stringify(userInfo));
-    login(userInfo);
-    history.push('/workout');
+const loginAs = (
+  userId: string,
+  firebase: Firebase,
+  redirect: boolean = false,
+  history?: History,
+) => async () => {
+  const response = await firebase.database.ref(`/users/${userId}`).once('value');
+  const responseVal = response.val();
+  const [, downloadURL] = await to(
+    firebase.storage.ref(responseVal.profileImagePath).getDownloadURL(),
+  );
+  const userInfo = {
+    friends: [],
+    ...responseVal,
+    id: userId,
+    level: 0,
+    profileImage: downloadURL,
+  } as AuthState;
+  localStorage.setItem('auth', userId);
+  login(userInfo);
+  if (redirect) {
+    if (history) history.replace('/workout');
     navigateTab('workout');
-  };
-  return (
+  }
+};
+const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
+  const login = (userId: string) => loginAs(userId, firebase);
+  const loginW = (userId: string) => loginAs(userId, firebase, true, history);
+  const redirectTo = location.search.split('?redirect=')[1] || 'workout';
+  useEffect(() => {
+    if (localStorage.getItem('auth') !== null) {
+      login(localStorage.getItem('auth')!)().then(() => {
+        history.replace(`/${redirectTo}`);
+        navigateTab(redirectTo as Tab);
+      });
+    }
+  }, []);
+
+  return localStorage.getItem('auth') ? null : (
     <div className="top-level" style={{ height: '100vh', position: 'absolute' }}>
       <div className="content">
         <h1 className="heading">Login</h1>
@@ -73,21 +88,21 @@ const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
             backgroundColor="white"
             color={COLORS.gray!.darkest}
             shadowColor={COLORS.gray!.dark}
-            onClick={loginAs('chad0314')}
+            onClick={loginW('chad0314')}
             labelInside="Login as Chad"
           />
           <ButtonLarge
             backgroundColor="white"
             color={COLORS.gray!.darkest}
             shadowColor={COLORS.gray!.dark}
-            onClick={loginAs('dmt322')}
+            onClick={loginW('dmt322')}
             labelInside="Login as Zeppe"
           />
           <ButtonLarge
             backgroundColor="white"
             color={COLORS.gray!.darkest}
             shadowColor={COLORS.gray!.dark}
-            onClick={loginAs('ostrich101')}
+            onClick={loginW('ostrich101')}
             labelInside="Login as Emil"
           />
         </div>
@@ -116,9 +131,7 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
   }
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'production') {
-      history.push(untilNthIndex(location.pathname, '/', 2));
-    }
+    history.push(untilNthIndex(location.pathname, '/', 2));
     document.cookie = 'VISITOR_INFO1_LIVE=oKckVSqvaGw; path=/; domain=.youtube.com';
     const timeout = setTimeout(() => {
       toggleLoading(LoadingData.App);
@@ -139,13 +152,12 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
       <Route
         exact
         path="/"
-        render={() =>
-          auth.id === '' && localStorage.getItem('auth') === null ? (
-            <Redirect to="/login" />
-          ) : (
-            <Redirect to={{ pathname: '/workout' }} />
-          )
-        }
+        render={() => {
+          if (auth.id === '') {
+            return <Redirect to="/login" />;
+          }
+          return <Redirect to={{ pathname: '/workout' }} />;
+        }}
       />
       <TransitionGroup>
         <Banner />

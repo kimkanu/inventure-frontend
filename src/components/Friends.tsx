@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState, useEffect } from 'react';
 import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from './Link';
-import { untilNthIndex, randomString } from '../utils';
+import { untilNthIndex, randomString, useAsyncEffect } from '../utils';
 import CardWithPicture from './CardWithPicture';
 import ProfileCard from './ProfileCard';
 import SectionSelector from './SectionSelector';
@@ -17,7 +17,9 @@ import BackButton from './Buttons/BackButton';
 import Fuse from 'fuse.js';
 import Feed from './Feed';
 import { navigateTab } from '../stores/tab';
-import { login, AuthState } from '../stores/auth';
+import { login, AuthState, UserProps, addFriend } from '../stores/auth';
+import Firebase, { FirebaseContext } from './Firebase';
+import { LoadingData } from '../stores/loading';
 
 interface CardProps {
   rank: number;
@@ -150,12 +152,247 @@ const RankingWithoutRouter: FunctionComponent<Props> = ({ history }) => {
 };
 const Ranking = withRouter(RankingWithoutRouter);
 
+interface FriendCardProps {
+  firebase: Firebase;
+  name: string;
+  id: string;
+  message: string;
+  depth?: number;
+  opacity?: number;
+  imgSrc?: string;
+  alt?: string;
+  friend: boolean;
+}
+
+const FriendCard: FunctionComponent<FriendCardProps> = ({
+  firebase,
+  name,
+  id,
+  message,
+  depth = 4,
+  opacity = 1.6,
+  imgSrc,
+  alt,
+  friend,
+}) => {
+  const [auth] = useGlobalState('auth');
+  const content = (
+    <div
+      style={{
+        backgroundColor: 'white',
+        display: 'flex',
+        width: '100%',
+        height: '5rem',
+        borderRadius: '8px',
+        WebkitAppearance: 'none',
+        boxShadow: shadowText({
+          depth,
+          opacity,
+          color: new Color(COLORS.gray!.darker),
+        }),
+      }}
+    >
+      <ButtonBase
+        style={{
+          width: '4rem',
+          height: '4rem',
+          overflow: 'hidden',
+          display: 'flex',
+          justifyContent: 'center',
+          borderRadius: '50%',
+          margin: '0.5rem 0.8rem 0.5rem 0.5rem',
+        }}
+      >
+        <img
+          src={imgSrc}
+          style={{
+            height: '4rem',
+            borderRadius: '50%',
+          }}
+          alt={alt}
+        />
+      </ButtonBase>
+      <div
+        style={{
+          width: 'calc(100% - 8.8rem)',
+          height: '100%',
+        }}
+      >
+        <div
+          style={{
+            width: '100%',
+            height: 'calc(100% - 1.6rem)',
+            margin: '0.8rem 0',
+            right: '0',
+            position: 'relative',
+            flexDirection: 'column',
+            borderRadius: '8px',
+            display: 'flex',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              marginBottom: '-0.3em',
+            }}
+          >
+            <span
+              style={{
+                ...headingFont,
+                fontSize: '1.5rem',
+                lineHeight: '2rem',
+              }}
+            >
+              {name}
+            </span>
+            <span
+              style={{
+                color: COLORS.gray!.dark,
+                fontSize: '.9rem',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                marginLeft: '0.3em',
+                lineHeight: '2rem',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'EdgeIcons',
+                  display: 'inline-block',
+                  transform: 'translateY(1pt)',
+                }}
+              >
+                
+              </span>
+              {id}
+            </span>
+          </div>
+          <div
+            style={{
+              marginBottom: '-.3rem',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              position: 'relative',
+            }}
+          >
+            <div
+              style={{
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+              }}
+            >
+              <span>
+                <span
+                  style={{
+                    fontFamily: 'EdgeIcons',
+                    display: 'inline-block',
+                    transform: 'translateY(1pt)',
+                    marginRight: '3px',
+                  }}
+                >
+                  
+                </span>
+                {message}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        style={{
+          width: '3rem',
+          marginRight: '0.5rem',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {friend ? (
+          <span
+            style={{
+              fontFamily: 'EdgeIcons',
+              fontSize: '1.6rem',
+              color: COLORS.blue!.lighter,
+            }}
+          >
+            
+          </span>
+        ) : (
+          <ButtonBase
+            style={{
+              width: '2.4rem',
+              height: '2.4rem',
+              borderRadius: '50%',
+            }}
+            onClick={() => {
+              if (auth.friends.includes(id)) return;
+              addFriend(id);
+              firebase.database.ref(`/users/${auth.id}/friends`).set([...auth.friends, id]);
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'EdgeIcons',
+                fontSize: '1.6rem',
+                color: COLORS.green!.light,
+              }}
+            >
+              
+            </span>
+          </ButtonBase>
+        )}
+        <span
+          style={{
+            ...sansSerifFont,
+            fontSize: '0.8rem',
+            lineHeight: '0.94rem',
+            color: COLORS.gray!.dark,
+          }}
+        >
+          {friend ? 'Friend' : 'Add'}
+        </span>
+      </div>
+    </div>
+  );
+  return (
+    <div
+      style={{
+        width: '100%',
+        margin: '1rem 0',
+        borderRadius: '8px',
+      }}
+    >
+      {content}
+    </div>
+  );
+};
+
 const searchId = randomString(8);
-const FriendsSearch: FunctionComponent = () => {
-  const friends = [{ name: 'Emil', id: 'Ostrich101' }, { name: 'Zeppe', id: 'dmt322' }];
+interface FriendsSearchProps {
+  firebase: Firebase;
+}
+const FriendsSearch: FunctionComponent<FriendsSearchProps> = ({ firebase }) => {
+  const [auth] = useGlobalState('auth');
+  const [loading] = useGlobalState('loading');
+  const [results, setResults] = useState([] as ({ id: string } & UserProps)[]);
+
   const [active, setActive] = useState(false);
   const [s, setS] = useState('');
-  const fuse = new Fuse(friends, { keys: ['name'], threshold: 0.3 });
+  const fuse = new Fuse((auth.users || []).filter((user) => user.id !== auth.id), {
+    keys: ['name', 'id'],
+    threshold: 0.3,
+  });
+  useEffect(() => {
+    const filteredFriends = s
+      ? fuse.search(s)
+      : (auth.users || []).filter((user) => auth.friends.includes(user.id));
+    setResults(filteredFriends);
+  }, [s, loading[LoadingData.UsersInfo]]);
+
   return (
     <>
       <div
@@ -196,6 +433,31 @@ const FriendsSearch: FunctionComponent = () => {
           />
         </div>
       </div>
+      <div>
+        {s
+          ? results.map((friend, i) => (
+              <FriendCard
+                firebase={firebase}
+                key={i}
+                name={friend.name}
+                id={friend.id}
+                message={friend.profileMessage}
+                imgSrc={friend.profileImagePath}
+                friend={auth.friends.includes(friend.id)}
+              />
+            ))
+          : results.map((friend, i) => (
+              <FriendCard
+                firebase={firebase}
+                key={i}
+                name={friend.name}
+                id={friend.id}
+                message={friend.profileMessage}
+                imgSrc={friend.profileImagePath}
+                friend={true}
+              />
+            ))}
+      </div>
     </>
   );
 };
@@ -209,7 +471,9 @@ const AddFriendsWithoutRouter: FunctionComponent<Props> = ({ history }) => {
           <BackButton onClick={history.goBack} />
           <span>Add Friends</span>
         </h1>
-        <FriendsSearch />
+        <FirebaseContext.Consumer>
+          {(firebase) => <FriendsSearch firebase={firebase} />}
+        </FirebaseContext.Consumer>
       </div>
     </div>
   );
@@ -221,15 +485,10 @@ const Friends: FunctionComponent<Props> = ({ location, history }) => {
   const [auth] = useGlobalState('auth');
   useEffect(() => {
     if (auth.id === '') {
-      const a = localStorage.getItem('auth');
-      if (a !== null) {
-        login(JSON.parse(a) as AuthState);
-      } else {
-        history.replace('/login');
-        navigateTab('');
-      }
+      history.push('/login?redirect=friends');
+      navigateTab('');
     }
-  }, []);
+  });
   return (
     <TransitionGroup className="top-level" style={{ height: '100vh', position: 'absolute' }}>
       <CSSTransition
@@ -311,6 +570,7 @@ const Friends: FunctionComponent<Props> = ({ location, history }) => {
                         key={untilNthIndex(location.pathname, '/', 4)}
                         timeout={{ enter: 300, exit: 500 }}
                         classNames={'content--pop-up-transition'}
+                        unmountOnExit={false}
                       >
                         <div>
                           <Route

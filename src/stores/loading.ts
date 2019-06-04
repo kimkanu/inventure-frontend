@@ -5,6 +5,7 @@ export enum LoadingData {
   App,
   WorkoutInfo,
   Images,
+  UsersInfo,
 }
 
 export type LoadingState = { [key in LoadingData]: boolean };
@@ -13,6 +14,7 @@ export const initialLoadingState: LoadingState = {
   [LoadingData.App]: false,
   [LoadingData.WorkoutInfo]: false,
   [LoadingData.Images]: false,
+  [LoadingData.UsersInfo]: false,
 };
 
 export interface ToggleLoadingAction {

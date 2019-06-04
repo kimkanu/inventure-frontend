@@ -23,16 +23,10 @@ const Workout: FunctionComponent<Props> = ({ location, history }) => {
   const [auth] = useGlobalState('auth');
   useEffect(() => {
     if (auth.id === '') {
-      const a = localStorage.getItem('auth');
-      if (a !== null) {
-        login(JSON.parse(a) as AuthState);
-        navigateTab('workout');
-      } else {
-        history.replace('/login');
-        navigateTab('');
-      }
+      history.push('/login?redirect=workout');
+      navigateTab('');
     }
-  }, []);
+  });
   return (
     <Route
       render={() => (

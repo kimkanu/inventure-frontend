@@ -2,6 +2,15 @@ import { Reducer } from 'react-hooks-global-state';
 import { dispatch } from '.';
 import { StaticState, staticReducer } from './static';
 
+export interface UserProps {
+  name: string;
+  profileImagePath?: string;
+  profileMessage: string;
+  gym: string;
+  points: number;
+  level: number;
+}
+
 export type Track = {
   createdAt: number;
   reps: number;
@@ -21,6 +30,7 @@ export type AuthState = {
   gym: string;
   friends: string[];
   track: Track[];
+  users: ({ id: string } & UserProps)[];
 };
 
 export const initialAuthState: AuthState = {
@@ -34,6 +44,7 @@ export const initialAuthState: AuthState = {
   gym: '',
   friends: [],
   track: [],
+  users: [],
 };
 
 export interface LoginAction {
@@ -47,9 +58,28 @@ export interface CalculateLevelAction {
   type: 'CALCULATE_LEVEL_ACTION';
   payload: { staticInfo: StaticState; points: number };
 }
+export interface SaveUsersAction {
+  type: 'SAVE_USERS_ACTION';
+  payload: ({ id: string } & UserProps)[];
+}
+export interface AddFriendAction {
+  type: 'ADD_FRIEND_ACTION';
+  payload: string;
+}
 
-export type AuthAction = LoginAction | LogoutAction | CalculateLevelAction;
-export const AUTH_ACTION_TYPES = ['LOGIN_ACTION', 'LOGOUT_ACTION', 'CALCULATE_LEVEL_ACTION'];
+export type AuthAction =
+  | LoginAction
+  | LogoutAction
+  | CalculateLevelAction
+  | SaveUsersAction
+  | AddFriendAction;
+export const AUTH_ACTION_TYPES = [
+  'LOGIN_ACTION',
+  'LOGOUT_ACTION',
+  'CALCULATE_LEVEL_ACTION',
+  'SAVE_USERS_ACTION',
+  'ADD_FRIEND_ACTION',
+];
 
 export const authReducer: Reducer<AuthState, AuthAction> = (state, action) => {
   switch (action.type) {
@@ -75,19 +105,34 @@ export const authReducer: Reducer<AuthState, AuthAction> = (state, action) => {
         ...state,
         points: action.payload.points,
       };
+    case 'SAVE_USERS_ACTION':
+      return {
+        ...state,
+        users: action.payload,
+      };
+    case 'ADD_FRIEND_ACTION':
+      if (state.friends.includes(action.payload)) return state;
+      return {
+        ...state,
+        friends: [...state.friends, action.payload],
+      };
     default:
       return state;
   }
 };
 
 export const login = (payload: AuthState) => {
-  console.log(payload);
   dispatch({ payload, type: 'LOGIN_ACTION' });
 };
 export const logout = () => {
   dispatch({ type: 'LOGOUT_ACTION' });
 };
 export const calculateLevel = (payload: { staticInfo: StaticState; points: number }) => {
-  console.log(payload);
   dispatch({ payload, type: 'CALCULATE_LEVEL_ACTION' });
+};
+export const saveUsers = (payload: ({ id: string } & UserProps)[]) => {
+  dispatch({ payload, type: 'SAVE_USERS_ACTION' });
+};
+export const addFriend = (payload: string) => {
+  dispatch({ payload, type: 'ADD_FRIEND_ACTION' });
 };
