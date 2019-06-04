@@ -25,7 +25,9 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
       name: string;
       type: { name: string };
       youtube: string;
+      instruction?: string;
     }[];
+    console.log(workoutData);
     setWorkoutInfo(workoutData);
 
     setWorkoutImage(

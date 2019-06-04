@@ -38,13 +38,17 @@ const WorkoutType: FunctionComponent<Props> = ({ location, history }) => {
                 imgSrc={(staticInfo.images[name] || {}).image || transparentImage}
                 alt={`The icon for ${name} workout`}
                 onClick={() => {
-                  changeWorkoutType(name);
-                  if (options.length) {
-                    history.push({
-                      pathname: '/workout/pain',
-                      state: options,
-                    });
-                  } else history.push('/workout/pain');
+                  if (i > 0) {
+                    alert('Not supported yet.');
+                  } else {
+                    changeWorkoutType(name);
+                    if (options.length) {
+                      history.push({
+                        pathname: '/workout/pain',
+                        state: options,
+                      });
+                    } else history.push('/workout/pain');
+                  }
                 }}
               >
                 <div

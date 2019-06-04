@@ -53,7 +53,10 @@ const BottomNavigator: FunctionComponent<Props> = ({ location, history }) => {
       navigateTab('');
       return;
     }
-    if (['/workout/start', '/workout/rest'].includes(location.pathname) && value === 'workout') {
+    if (
+      ['/workout/start', '/workout/rest', '/workout/rest/info'].includes(location.pathname) &&
+      value === 'workout'
+    ) {
       return;
     }
     const to = `${value}/`.slice(0, `${value}/`.slice(1).indexOf('/') + 1) as Tab | 'login';

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState, FunctionComponentElement } from 'react';
 import { useStyles, sansSerifFont } from '../../styles';
-import { COLORS } from '../../colors';
+import { COLORS, COLOR_BACKGROUND } from '../../colors';
 import ButtonSmall from '../Buttons/ButtonSmall';
 import EdgeIcon from '../Icons/EdgeIcon';
 import { useGlobalState } from '../../stores';
@@ -11,23 +11,23 @@ import {
   quitEntireWorkout,
   quitWorkout,
 } from '../../stores/workout';
-import { Redirect, RouteComponentProps, withRouter, Prompt } from 'react-router-dom';
-import { capitalizeFirst } from '../../utils';
+import { Redirect, RouteComponentProps, withRouter, Prompt, Route } from 'react-router-dom';
+import { capitalizeFirst, untilNthIndex } from '../../utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faInfo,
   faCheck,
   faAngleRight,
   faExclamationTriangle,
-  faCross,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import BottomToolbar from '../BottomToolbar';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import { voiceAssistance } from '../../voiceAssistance';
 import Dialog from '../Dialog';
-import { ButtonBase } from '@material-ui/core';
 import { navigateTab } from '../../stores/tab';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import InfoScreen from './InfoScreen';
 
 interface DialogProps {
   show: boolean;
@@ -406,6 +406,8 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
     }));
   };
 
+  const [staticInfo] = useGlobalState('static');
+
   return workout.current[0] === -2 ? (
     <Redirect to="/workout/congrats" />
   ) : workout.current[0] === -1 && !workout.quitted ? (
@@ -419,6 +421,8 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
         message={(location) => {
           if (!location.pathname.startsWith('/workout')) return true;
           if (location.pathname === '/workout/pain') return true;
+          if (location.pathname === '/workout/rest/info') return true;
+          if (location.pathname === '/workout/rest') return true;
           setDialog({
             show: !dialog.show,
           });
@@ -493,10 +497,11 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
           </span>
           &nbsp;&nbsp;
           <ButtonSmall
-            // clickHandler={toggleMute}
             backgroundColor={COLORS.blue!.light}
             shadowColor={COLORS.blue!.light}
             color={'#fff'}
+            onClick={() => history.push('/workout/rest/info')}
+            hidden={!staticInfo.workoutInfo[plan[workout.current[0]].name].instruction}
           >
             <span
               style={{
@@ -606,6 +611,25 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
           </CurrentProgress>
         </div>
       </div>
+      <Route
+        render={({ location }) => (
+          <TransitionGroup>
+            <CSSTransition
+              key={untilNthIndex(location.pathname, '/', 4)}
+              timeout={{ enter: 300, exit: 500 }}
+              classNames={'content--pop-up-transition'}
+            >
+              <div>
+                <Route
+                  location={location}
+                  path="/workout/rest/info"
+                  render={() => <InfoScreen />}
+                />
+              </div>
+            </CSSTransition>
+          </TransitionGroup>
+        )}
+      />
     </>
   );
 };

@@ -52,7 +52,7 @@ const VideoManager: FunctionComponent = () => {
     } catch (e) {}
   }, [workout.muted]);
 
-  const vis = ['/workout/start', '/workout/rest'].includes(location.pathname);
+  const vis = ['/workout/start', '/workout/rest', '/workout/rest/info'].includes(location.pathname);
 
   return (
     <div

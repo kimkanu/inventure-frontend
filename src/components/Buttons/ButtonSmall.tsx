@@ -12,6 +12,7 @@ interface Props {
   color?: string | Color;
   depth?: number;
   opacity?: number;
+  hidden?: boolean;
 }
 
 const ButtonSmall: FunctionComponent<Props> = ({
@@ -23,6 +24,7 @@ const ButtonSmall: FunctionComponent<Props> = ({
   children,
   depth = 6,
   opacity = 1.6,
+  hidden = false,
 }) => {
   const content = (
     <div
@@ -41,7 +43,7 @@ const ButtonSmall: FunctionComponent<Props> = ({
   );
   return (
     <div
-      onClick={onClick}
+      onClick={hidden ? undefined : onClick}
       style={{
         display: 'inline-block',
         borderRadius: '18px',
@@ -51,7 +53,10 @@ const ButtonSmall: FunctionComponent<Props> = ({
           opacity,
           color: typeof shadowColor === 'string' ? new Color(shadowColor) : shadowColor,
         }),
+        opacity: hidden ? 0.2 : 1,
       }}
+      hidden={hidden}
+      aria-hidden={hidden}
     >
       <ButtonBase style={{ borderRadius: '50%' }}>
         {link ? <Link to={link}>{content}</Link> : content}

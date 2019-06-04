@@ -123,13 +123,17 @@ interface Props extends RouteComponentProps {}
 
 const App: FunctionComponent<Props> = ({ location, history }) => {
   const { i18n } = useTranslation();
+  /*
   const language = querystring.parse(location.search).lang as string | null | undefined;
 
   if (language) {
     i18n.changeLanguage(language);
   }
+  */
 
   useEffect(() => {
+    i18n.changeLanguage('en');
+
     toggleLoading(LoadingData.App);
     history.push(untilNthIndex(location.pathname, '/', 2));
     document.cookie = 'VISITOR_INFO1_LIVE=oKckVSqvaGw; path=/; domain=.youtube.com';

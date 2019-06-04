@@ -273,7 +273,7 @@ const Profile: FunctionComponent<Props> = ({ location, history }) => {
   let tempObj = {} as { [name: string]: number };
   useEffect(() => {
     tempObj = {} as { [name: string]: number };
-    for (let i = 0; i < auth.track.length; i += 1) {
+    for (let i = 0; i < (auth.track || []).length; i += 1) {
       if (tempObj[auth.track[i].name]) {
         tempObj[auth.track[i].name] += auth.track[i].points || 0;
       } else {
@@ -281,7 +281,7 @@ const Profile: FunctionComponent<Props> = ({ location, history }) => {
       }
     }
     setOverview(tempObj);
-  }, [auth.track.length]);
+  }, [(auth.track || []).length]);
 
   return (
     <Route

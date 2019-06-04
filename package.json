@@ -37,6 +37,7 @@
     "react-hooks-global-state": "^0.9.0",
     "react-i18next": "^10.8.1",
     "react-iframe": "^1.8.0",
+    "react-markdown": "^4.0.8",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "react-switch": "^5.0.0",

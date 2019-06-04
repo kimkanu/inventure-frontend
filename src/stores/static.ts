@@ -6,6 +6,7 @@ export interface WorkoutInfo {
   imagePath: string;
   image?: string;
   youtube?: string;
+  instruction?: string;
   type: { name: string };
 }
 export interface Images {
@@ -37,6 +38,7 @@ export interface SetWorkoutInfoAction {
     imagePath: string;
     image?: string;
     youtube: string;
+    instruction?: string;
     type: { name: string };
   }[];
 }
@@ -73,8 +75,8 @@ export const staticReducer: Reducer<StaticState, StaticAction> = (state, action)
         workoutInfo: {
           ...state.workoutInfo,
           ...action.payload
-            .map(({ name, imagePath, image, youtube, type }) => ({
-              [name]: { imagePath, image, youtube, type },
+            .map(({ name, imagePath, image, youtube, type, instruction }) => ({
+              [name]: { imagePath, image, youtube, type, instruction },
             }))
             .reduce((a, b) => ({ ...a, ...b }), {}),
         },
@@ -127,6 +129,7 @@ export const setWorkoutInfo = (
     imagePath: string;
     image?: string;
     youtube: string;
+    instruction?: string;
     type: { name: string };
   }[],
 ) => {
