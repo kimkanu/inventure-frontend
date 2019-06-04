@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState, useEffect } from 'react';
 import { withRouter, RouteComponentProps, Route, Redirect, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Link from './Link';
-import { untilNthIndex } from '../utils';
+import { untilNthIndex, capitalizeFirst, capitalizeEach, randomElement } from '../utils';
 import CardWithPicture from './CardWithPicture';
 import ProfileCard from './ProfileCard';
 import SectionSelector from './SectionSelector';
@@ -19,7 +19,7 @@ import {
 } from 'victory';
 import Achievement from './Achievement';
 import { navigateTab } from '../stores/tab';
-import { login, AuthState } from '../stores/auth';
+import { login, AuthState, Track } from '../stores/auth';
 
 interface Props extends RouteComponentProps {}
 
@@ -73,6 +73,11 @@ const ExerciseCard: FunctionComponent<ExerciseCardProps> = ({
             fontSize: '1.2rem',
             fontWeight: 'bold',
             lineHeight: '1.5rem',
+            display: 'block',
+            maxWidth: 'calc(100% - 32px)',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
           }}
         >
           {name}
@@ -142,16 +147,17 @@ const WorkoutChart: FunctionComponent = () => {
       window.removeEventListener('resize', adjust);
     };
   }, []);
+  const [auth] = useGlobalState('auth');
 
-  const description = 'very very nice';
+  const description = 'Last week, overall points';
   const data = [
-    { x: '20190517', y: 1 },
-    { x: '20190518', y: 1 },
-    { x: '20190519', y: 1 },
-    { x: '20190520', y: 1 },
-    { x: '20190521', y: 2 },
-    { x: '20190522', y: 1.5 },
-    { x: '20190523', y: 1.4 },
+    { x: '20190529', y: 0 },
+    { x: '20190530', y: 0 },
+    { x: '20190531', y: 0 },
+    { x: '20190601', y: 0 },
+    { x: '20190602', y: 0 },
+    { x: '20190603', y: 0 },
+    { x: '20190604', y: auth.points },
   ];
 
   return (
@@ -183,7 +189,6 @@ const WorkoutChart: FunctionComponent = () => {
           style={{
             data: { fill: 'url(#myGradient)' },
           }}
-          domain={[0.5, 2.5]}
           interpolation="cardinal"
           data={data}
         />
@@ -253,7 +258,7 @@ const Profile: FunctionComponent<Props> = ({ location, history }) => {
         profileMessage: '',
         gym: '',
         friends: [],
-        track: [],
+        track: [] as Track[],
       };
   useEffect(() => {
     if (auth.id === '') {
@@ -263,6 +268,21 @@ const Profile: FunctionComponent<Props> = ({ location, history }) => {
   });
   const [section, setSection] = useState(0);
   const [staticInfo] = useGlobalState('static');
+
+  const [overview, setOverview] = useState({} as { [name: string]: number });
+  let tempObj = {} as { [name: string]: number };
+  useEffect(() => {
+    tempObj = {} as { [name: string]: number };
+    for (let i = 0; i < auth.track.length; i += 1) {
+      if (tempObj[auth.track[i].name]) {
+        tempObj[auth.track[i].name] += auth.track[i].points || 0;
+      } else {
+        tempObj[auth.track[i].name] = auth.track[i].points || 0;
+      }
+    }
+    setOverview(tempObj);
+  }, [auth.track.length]);
+
   return (
     <Route
       render={() => (
@@ -303,39 +323,28 @@ const Profile: FunctionComponent<Props> = ({ location, history }) => {
                       />
                       {section === 0 ? (
                         <>
-                          <ExerciseCard
-                            imgSrc={(staticInfo.images.bulking || {}).image}
-                            name="Benchpress"
-                            rank={3}
-                            achievement={{
-                              name: 'Benchpress Veteran',
-                              icon: '',
-                              scheme: COLORS.orange!,
-                              description: '1000x benched, 60 kg max. record',
-                            }}
-                          />
-                          <ExerciseCard
-                            imgSrc={(staticInfo.images.bulking || {}).image}
-                            name="Benchpress"
-                            rank={3}
-                            achievement={{
-                              name: 'Benchpress Veteran',
-                              icon: '',
-                              scheme: COLORS.orange!,
-                              description: '1000x benched, 60 kg max. record',
-                            }}
-                          />
-                          <ExerciseCard
-                            imgSrc={(staticInfo.images.bulking || {}).image}
-                            name="Benchpress"
-                            rank={3}
-                            achievement={{
-                              name: 'Benchpress Veteran',
-                              icon: '',
-                              scheme: COLORS.orange!,
-                              description: '1000x benched, 60 kg max. record',
-                            }}
-                          />
+                          {[...Object.keys(overview)]
+                            .sort((n1, n2) => overview[n2] - overview[n1])
+                            .map((name, i) => (
+                              <ExerciseCard
+                                key={i}
+                                rank={i + 1}
+                                imgSrc={(staticInfo.workoutInfo[name] || {}).image}
+                                name={capitalizeEach(name)}
+                                achievement={{
+                                  name: `${capitalizeEach(name)} Beginner`,
+                                  icon: '',
+                                  scheme: randomElement([
+                                    COLORS.red!,
+                                    COLORS.orange!,
+                                    COLORS.green!,
+                                    COLORS.blue!,
+                                    COLORS.gray!,
+                                  ])!,
+                                  description: `Do the workout ${name} once.`,
+                                }}
+                              />
+                            ))}
                         </>
                       ) : (
                         <div

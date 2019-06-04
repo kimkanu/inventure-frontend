@@ -15,7 +15,8 @@ export type Track = {
   createdAt: number;
   reps: number;
   sets: number;
-  workoutName: string;
+  name: string;
+  points?: number;
 } & {
   [params: string]: number;
 };
@@ -66,19 +67,25 @@ export interface AddFriendAction {
   type: 'ADD_FRIEND_ACTION';
   payload: string;
 }
+export interface GetPointsAction {
+  type: 'GET_POINTS_ACTION';
+  payload: number;
+}
 
 export type AuthAction =
   | LoginAction
   | LogoutAction
   | CalculateLevelAction
   | SaveUsersAction
-  | AddFriendAction;
+  | AddFriendAction
+  | GetPointsAction;
 export const AUTH_ACTION_TYPES = [
   'LOGIN_ACTION',
   'LOGOUT_ACTION',
   'CALCULATE_LEVEL_ACTION',
   'SAVE_USERS_ACTION',
   'ADD_FRIEND_ACTION',
+  'GET_POINTS_ACTION',
 ];
 
 export const authReducer: Reducer<AuthState, AuthAction> = (state, action) => {
@@ -95,6 +102,7 @@ export const authReducer: Reducer<AuthState, AuthAction> = (state, action) => {
         const level = (action.payload.staticInfo.others.levels as number[])
           .reduce((a, x, i) => [...a, x + (a[i - 1] || 0)], [] as number[])
           .findIndex((x: number) => x > action.payload.points);
+        console.log(level);
         return {
           ...state,
           level,
@@ -116,6 +124,11 @@ export const authReducer: Reducer<AuthState, AuthAction> = (state, action) => {
         ...state,
         friends: [...state.friends, action.payload],
       };
+    case 'GET_POINTS_ACTION':
+      return {
+        ...state,
+        points: state.points + action.payload,
+      };
     default:
       return state;
   }
@@ -135,4 +148,7 @@ export const saveUsers = (payload: ({ id: string } & UserProps)[]) => {
 };
 export const addFriend = (payload: string) => {
   dispatch({ payload, type: 'ADD_FRIEND_ACTION' });
+};
+export const getPoints = (payload: number) => {
+  dispatch({ payload, type: 'GET_POINTS_ACTION' });
 };

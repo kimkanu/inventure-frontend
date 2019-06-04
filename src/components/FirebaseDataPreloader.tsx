@@ -177,7 +177,7 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
     if (staticInfo.others.levels) {
       calculateLevel({ staticInfo, points: auth.points });
     }
-  }, [(staticInfo.others.levels || []).length, auth.points]);
+  }, [(staticInfo.others.levels || []).length, auth.points, loading[LoadingData.UsersInfo]]);
 
   useAsyncEffect(async () => {
     let isSubscribed = true;

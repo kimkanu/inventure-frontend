@@ -40,6 +40,7 @@ const Achievement: FunctionComponent<AchievementProps> = ({
           transform: 'translateY(1pt)',
           userSelect: 'none',
           marginTop: big ? '5px' : '2px',
+          marginLeft: big ? '0' : '2px',
         }}
       >
         <div

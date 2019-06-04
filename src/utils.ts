@@ -87,6 +87,13 @@ export function capitalizeFirstOnly(s: string) {
   return `${s[0].toLocaleUpperCase()}${s.slice(1).toLocaleLowerCase()}`;
 }
 
+export function capitalizeEach(s: string) {
+  return s
+    .split(' ')
+    .map((n) => capitalizeFirst(n))
+    .join(' ');
+}
+
 export default function to<T>(promise: Promise<T>): Promise<[any, T | undefined]> {
   return promise
     .then((data) => {

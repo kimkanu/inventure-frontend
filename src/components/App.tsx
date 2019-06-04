@@ -27,7 +27,6 @@ import Firebase, { FirebaseContext } from './Firebase';
 import ButtonLarge from './Buttons/ButtonLarge';
 import { COLORS } from '../colors';
 import { History } from 'history';
-import { StaticState } from '../stores/static';
 
 interface LoginProps extends RouteComponentProps {
   firebase: Firebase;
@@ -131,15 +130,15 @@ const App: FunctionComponent<Props> = ({ location, history }) => {
   }
 
   useEffect(() => {
+    toggleLoading(LoadingData.App);
     history.push(untilNthIndex(location.pathname, '/', 2));
     document.cookie = 'VISITOR_INFO1_LIVE=oKckVSqvaGw; path=/; domain=.youtube.com';
     const timeout = setTimeout(() => {
-      toggleLoading(LoadingData.App);
       document.getElementById('loader')!.className = 'hidden';
-    }, 1030);
+    }, 3030);
     const timeout2 = setTimeout(() => {
       document.getElementById('loader')!.style.display = 'none';
-    }, 1330);
+    }, 3330);
     return () => {
       clearTimeout(timeout);
       clearTimeout(timeout2);

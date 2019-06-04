@@ -20,6 +20,8 @@ import { navigateTab } from '../stores/tab';
 import { login, AuthState, UserProps, addFriend } from '../stores/auth';
 import Firebase, { FirebaseContext } from './Firebase';
 import { LoadingData } from '../stores/loading';
+import { transparentImage } from '../contants';
+import { userInfo } from 'os';
 
 interface CardProps {
   rank: number;
@@ -61,7 +63,9 @@ const RankingWithoutRouter: FunctionComponent<Props> = ({ history }) => {
                 ? 'linear-gradient(#f4e24a 0%, #f0ad36 100%)'
                 : rank === 2
                 ? 'linear-gradient(#9ab5d3 0%, #769bc2 100%)'
-                : 'linear-gradient(#d19579 0%, #bf7454 100%)',
+                : rank === 3
+                ? 'linear-gradient(#d19579 0%, #bf7454 100%)'
+                : 'linear-gradient(#9d9fa0 0%, #54585d 100%)',
           }}
         >
           <img
@@ -70,14 +74,24 @@ const RankingWithoutRouter: FunctionComponent<Props> = ({ history }) => {
                 ? '/gold medal.png'
                 : rank === 2
                 ? '/silver medal.png'
-                : '/bronze medal.png'
+                : rank === 3
+                ? '/bronze medal.png'
+                : transparentImage
             }
             style={{
               height: rank === 1 ? '6.8rem' : '6.4rem',
               position: 'relative',
               marginRight: '-1.7rem',
             }}
-            alt={rank === 1 ? 'gold medal' : rank === 2 ? 'silver medal' : 'bronze medal'}
+            alt={
+              rank === 1
+                ? 'gold medal'
+                : rank === 2
+                ? 'silver medal'
+                : rank === 3
+                ? 'bronze medal'
+                : ''
+            }
           />
         </div>
         <div
@@ -135,6 +149,11 @@ const RankingWithoutRouter: FunctionComponent<Props> = ({ history }) => {
       </div>
     </div>
   );
+  const [auth] = useGlobalState('auth');
+  const sortedFriends = [...auth.friends, auth.id]
+    .map((id) => auth.users.find((user) => user.id === id)!)
+    .sort((f1, f2) => f2.points - f1.points);
+
   return (
     <div className="pop-content">
       {' '}
@@ -143,9 +162,16 @@ const RankingWithoutRouter: FunctionComponent<Props> = ({ history }) => {
           <BackButton onClick={history.goBack} />
           <span>Ranking</span>
         </h1>
-        <Card rank={1} name="Emil" change={1} points={1323} />
-        <Card rank={2} name="Chad" change={-1} points={1200} me />
-        <Card rank={3} name="Zeppe" change={0} points={998} />
+        {sortedFriends.map((friend, i) => (
+          <Card
+            key={i}
+            rank={i + 1}
+            name={friend.name}
+            change={0}
+            points={friend.points}
+            me={auth.id === friend.id}
+          />
+        ))}
       </div>
     </div>
   );

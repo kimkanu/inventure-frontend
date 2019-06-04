@@ -10,6 +10,7 @@ import { capitalizeFirst } from '../../utils';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import { COLORS } from '../../colors';
 import Firebase, { FirebaseContext } from '../Firebase';
+import { getPoints } from '../../stores/auth';
 
 interface Props extends RouteComponentProps {
   firebase: Firebase;
@@ -162,15 +163,20 @@ const CongratsConsumingFirebase: FunctionComponent<Props> = ({ location, history
                       sets,
                       name,
                       createdAt,
+                      points: Math.floor(reps * sets * (Math.random() * 0.7 + 0.5)),
                     }));
-                  console.log(arr);
-                  const response = await firebase.database
+                  const trackResponse = await firebase.database
                     .ref(`/users/${auth.id}/track`)
                     .once('value');
-                  const responseVal = response.val() || [];
+                  const trackResponseVal = trackResponse.val() || [];
                   await firebase.database
                     .ref(`/users/${auth.id}/track`)
-                    .set([...responseVal, ...arr]);
+                    .set([...trackResponseVal, ...arr]);
+                  const additionalPoints = arr.map((a) => a.points).reduce((a, b) => a + b, 0);
+                  getPoints(additionalPoints);
+                  await firebase.database
+                    .ref(`/users/${auth.id}/points`)
+                    .set(auth.points + additionalPoints);
                   initializeWorkout();
                 }}
               />
