@@ -71,6 +71,10 @@ export interface GetPointsAction {
   type: 'GET_POINTS_ACTION';
   payload: number;
 }
+type SetTrackAction = {
+  type: 'SET_TRACK_ACTION';
+  payload: Track[];
+};
 
 export type AuthAction =
   | LoginAction
@@ -78,7 +82,8 @@ export type AuthAction =
   | CalculateLevelAction
   | SaveUsersAction
   | AddFriendAction
-  | GetPointsAction;
+  | GetPointsAction
+  | SetTrackAction;
 export const AUTH_ACTION_TYPES = [
   'LOGIN_ACTION',
   'LOGOUT_ACTION',
@@ -86,6 +91,7 @@ export const AUTH_ACTION_TYPES = [
   'SAVE_USERS_ACTION',
   'ADD_FRIEND_ACTION',
   'GET_POINTS_ACTION',
+  'SET_TRACK_ACTION',
 ];
 
 export const authReducer: Reducer<AuthState, AuthAction> = (state, action) => {
@@ -129,6 +135,11 @@ export const authReducer: Reducer<AuthState, AuthAction> = (state, action) => {
         ...state,
         points: state.points + action.payload,
       };
+    case 'SET_TRACK_ACTION':
+      return {
+        ...state,
+        track: action.payload,
+      };
     default:
       return state;
   }
@@ -151,4 +162,7 @@ export const addFriend = (payload: string) => {
 };
 export const getPoints = (payload: number) => {
   dispatch({ payload, type: 'GET_POINTS_ACTION' });
+};
+export const setTrack = (payload: Track[]) => {
+  dispatch({ payload, type: 'SET_TRACK_ACTION' });
 };

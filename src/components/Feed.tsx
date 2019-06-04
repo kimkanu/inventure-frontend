@@ -4,6 +4,7 @@ import { COLORS, COLOR_BACKGROUND, Color } from '../colors';
 import moment from 'moment';
 import { shadowText } from '../styles';
 import Achievement from './Achievement';
+import { useGlobalState } from '../stores';
 
 interface Props extends RouteComponentProps {}
 
@@ -50,11 +51,12 @@ const Separator: FunctionComponent<SeparatorProps> = ({ date }) => {
 
 const Post: FunctionComponent = () => {
   const achievement = {
-    name: 'Benchpress Veteran',
+    name: 'Bench Press Veteran',
     icon: '',
     scheme: COLORS.orange!,
     description: '1000x benched, 60 kg max. record',
   };
+  const [auth] = useGlobalState('auth');
   return (
     <div
       style={{
@@ -78,7 +80,10 @@ const Post: FunctionComponent = () => {
         }}
       >
         <img
-          src="https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg"
+          src={
+            ((auth.users || []).find((u) => u.id === 'chad0314') || { profileImagePath: undefined })
+              .profileImagePath
+          }
           style={{
             clipPath: 'circle(2rem at 50% 50%)',
             width: '4rem',
@@ -107,7 +112,7 @@ const Post: FunctionComponent = () => {
                 fontWeight: 'bold',
               }}
             >
-              Amy
+              Chad
             </span>
             <span
               style={{
@@ -116,7 +121,7 @@ const Post: FunctionComponent = () => {
               }}
             >
               {' '}
-              (@amymymy)
+              (@chad0314)
             </span>
             <span> got an achievement!</span>
           </div>

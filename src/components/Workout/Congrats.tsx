@@ -10,7 +10,7 @@ import { capitalizeFirst } from '../../utils';
 import ButtonLarge from '../Buttons/ButtonLarge';
 import { COLORS } from '../../colors';
 import Firebase, { FirebaseContext } from '../Firebase';
-import { getPoints } from '../../stores/auth';
+import { getPoints, setTrack } from '../../stores/auth';
 
 interface Props extends RouteComponentProps {
   firebase: Firebase;
@@ -172,6 +172,7 @@ const CongratsConsumingFirebase: FunctionComponent<Props> = ({ location, history
                   await firebase.database
                     .ref(`/users/${auth.id}/track`)
                     .set([...trackResponseVal, ...arr]);
+                  setTrack([...trackResponseVal, ...arr]);
                   const additionalPoints = arr.map((a) => a.points).reduce((a, b) => a + b, 0);
                   getPoints(additionalPoints);
                   await firebase.database
