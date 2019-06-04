@@ -22,6 +22,7 @@ import Firebase, { FirebaseContext } from './Firebase';
 import { LoadingData } from '../stores/loading';
 import { transparentImage } from '../contants';
 import { userInfo } from 'os';
+import ButtonLarge from './Buttons/ButtonLarge';
 
 interface CardProps {
   rank: number;
@@ -529,64 +530,44 @@ const Friends: FunctionComponent<Props> = ({ location, history }) => {
             render={() => (
               <div className="">
                 <div className="content">
-                  <h1
-                    className="heading"
-                    style={{ display: 'flex', justifyContent: 'space-between' }}
-                  >
+                  <h1 className="heading">
                     <span>Friends</span>
-                    <div>
-                      <Link
-                        to="/friends/ranking"
-                        style={{
-                          textDecoration: 'none',
-                          color: COLORS.gray!.darker,
-                        }}
-                        className="without-blue"
-                      >
-                        <ButtonBase
-                          style={{
-                            fontSize: '1em',
-                            display: 'inline-flex',
-                            width: 48,
-                            height: 48,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            textAlign: 'center',
-                            padding: '6px',
-                            transform: 'translateY(-4px)',
-                            borderRadius: '50%',
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faMedal} style={{ fontSize: '92%' }} />
-                        </ButtonBase>
-                      </Link>
-                      <Link
-                        to="/friends/add"
-                        style={{
-                          textDecoration: 'none',
-                          color: COLORS.gray!.darker,
-                        }}
-                        className="without-blue"
-                      >
-                        <ButtonBase
-                          style={{
-                            fontSize: '1em',
-                            display: 'inline-flex',
-                            width: 48,
-                            height: 48,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            textAlign: 'center',
-                            padding: '6px',
-                            transform: 'translateY(-4px)',
-                            borderRadius: '50%',
-                          }}
-                        >
-                          <EdgeIcon buttonSize="back"></EdgeIcon>
-                        </ButtonBase>
-                      </Link>
-                    </div>
                   </h1>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <ButtonLarge
+                      shadowColor={COLORS.orange!.darker}
+                      backgroundColor={COLORS.orange!.normal}
+                      link="/friends/ranking"
+                      labelInside="Ranking"
+                    >
+                      <span style={{ marginTop: '1.4rem' }}>
+                        <FontAwesomeIcon
+                          icon={faMedal}
+                          style={{
+                            fontSize: '1.5rem',
+                            transform: 'translateY(-3px)',
+                            marginTop: '0.64em',
+                          }}
+                        />
+                      </span>
+                    </ButtonLarge>
+                    <ButtonLarge
+                      shadowColor={COLORS.blue!.darker}
+                      backgroundColor={COLORS.blue!.light}
+                      link="/friends/add"
+                      labelInside="Add Friends"
+                    >
+                      <EdgeIcon buttonSize={48}></EdgeIcon>
+                    </ButtonLarge>
+                  </div>
+                  <h2 className="heading" style={{ ...headingFont, margin: '2.3rem 0 1.7rem' }}>
+                    <span>Recent Feed</span>
+                  </h2>
                   <Feed />
                 </div>
                 <Route
