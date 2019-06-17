@@ -27,6 +27,7 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
       youtube: string;
       instruction?: string;
     }[];
+    console.log(workoutData);
     setWorkoutInfo(workoutData);
 
     setWorkoutImage(
@@ -174,6 +175,7 @@ const ConsumingFirebase: FunctionComponent<Props> = ({ firebase }) => {
   }, []);
 
   useEffect(() => {
+    console.log('level', (staticInfo.others.levels || []).length);
     if (staticInfo.others.levels) {
       calculateLevel({ staticInfo, points: auth.points });
     }
