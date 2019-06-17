@@ -77,8 +77,9 @@ const ProfileCard: FunctionComponent<Props> = ({
         <img
           src={imgSrc}
           style={{
+            width: '6rem',
             height: '6rem',
-            borderRadius: '50%',
+            objectFit: 'cover',
           }}
           alt={alt}
         />

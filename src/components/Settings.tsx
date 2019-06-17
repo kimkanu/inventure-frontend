@@ -8,6 +8,7 @@ import { useGlobalState } from '../stores';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { navigateTab } from '../stores/tab';
 import { login, AuthState, logout } from '../stores/auth';
+import { initializeWorkout } from '../stores/workout';
 interface CardProps {
   title: string;
 }
@@ -86,6 +87,7 @@ const Settings: FunctionComponent<RouteComponentProps> = ({ history }) => {
           <Menu
             onClick={() => {
               logout();
+              initializeWorkout();
               localStorage.removeItem('auth');
               navigateTab('');
               history.push('/login');
