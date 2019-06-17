@@ -90,6 +90,7 @@ export const staticReducer: Reducer<StaticState, StaticAction> = (state, action)
             .map(({ name, image, youtube }) => ({
               [name]: {
                 image,
+                instruction: (state.workoutInfo[name] || { instruction: undefined }).instruction,
                 type: (state.workoutInfo[name] || { type: { name: '' } }).type,
                 youtube: youtube || (state.workoutInfo[name] || { youtube: undefined }).youtube,
                 imagePath: (state.workoutInfo[name] || { imagePath: undefined }).imagePath,

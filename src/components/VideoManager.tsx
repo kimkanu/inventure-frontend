@@ -22,22 +22,26 @@ const VideoManager: FunctionComponent = () => {
           : undefined,
     }));
   }, [workout.current[0]]);
-  const setSize = (rest: boolean) => {
+  const setSize = (rest: boolean, info: boolean = false) => {
     const h = Math.min(-208 + 0.6 * window.innerHeight, ((window.innerWidth - 1.33 * 16) * 9) / 16);
     setState((s) => ({
       ...s,
       h,
-      y: rest ? 128 : 36 + 0.4 * window.innerHeight,
+      y: !rest ? 36 + 0.4 * window.innerHeight : info ? 72 : 128,
       w: (h * 16) / 9,
     }));
   };
   useEffect(() => {
-    setSize(workout.current[1] % 2 === 0);
-    window.addEventListener('resize', () => setSize(workout.current[1] % 2 === 0));
+    setSize(workout.current[1] % 2 === 0, location.pathname === '/workout/rest/info');
+    window.addEventListener('resize', () =>
+      setSize(workout.current[1] % 2 === 0, location.pathname === '/workout/rest/info'),
+    );
     return () => {
-      window.removeEventListener('resize', () => setSize(workout.current[1] % 2 === 0));
+      window.removeEventListener('resize', () =>
+        setSize(workout.current[1] % 2 === 0, location.pathname === '/workout/rest/info'),
+      );
     };
-  }, [workout.current[1]]);
+  }, [workout.current[1], location.pathname]);
   useEffect(() => {
     if (url) setVid(new YT.Player('video'));
   }, [url]);
@@ -61,6 +65,7 @@ const VideoManager: FunctionComponent = () => {
           ? {
               position: 'fixed',
               top: y,
+              zIndex: location.pathname === '/workout/rest/info' ? 9999999999999 : undefined,
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',

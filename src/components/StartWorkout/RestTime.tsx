@@ -117,7 +117,6 @@ const CurrentProgressItem: FunctionComponent<CurrentProgressItemProps> = ({
           style={{
             color: yet || current ? COLORS.gray!.darkest : COLORS.gray!.dark,
             textDecoration: yet || current ? '' : 'line-through',
-            lineHeight: '1rem',
           }}
         >
           {current ? <b>{name}</b> : name}
@@ -292,42 +291,9 @@ const RestTime: FunctionComponent<RouteComponentProps> = ({ history }) => {
           backgroundColor={COLORS.red!.dark}
           shadowColor={COLORS.red!.darkest}
           onClick={() => {
-            setDialog({
-              title: 'Why do you quit?',
-              children: (
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginTop: '1.4em',
-                  }}
-                >
-                  <ButtonLarge
-                    labelInside="Injured"
-                    backgroundColor={COLORS.red!.light}
-                    shadowColor={COLORS.red!.darker}
-                    onClick={() => {
-                      history.push('/profile');
-                      navigateTab('profile');
-                      quitEntireWorkout();
-                    }}
-                  />
-                  <ButtonLarge
-                    labelInside="Don't want to do"
-                    backgroundColor={COLORS.gray!.normal}
-                    shadowColor={COLORS.gray!.darkest}
-                    style={{
-                      marginTop: '1.1em',
-                    }}
-                    onClick={() => {
-                      history.push('/profile');
-                      navigateTab('profile');
-                      quitEntireWorkout();
-                    }}
-                  />
-                </div>
-              ),
-            });
+            history.push('/profile');
+            navigateTab('profile');
+            quitEntireWorkout();
           }}
         />
         <ButtonLarge
