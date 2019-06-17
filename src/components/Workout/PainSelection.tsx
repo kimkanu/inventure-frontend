@@ -540,7 +540,7 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
                   labelInside="Continue with pain"
                   onClick={() => {
                     if (bannedWorkouts) {
-                      history.push(workout.current[0] < 0 ? '/workout/view' : '/workout/rest');
+                      history.push(workout.current[0] === -1 ? '/workout/view' : '/workout/rest');
                     }
                     setDialog({
                       show: true,
@@ -576,10 +576,10 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
                                 text="proceed"
                                 bold
                                 onClick={() => {
-                                  workout.current[0] < 0 && setDefaultPlan();
+                                  workout.current[0] === -1 && setDefaultPlan();
                                   setDialog({ show: false });
                                   history.push(
-                                    workout.current[0] < 0 ? '/workout/view' : '/workout/rest',
+                                    workout.current[0] === -1 ? '/workout/view' : '/workout/rest',
                                   );
                                 }}
                               />
@@ -592,12 +592,12 @@ const PainSelection: FunctionComponent<Props> = ({ history }) => {
                 />
               ) : (
                 <ButtonLarge
-                  link={workout.current[0] < 0 ? '/workout/view' : '/workout/rest'}
+                  link={workout.current[0] === -1 ? '/workout/view' : '/workout/rest'}
                   shadowColor={COLORS.blue!.dark}
                   backgroundColor={COLORS.blue!.light}
                   labelInside="I have no pain now"
                   onClick={() => {
-                    workout.current[0] < 0 && setDefaultPlan();
+                    workout.current[0] === -1 && setDefaultPlan();
                   }}
                 />
               )}
