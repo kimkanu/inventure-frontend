@@ -207,6 +207,10 @@ const StartWorkout: FunctionComponent<RouteComponentProps> = ({ history }) => {
                     backgroundColor={COLORS.red!.light}
                     shadowColor={COLORS.red!.darker}
                     link="/workout/pain"
+                    onClick={() => {
+                      quitWorkout();
+                      setDialog({ show: false });
+                    }}
                   />
                   <ButtonLarge
                     labelInside="Don't want to do"
