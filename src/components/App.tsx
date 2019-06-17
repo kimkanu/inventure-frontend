@@ -62,10 +62,18 @@ const Login: FunctionComponent<LoginProps> = ({ history, firebase }) => {
   const redirectTo = location.search.split('?redirect=')[1] || 'workout';
   useEffect(() => {
     if (localStorage.getItem('auth') !== null) {
-      login(localStorage.getItem('auth')!)().then(() => {
-        history.replace(`/${redirectTo}`);
-        navigateTab(redirectTo as Tab);
-      });
+      login(localStorage.getItem('auth')!)()
+        .then(() => {
+          history.replace(`/${redirectTo}`);
+          navigateTab(redirectTo as Tab);
+        })
+        .catch(() => {
+          localStorage.clear();
+          login(localStorage.getItem('auth')!)().then(() => {
+            history.replace(`/${redirectTo}`);
+            navigateTab(redirectTo as Tab);
+          });
+        });
     }
   }, []);
 
