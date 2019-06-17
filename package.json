@@ -1,6 +1,6 @@
 {
   "name": "inventure-frontend",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@bit/mui-org.material-ui.bottom-navigation": "^3.9.2",
