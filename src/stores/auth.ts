@@ -108,7 +108,6 @@ export const authReducer: Reducer<AuthState, AuthAction> = (state, action) => {
         const level = (action.payload.staticInfo.others.levels as number[])
           .reduce((a, x, i) => [...a, x + (a[i - 1] || 0)], [] as number[])
           .findIndex((x: number) => x > action.payload.points);
-        console.log(level);
         return {
           ...state,
           level,

@@ -4,7 +4,7 @@ import Slider from '../Slider';
 const SliderContainer: FunctionComponent = () => {
   return (
     <div style={{ width: '500px' }}>
-      <Slider integer onChange={(e) => console.log(e)} title="Slider" />
+      <Slider integer title="Slider" />
     </div>
   );
 };
