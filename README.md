@@ -2,6 +2,13 @@
 
 This project is based on **React.js** and written in **TypeScript**, which is a typed superset of JavaScript.
 
+[See the product](https://inventure-kaist.netlify.com)
+
+
+## Final Video
+
+https://www.youtube.com/watch?v=1q5I0CXh9KY
+
 
 ## Installation
 
@@ -42,6 +49,8 @@ We used the following libraries:
 * react-circular-progressbar
 * victory
 * lorem-ipsum
+
+... and now much more!
 
 ## Directory Structure
 
