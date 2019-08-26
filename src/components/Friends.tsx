@@ -169,10 +169,10 @@ const RankingWithoutRouter: FunctionComponent<Props> = ({ history }) => {
           <Card
             key={i}
             rank={i + 1}
-            name={friend.name}
+            name={(friend || {}).name || ''}
             change={0}
-            points={friend.points}
-            me={auth.id === friend.id}
+            points={(friend || {}).points || 0}
+            me={auth.id === ((friend || {}).id || '')}
           />
         ))}
       </div>
